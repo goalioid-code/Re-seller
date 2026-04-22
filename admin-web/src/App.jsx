@@ -1,120 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import React from 'react'
 import './App.css'
+import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext'
+import Login from './screens/Login'
 
-function App() {
-  const [count, setCount] = useState(0)
+function Dashboard() {
+  const { admin, logout } = useAdminAuth()
 
   return (
-    <>
+    <div className="dashboard-layout">
       <section id="center">
         <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+          <h1>🚀 CALSUB Reseller</h1>
+          <p className="subtitle">Admin Dashboard Portal</p>
         </div>
-        <div>
-          <h1>Get started</h1>
+        <div className="card">
+          <h2>Selamat Datang, {admin?.name}!</h2>
           <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+            Ini adalah portal internal tim CALSUB untuk mengelola reseller, pesanan, dan produksi.
           </p>
+          <div className="status-grid">
+            <div className="status-item">
+              <strong>Role Anda:</strong>
+              <span className="badge success">{admin?.role}</span>
+            </div>
+            <button onClick={logout} className="logout-button">Logout</button>
+          </div>
         </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
       </section>
 
       <div className="ticks"></div>
 
       <section id="next-steps">
         <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+          <h2>Modul Admin (Sprint 5)</h2>
+          <div className="modules-grid">
+            <div className="module-card">👥 Reseller</div>
+            <div className="module-card">📦 Orders</div>
+            <div className="module-card">🏭 Produksi</div>
+            <div className="module-card">💰 Komisi</div>
+          </div>
         </div>
       </section>
+    </div>
+  )
+}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+function MainContent() {
+  const { isLoggedIn, loading } = useAdminAuth()
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner"></div>
+        <p>Memuat sistem...</p>
+      </div>
+    )
+  }
+
+  return isLoggedIn ? <Dashboard /> : <Login />
+}
+
+function App() {
+  return (
+    <AdminAuthProvider>
+      <MainContent />
+    </AdminAuthProvider>
   )
 }
 

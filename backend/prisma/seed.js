@@ -88,6 +88,23 @@ async function main() {
   }
   console.log('✅ Rewards created');
 
+  // ============================================================
+  // Seed Default Admin
+  // ============================================================
+  console.log('👤 Seeding default admin...');
+  await prisma.admin.upsert({
+    where: { email: 'admin@calsub.com' },
+    update: {},
+    create: {
+      email: 'admin@calsub.com',
+      password_hash: 'admin123',
+      name: 'Super Admin CALSUB',
+      role: 'super_admin',
+      is_active: true,
+    },
+  });
+  console.log('✅ Default admin created');
+
   console.log('✨ Database seeding completed successfully!');
 }
 

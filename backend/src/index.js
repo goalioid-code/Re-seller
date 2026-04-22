@@ -10,6 +10,7 @@ const orderRoutes = require('./routes/orders');
 const paymentRoutes = require('./routes/payments');
 const productionRoutes = require('./routes/production');
 const erpSyncRoutes = require('./routes/erp-sync');
+const uploadRoutes = require('./routes/uploads');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,6 +43,7 @@ app.use('/resellers', resellerRoutes);
 app.use('/orders', orderRoutes);
 app.use('/payments', paymentRoutes);
 app.use('/production', productionRoutes);
+app.use('/uploads', uploadRoutes);
 
 // Health check
 app.get('/', (req, res) => {

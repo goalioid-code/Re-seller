@@ -1,6 +1,8 @@
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 const prisma = require('../lib/prisma');
+const redis = require('../lib/redis');
+const { sendWhatsApp } = require('../lib/foonte');
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -376,4 +378,118 @@ const devListUsers = async (req, res) => {
   }
 };
 
-module.exports = { googleAuth, getMe, devLogin, devRegister, devListUsers };
+/**
+ * POST /auth/whatsapp/request
+ * Request OTP via WhatsApp
+ */
+const requestWhatsAppOTP = async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) {
+      return res.status(400).json({ success: false, message: 'Nomor WhatsApp wajib diisi.' });
+    }
+
+    // Format phone to 62...
+    let formattedPhone = phone;
+    if (phone.startsWith('0')) formattedPhone = '62' + phone.slice(1);
+    if (!phone.startsWith('62')) formattedPhone = '62' + phone;
+
+    // Generate 6 digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Simpan di Redis (5 menit)
+    await redis.set(`otp:wa:${formattedPhone}`, otp, 'EX', 300);
+
+    // Kirim via Foonte
+    const message = `Kode OTP CALSUB Anda adalah: *${otp}*. Kode ini berlaku selama 5 menit. Jangan bagikan kode ini kepada siapapun.`;
+    await sendWhatsApp(formattedPhone, message);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Kode OTP telah dikirim ke WhatsApp Anda.',
+    });
+  } catch (error) {
+    console.error('[Auth] WA Request error:', error);
+    return res.status(500).json({ success: false, message: 'Gagal mengirim OTP.' });
+  }
+};
+
+/**
+ * POST /auth/whatsapp/verify
+ * Verifikasi OTP dan Login/Register
+ */
+const verifyWhatsAppOTP = async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+    if (!phone || !otp) {
+      return res.status(400).json({ success: false, message: 'Nomor WhatsApp dan OTP wajib diisi.' });
+    }
+
+    let formattedPhone = phone;
+    if (phone.startsWith('0')) formattedPhone = '62' + phone.slice(1);
+    if (!phone.startsWith('62')) formattedPhone = '62' + phone;
+
+    // Ambil OTP dari Redis
+    const savedOtp = await redis.get(`otp:wa:${formattedPhone}`);
+
+    if (!savedOtp || savedOtp !== otp) {
+      return res.status(400).json({ success: false, message: 'Kode OTP salah atau sudah kadaluarsa.' });
+    }
+
+    // OTP Benar -> Hapus dari Redis
+    await redis.del(`otp:wa:${formattedPhone}`);
+
+    // Cari atau buat reseller berdasarkan nomor HP
+    let reseller = await prisma.reseller.findFirst({
+      where: { phone: formattedPhone },
+    });
+
+    const isNewUser = !reseller;
+
+    if (!reseller) {
+      // Untuk register via WA, kita buat dummy email atau biarkan kosong jika schema membolehkan
+      // Tapi schema biasanya minta email @unique. Kita buat email dummy phone@calsub.com
+      reseller = await prisma.reseller.create({
+        data: {
+          google_id: `wa_${formattedPhone}`,
+          email: `${formattedPhone}@wa.calsub.com`,
+          name: `User WA ${formattedPhone.slice(-4)}`,
+          phone: formattedPhone,
+          status: 'pending', // Baru daftar via WA tetap pending
+        },
+      });
+    }
+
+    // Buat JWT token
+    const token = jwt.sign(
+      {
+        id: reseller.id,
+        email: reseller.email,
+        phone: reseller.phone,
+        status: reseller.status,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+
+    return res.status(200).json({
+      success: true,
+      token,
+      is_new_user: isNewUser,
+      reseller,
+    });
+  } catch (error) {
+    console.error('[Auth] WA Verify error:', error);
+    return res.status(500).json({ success: false, message: 'Terjadi kesalahan saat verifikasi.' });
+  }
+};
+
+module.exports = {
+  googleAuth,
+  getMe,
+  devLogin,
+  devRegister,
+  devListUsers,
+  requestWhatsAppOTP,
+  verifyWhatsAppOTP,
+};

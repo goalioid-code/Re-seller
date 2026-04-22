@@ -1,6 +1,3 @@
-// This is your Prisma schema file
-// Learn more: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,47 +7,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ============================================================
-// TABEL OWN — Dikelola oleh backend Reseller CALSUB
-// ============================================================
-
 model Reseller {
-  id              String   @id @default(uuid())
-  google_id       String   @unique
-  email           String   @unique
-  name            String
-  photo_url       String?
-  phone           String?
-  address         String?
-  status          String   @default("pending") // pending | active | inactive
-  tier_id         String?
-  onboarding_data String? // Menyimpan jawaban quiz onboarding (target, kategori, pengalaman) - JSON string
-  fcm_token       String? // Firebase Cloud Messaging token untuk push notification
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-
-  // Relations
-  tier               CommissionTier?        @relation(fields: [tier_id], references: [id])
-  commissions        Commission[]
+  id                 String                 @id @default(uuid())
+  google_id          String                 @unique
+  email              String                 @unique
+  name               String
+  photo_url          String?
+  phone              String?
+  address            String?
+  status             String                 @default("pending")
+  tier_id            String?
+  onboarding_data    String?
+  fcm_token          String?
+  created_at         DateTime               @default(now())
+  updated_at         DateTime               @updatedAt
   withdrawals        CommissionWithdrawal[]
-  points             Point[]
-  reward_redemptions RewardRedemption[]
+  commissions        Commission[]
   notifications      Notification[]
   orders             Order[]
+  points             Point[]
+  tier               CommissionTier?        @relation(fields: [tier_id], references: [id])
+  reward_redemptions RewardRedemption[]
 
   @@map("resellers")
 }
 
 model CommissionTier {
-  id         String   @id @default(uuid())
-  name       String // Silver, Gold, Platinum
-  percentage Float // 5.0, 7.0, 10.0
-  min_orders Int      @default(0)
-  is_active  Boolean  @default(true)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  resellers Reseller[]
+  id         String     @id @default(uuid())
+  name       String
+  percentage Float
+  min_orders Int        @default(0)
+  is_active  Boolean    @default(true)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  resellers  Reseller[]
 
   @@map("commission_tiers")
 }
@@ -58,15 +48,14 @@ model CommissionTier {
 model Commission {
   id           String    @id @default(uuid())
   reseller_id  String
-  order_id     String? // Referensi ke orders (dari ERP)
+  order_id     String?
   amount       Float
-  percentage   Float // Persentase komisi saat transaksi
-  status       String    @default("pending") // pending | confirmed | withdrawn
+  percentage   Float
+  status       String    @default("pending")
   note         String?
   created_at   DateTime  @default(now())
   confirmed_at DateTime?
-
-  reseller Reseller @relation(fields: [reseller_id], references: [id])
+  reseller     Reseller  @relation(fields: [reseller_id], references: [id])
 
   @@map("commissions")
 }
@@ -75,7 +64,7 @@ model CommissionWithdrawal {
   id           String    @id @default(uuid())
   reseller_id  String
   amount       Float
-  status       String    @default("pending") // pending | approved | rejected
+  status       String    @default("pending")
   bank_name    String?
   bank_account String?
   account_name String?
@@ -83,8 +72,7 @@ model CommissionWithdrawal {
   admin_notes  String?
   created_at   DateTime  @default(now())
   processed_at DateTime?
-
-  reseller Reseller @relation(fields: [reseller_id], references: [id])
+  reseller     Reseller  @relation(fields: [reseller_id], references: [id])
 
   @@map("commission_withdrawals")
 }
@@ -93,28 +81,26 @@ model Point {
   id          String    @id @default(uuid())
   reseller_id String
   order_id    String?
-  amount      Int // Positif = dapat poin, Negatif = pakai poin
-  type        String // earned | redeemed | expired
+  amount      Int
+  type        String
   note        String?
-  expires_at  DateTime? // Null jika type = redeemed/expired
+  expires_at  DateTime?
   created_at  DateTime  @default(now())
-
-  reseller Reseller @relation(fields: [reseller_id], references: [id])
+  reseller    Reseller  @relation(fields: [reseller_id], references: [id])
 
   @@map("points")
 }
 
 model Reward {
-  id          String   @id @default(uuid())
+  id          String             @id @default(uuid())
   name        String
   description String?
   image_url   String?
   points_cost Int
-  stock       Int      @default(0)
-  is_active   Boolean  @default(true)
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-
+  stock       Int                @default(0)
+  is_active   Boolean            @default(true)
+  created_at  DateTime           @default(now())
+  updated_at  DateTime           @updatedAt
   redemptions RewardRedemption[]
 
   @@map("rewards")
@@ -125,15 +111,14 @@ model RewardRedemption {
   reseller_id  String
   reward_id    String
   points_used  Int
-  status       String    @default("pending") // pending | approved | rejected | shipped
-  address      String? // Alamat pengiriman hadiah
+  status       String    @default("pending")
+  address      String?
   notes        String?
   admin_notes  String?
   created_at   DateTime  @default(now())
   processed_at DateTime?
-
-  reseller Reseller @relation(fields: [reseller_id], references: [id])
-  reward   Reward   @relation(fields: [reward_id], references: [id])
+  reseller     Reseller  @relation(fields: [reseller_id], references: [id])
+  reward       Reward    @relation(fields: [reward_id], references: [id])
 
   @@map("reward_redemptions")
 }
@@ -141,166 +126,137 @@ model RewardRedemption {
 model Notification {
   id          String   @id @default(uuid())
   reseller_id String
-  type        String // order_update | commission | points | points_expiry | lk_issued | payment_confirmed
+  type        String
   title       String
   body        String
   is_read     Boolean  @default(false)
-  data        String? // Extra data (order_id, amount, dll) - JSON string
+  data        String?
   created_at  DateTime @default(now())
-
-  reseller Reseller @relation(fields: [reseller_id], references: [id])
+  reseller    Reseller @relation(fields: [reseller_id], references: [id])
 
   @@map("notifications")
 }
 
-// ============================================================
-// TABEL ORDER & PAYMENT (Integrasi & Own)
-// ============================================================
-
 model Order {
-  id            String   @id @default(uuid())
-  reseller_id   String
-  po_number     String   @unique // Auto-generate PO number
-  order_type    String // BASIC | LIGA | MAKLOON
-  customer_name String
-  brand_name    String
-  order_date    DateTime
-  due_date      DateTime
-  description   String?
-  notes         String?
-  subtotal      Float    @default(0)
-  discount      Float    @default(0)
-  total_amount  Float    @default(0)
-
-  status      String  @default("draft") // draft | submitted | processing | design | production | completed | cancelled
-  lk_approved Boolean @default(false)
-
-  design_file_url String? // URL file desain di Cloudflare R2
-  mockup_file_url String? // URL file mockup ACC di Cloudflare R2
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  reseller            Reseller           @relation(fields: [reseller_id], references: [id])
+  id                  String             @id @default(uuid())
+  reseller_id         String
+  po_number           String             @unique
+  order_type          String
+  customer_name       String
+  brand_name          String
+  order_date          DateTime
+  due_date            DateTime
+  description         String?
+  notes               String?
+  subtotal            Float              @default(0)
+  discount            Float              @default(0)
+  total_amount        Float              @default(0)
+  status              String             @default("draft")
+  lk_approved         Boolean            @default(false)
+  design_file_url     String?
+  mockup_file_url     String?
+  created_at          DateTime           @default(now())
+  updated_at          DateTime           @updatedAt
   items               OrderItem[]
   payments            OrderPayment[]
-  work_order          WorkOrder?
+  reseller            Reseller           @relation(fields: [reseller_id], references: [id])
   production_statuses ProductionStatus[]
+  work_order          WorkOrder?
 
   @@map("orders")
 }
 
 model OrderItem {
-  id               String  @id @default(uuid())
+  id               String   @id @default(uuid())
   order_id         String
-  product_name     String // Jersey BASIC/LIGA/MAKLOON
+  product_name     String
   quantity         Int
   unit_price       Float
-  collar_type      String? // Kerah
-  pattern          String? // Pola
-  fabric_type      String? // Jenis kain
-  additional_attrs String? // Atribut/Addons tambahan - JSON string
-  subtotal         Float   @default(0)
-
-  created_at DateTime @default(now())
-
-  order Order @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  collar_type      String?
+  pattern          String?
+  fabric_type      String?
+  additional_attrs String?
+  subtotal         Float    @default(0)
+  created_at       DateTime @default(now())
+  order            Order    @relation(fields: [order_id], references: [id], onDelete: Cascade)
 
   @@map("order_items")
 }
 
 model OrderPayment {
-  id                      String  @id @default(uuid())
+  id                      String    @id @default(uuid())
   order_id                String
-  payment_type            String // dp_design | dp_production | full_payment
+  payment_type            String
   amount                  Float
-  required_amount         Float // Minimum amount diperlukan
+  required_amount         Float
   midtrans_order_id       String?
   midtrans_transaction_id String?
-  payment_method          String? // VA | QRIS | GOPAY | OVO | DANA
-  status                  String  @default("pending") // pending | completed | failed | cancelled
-  proof_url               String? // URL bukti pembayaran manual
-
-  created_at   DateTime  @default(now())
-  completed_at DateTime?
-
-  order Order @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  payment_method          String?
+  status                  String    @default("pending")
+  proof_url               String?
+  created_at              DateTime  @default(now())
+  completed_at            DateTime?
+  order                   Order     @relation(fields: [order_id], references: [id], onDelete: Cascade)
 
   @@map("order_payments")
 }
 
 model WorkOrder {
-  id        String @id @default(uuid())
-  order_id  String @unique
-  lk_number String @unique // Nomor Lembar Kerja
-
-  // Detail fix setelah desain ACC
-  size_run           String?
-  back_name          String? // Nama punggung
-  back_number        String? // Nomor punggung
-  additional_details String?
-
-  status               String    @default("draft") // draft | ready_for_review | approved | in_production | completed
+  id                   String    @id @default(uuid())
+  order_id             String    @unique
+  lk_number            String    @unique
+  size_run             String?
+  back_name            String?
+  back_number          String?
+  additional_details   String?
+  status               String    @default("draft")
   approved_at          DateTime?
   approved_by_reseller Boolean   @default(false)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  order Order @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  created_at           DateTime  @default(now())
+  updated_at           DateTime  @updatedAt
+  order                Order     @relation(fields: [order_id], references: [id], onDelete: Cascade)
 
   @@map("work_orders")
 }
 
 model ProductionStage {
-  id          String  @id @default(uuid())
-  name        String // Desain | Layout | Print | Roll Press | Potong Pola | Konveksi | QC | Selesai
-  order_index Int // 1-8
-  description String?
-
-  created_at DateTime @default(now())
-
+  id                  String             @id @default(uuid())
+  name                String
+  order_index         Int
+  description         String?
+  created_at          DateTime           @default(now())
   production_statuses ProductionStatus[]
 
   @@map("production_stages")
 }
 
 model ProductionStatus {
-  id       String @id @default(uuid())
-  order_id String
-  stage_id String
-
-  status           String // pending | in_progress | completed
+  id               String          @id @default(uuid())
+  order_id         String
+  stage_id         String
+  status           String
   started_at       DateTime?
   completed_at     DateTime?
-  duration_minutes Int? // Durasi pengerjaan dalam menit
-
-  notes String? // Catatan internal (tidak terlihat reseller)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  order Order           @relation(fields: [order_id], references: [id], onDelete: Cascade)
-  stage ProductionStage @relation(fields: [stage_id], references: [id])
+  duration_minutes Int?
+  notes            String?
+  created_at       DateTime        @default(now())
+  updated_at       DateTime        @updatedAt
+  order            Order           @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  stage            ProductionStage @relation(fields: [stage_id], references: [id])
 
   @@map("production_statuses")
 }
 
-// ============================================================
-// ADMIN MANAGEMENT
-// ============================================================
-
 model Admin {
-  id            String  @id @default(uuid())
-  email         String  @unique
-  password_hash String // Hash password, bukan plain text
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password_hash String
   name          String
-  role          String // super_admin | order_manager | finance_manager | production_manager
-  permissions   String? // Array of permission strings - JSON string
-  is_active     Boolean @default(true)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  role          String
+  permissions   String?
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 
   @@map("admins")
 }

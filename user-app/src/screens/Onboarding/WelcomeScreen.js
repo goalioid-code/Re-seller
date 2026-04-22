@@ -157,6 +157,15 @@ export default function WelcomeScreen({ navigation }) {
         </TouchableOpacity>
 
         {/* Terms */}
+        <TouchableOpacity
+          style={styles.loginLink}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.loginLinkText}>
+            Sudah punya akun? <Text style={styles.loginLinkHighlight}>Masuk di sini</Text>
+          </Text>
+        </TouchableOpacity>
+
         <Text style={styles.termsText}>
           Dengan lanjut, Anda setuju dengan
           <Text style={styles.termsLink}> Syarat & Ketentuan</Text>
@@ -312,9 +321,23 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.5)',
     textAlign: 'center',
     lineHeight: 18,
+    marginTop: 20,
   },
   termsLink: {
     color: '#3B82F6',
     fontWeight: '600',
+  },
+  loginLink: {
+    marginBottom: 10,
+    paddingVertical: 10,
+  },
+  loginLinkText: {
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  loginLinkHighlight: {
+    color: '#3B82F6',
+    fontWeight: '700',
   },
 });

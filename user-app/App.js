@@ -14,28 +14,87 @@ import CategoryScreen from './src/screens/Onboarding/CategoryScreen';
 import ExperienceScreen from './src/screens/Onboarding/ExperienceScreen';
 import AnalyzingScreen from './src/screens/Onboarding/AnalyzingScreen';
 import SignUpScreen from './src/screens/Onboarding/SignUpScreen';
+import LoginScreen from './src/screens/Onboarding/LoginScreen';
 
 // Screens - Main App
 import ProfileScreen from './src/screens/Profile/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
-// Placeholder for Main App Dashboard
-function MainAppScreen() {
-  const { logout } = useAuth();
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+// Auth Provider & Context
+import { AuthProvider, useAuth } from './src/context/AuthContext';
+
+// Screens - Onboarding
+import WelcomeScreen from './src/screens/Onboarding/WelcomeScreen';
+import TargetScreen from './src/screens/Onboarding/TargetScreen';
+import CategoryScreen from './src/screens/Onboarding/CategoryScreen';
+import ExperienceScreen from './src/screens/Onboarding/ExperienceScreen';
+import AnalyzingScreen from './src/screens/Onboarding/AnalyzingScreen';
+import SignUpScreen from './src/screens/Onboarding/SignUpScreen';
+import LoginScreen from './src/screens/Onboarding/LoginScreen';
+
+// Screens - Main App
+import HomeScreen from './src/screens/Home/HomeScreen';
+import OrderListScreen from './src/screens/Orders/OrderListScreen';
+import OrderDetailScreen from './src/screens/Orders/OrderDetailScreen';
+import CreateOrderScreen from './src/screens/Orders/CreateOrderScreen';
+import ProfileScreen from './src/screens/Profile/ProfileScreen';
+import PaymentMethodScreen from './src/screens/Payments/PaymentMethodScreen';
+
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+// Tab Navigator for Authenticated Users
+function MainTabs() {
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      {/* TODO: Replace with actual dashboard implementation */}
-      <View style={styles.placeholder}>
-        <Text style={styles.mainText}>📊 Dashboard Utama</Text>
-        <Text style={styles.subText}>Selamat datang! Halaman dashboard akan ditampilkan di sini.</Text>
-        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: '#1E293B',
+          borderTopWidth: 0,
+          height: 60,
+          paddingBottom: 8,
+        },
+        tabBarActiveTintColor: '#3B82F6',
+        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.4)',
+      }}
+    >
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>🏠</Text>
+        }}
+      />
+      <Tab.Screen 
+        name="Orders" 
+        component={OrderListScreen} 
+        options={{
+          tabBarLabel: 'Pesanan',
+          tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>📦</Text>
+        }}
+      />
+      <Tab.Screen 
+        name="Payments" 
+        component={PaymentHistoryScreen} 
+        options={{
+          tabBarLabel: 'Bayar',
+          tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>💳</Text>
+        }}
+      />
+      <Tab.Screen 
+        name="ProfileTab" 
+        component={ProfileScreen} 
+        options={{
+          tabBarLabel: 'Profil',
+          tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>👤</Text>
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
@@ -93,6 +152,11 @@ function RootNavigator() {
             component={WelcomeScreen}
             options={{ animationEnabled: false }}
           />
+          <Stack.Screen 
+            name="Login" 
+            component={LoginScreen}
+            options={{ animationEnabled: true }}
+          />
         </Stack.Group>
       ) : needsOnboarding ? (
         // Needs Onboarding (Authenticated but no data)
@@ -108,14 +172,13 @@ function RootNavigator() {
         <Stack.Group screenOptions={{ presentation: 'card' }}>
           <Stack.Screen 
             name="MainApp" 
-            component={MainAppScreen}
+            component={MainTabs}
             options={{ animationEnabled: false }}
           />
-          <Stack.Screen 
-            name="Profile" 
-            component={ProfileScreen}
-            options={{ animationEnabled: true }}
-          />
+          <Stack.Screen name="OrderDetail" component={OrderDetailScreen} />
+          <Stack.Screen name="CreateOrder" component={CreateOrderScreen} />
+          <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
         </Stack.Group>
       ) : (
         // Pending Approval Stack
@@ -142,6 +205,49 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#0F172A',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: '#0F172A',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholder: {
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  mainText: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFF',
+    marginBottom: 12,
+  },
+  subText: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.6)',
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  logoutButton: {
+    marginTop: 24,
+    backgroundColor: '#EF4444',
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: 10,
+  },
+  logoutButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+});
 
 const styles = StyleSheet.create({
   container: {

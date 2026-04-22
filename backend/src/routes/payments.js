@@ -6,10 +6,18 @@ const {
   getPayment,
   confirmPaymentManual,
   getPaymentsByOrder,
+  getAllPayments,
+  handleMidtransWebhook,
 } = require('../controllers/paymentController');
 
-// Semua route payment butuh JWT
+// Webhook — Tidak butuh authMiddleware (dipanggil oleh Midtrans)
+router.post('/webhook', handleMidtransWebhook);
+
+// Semua route payment lainnya butuh JWT
 router.use(authMiddleware);
+
+// GET /payments — Semua riwayat pembayaran
+router.get('/', getAllPayments);
 
 // POST /payments/initiate — Inisiasi pembayaran
 router.post('/initiate', initiatePayment);

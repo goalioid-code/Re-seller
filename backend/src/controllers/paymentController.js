@@ -1,4 +1,6 @@
 const prisma = require('../lib/prisma');
+const { v4: uuidv4 } = require('uuid');
+const { snap } = require('../lib/midtrans');
 
 /**
  * POST /payments/initiate
@@ -21,7 +23,10 @@ const initiatePayment = async (req, res) => {
 
     const order = await prisma.order.findUnique({
       where: { id: order_id },
-      include: { payments: true },
+      include: { 
+        payments: true,
+        reseller: true 
+      },
     });
 
     if (!order) {
@@ -41,21 +46,22 @@ const initiatePayment = async (req, res) => {
     // Tentukan amount berdasarkan payment_type
     let requiredAmount = 0;
     if (payment_type === 'dp_design') {
-      requiredAmount = Math.max(100000, order.total_amount * 0.1); // Min 100k atau 10%
+      requiredAmount = 100000; // Flat Rp 100k
     } else if (payment_type === 'dp_production') {
-      requiredAmount = order.total_amount * 0.5; // 50% dari total
+      // Perhitungan 50% potong DP Desain jika sudah dibayar
+      const dpDesignPaid = order.payments.some(p => p.payment_type === 'dp_design' && p.status === 'completed');
+      const baseDP = order.total_amount * 0.5;
+      requiredAmount = dpDesignPaid ? baseDP - 100000 : baseDP;
     } else if (payment_type === 'full_payment') {
-      requiredAmount = order.total_amount;
+      // Potong semua DP yang sudah dibayar
+      const totalPaid = order.payments
+        .filter(p => p.status === 'completed')
+        .reduce((sum, p) => sum + p.amount, 0);
+      requiredAmount = order.total_amount - totalPaid;
     }
 
-    // Cek apakah sudah ada pembayaran untuk tipe ini
-    const existingPayment = await prisma.orderPayment.findFirst({
-      where: {
-        order_id,
-        payment_type,
-        status: 'completed',
-      },
-    });
+    // Cek apakah sudah ada pembayaran untuk tipe ini yang sukses
+    const existingPayment = order.payments.find(p => p.payment_type === payment_type && p.status === 'completed');
 
     if (existingPayment) {
       return res.status(400).json({
@@ -64,6 +70,9 @@ const initiatePayment = async (req, res) => {
       });
     }
 
+    // Buat transaction ID unik untuk Midtrans
+    const midtransOrderId = `PAY-${Date.now()}-${uuidv4().substring(0, 8)}`;
+
     // Buat payment record
     const payment = await prisma.orderPayment.create({
       data: {
@@ -71,20 +80,162 @@ const initiatePayment = async (req, res) => {
         payment_type,
         amount: requiredAmount,
         required_amount: requiredAmount,
+        midtrans_order_id: midtransOrderId,
         status: 'pending',
       },
     });
 
+    // Generate Midtrans Snap Token
+    const transactionDetails = {
+      transaction_details: {
+        order_id: midtransOrderId,
+        gross_amount: requiredAmount,
+      },
+      customer_details: {
+        first_name: order.reseller.name,
+        email: order.reseller.email,
+        phone: order.reseller.phone,
+      },
+      item_details: [
+        {
+          id: payment_type,
+          price: requiredAmount,
+          quantity: 1,
+          name: `Pembayaran ${payment_type.replace('_', ' ').toUpperCase()} - ${order.po_number}`,
+        }
+      ],
+    };
+
+    const snapResponse = await snap.createTransaction(transactionDetails);
+
     return res.status(201).json({
       success: true,
-      message: 'Pembayaran berhasil dibuat. Pilih metode pembayaran.',
-      payment,
+      message: 'Pembayaran berhasil diinisiasi.',
+      payment: {
+        ...payment,
+        snap_token: snapResponse.token,
+        snap_redirect_url: snapResponse.redirect_url,
+      },
     });
   } catch (error) {
     console.error('[Payment] Initiate error:', error);
     return res.status(500).json({
       success: false,
       message: 'Terjadi kesalahan saat membuat pembayaran.',
+    });
+  }
+};
+
+/**
+ * POST /payments/webhook
+ * Handler untuk notifikasi dari Midtrans
+ */
+const handleMidtransWebhook = async (req, res) => {
+  try {
+    const notification = req.body;
+    
+    // Validasi signature (Opsional tapi direkomendasikan)
+    // Untuk simplifikasi di dev, kita langsung proses status
+
+    const {
+      order_id: midtransOrderId,
+      transaction_status,
+      payment_type,
+      fraud_status,
+    } = notification;
+
+    console.log(`[Midtrans Webhook] Received: ${midtransOrderId} - ${transaction_status}`);
+
+    let status = 'pending';
+    if (transaction_status === 'capture' || transaction_status === 'settlement') {
+      if (fraud_status === 'challenge') {
+        status = 'pending';
+      } else {
+        status = 'completed';
+      }
+    } else if (transaction_status === 'cancel' || transaction_status === 'deny' || transaction_status === 'expire') {
+      status = 'failed';
+    } else if (transaction_status === 'pending') {
+      status = 'pending';
+    }
+
+    // Update payment record
+    const payment = await prisma.orderPayment.findFirst({
+      where: { midtrans_order_id: midtransOrderId },
+    });
+
+    if (!payment) {
+      return res.status(404).json({ success: false, message: 'Payment record not found' });
+    }
+
+    const updatedPayment = await prisma.orderPayment.update({
+      where: { id: payment.id },
+      data: {
+        status,
+        payment_method: payment_type,
+        completed_at: status === 'completed' ? new Date() : null,
+      },
+    });
+
+    // Jika pembayaran selesai, update status order jika perlu
+    if (status === 'completed') {
+      // Contoh: Jika DP Desain selesai, status order pindah ke 'processing' atau 'design'
+      if (payment.payment_type === 'dp_design') {
+        await prisma.order.update({
+          where: { id: payment.order_id },
+          data: { status: 'design' },
+        });
+      } else if (payment.payment_type === 'dp_production') {
+        await prisma.order.update({
+          where: { id: payment.order_id },
+          data: { status: 'production' },
+        });
+      }
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('[Payment Webhook] Error:', error);
+    return res.status(500).json({ success: false });
+  }
+};
+
+/**
+ * GET /payments
+ * Mendapatkan semua riwayat pembayaran reseller
+ */
+const getAllPayments = async (req, res) => {
+  try {
+    const resellerId = req.reseller.id;
+
+    const payments = await prisma.orderPayment.findMany({
+      where: {
+        order: {
+          reseller_id: resellerId
+        }
+      },
+      include: {
+        order: {
+          select: {
+            po_number: true,
+            customer_name: true
+          }
+        }
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    });
+
+    return res.status(200).json({
+      success: true,
+      payments
+    });
+  } catch (error) {
+    console.error('[Payment] Get all error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat mengambil riwayat pembayaran.'
     });
   }
 };
@@ -231,4 +382,6 @@ module.exports = {
   getPayment,
   confirmPaymentManual,
   getPaymentsByOrder,
+  getAllPayments,
+  handleMidtransWebhook,
 };

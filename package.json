@@ -1,0 +1,28 @@
+{
+  "name": "calsub-reseller-monorepo",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "user-app",
+    "admin-web"
+  ],
+  "scripts": {
+    "backend:dev": "npm run dev --workspace=backend",
+    "mobile:dev": "npm run start --workspace=user-app",
+    "admin:dev": "npm run dev --workspace=admin-web",
+    "install:all": "npm install"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~6.1.2",
+    "expo": "^55.0.17",
+    "metro-runtime": "^0.84.3",
+    "nodemon": "^3.1.14",
+    "prisma": "^7.7.0",
+    "react-native": "^0.85.2",
+    "react-native-worklets": "^0.8.1",
+    "react-native-worklets-core": "^1.6.3"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.2"
+  }
+}
