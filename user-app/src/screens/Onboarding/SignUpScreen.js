@@ -16,8 +16,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ProgressBar from '../../components/ProgressBar';
 import { supabase } from '../../config/supabase';
 
+import { useAuth } from '../../context/AuthContext';
+
 export default function SignUpScreen({ navigation, route }) {
   const { onboardingData } = route.params;
+  const { updateProfile } = useAuth();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
@@ -45,17 +48,24 @@ export default function SignUpScreen({ navigation, route }) {
 
     setLoading(true);
 
-    // Simulate auth & saving preferences
-    setTimeout(() => {
+    try {
+      await updateProfile({
+        name,
+        phone,
+        address,
+        onboarding_data: onboardingData,
+      });
+
       setLoading(false);
-      
-      // Tampilkan Modal Custom Success
       showCustomModal(
         'success', 
         'Selamat Bergabung!', 
         `Akun ${name} berhasil disiapkan. Bersiaplah melesatkan omset penjualan pertamamu sekarang!`
       );
-    }, 1500);
+    } catch (error) {
+      setLoading(false);
+      showCustomModal('error', 'Gagal Menyimpan Data', error.message || 'Terjadi kesalahan saat menyimpan data.');
+    }
   };
 
   const handleModalOk = () => {

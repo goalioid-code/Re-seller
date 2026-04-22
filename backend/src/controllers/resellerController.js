@@ -6,7 +6,7 @@ const prisma = require('../lib/prisma');
  */
 const updateProfile = async (req, res) => {
   try {
-    const { name, phone, address, fcm_token } = req.body;
+    const { name, phone, address, fcm_token, onboarding_data } = req.body;
 
     const reseller = await prisma.reseller.update({
       where: { id: req.reseller.id },
@@ -15,6 +15,7 @@ const updateProfile = async (req, res) => {
         ...(phone && { phone }),
         ...(address && { address }),
         ...(fcm_token && { fcm_token }),
+        ...(onboarding_data && { onboarding_data }),
       },
       include: { tier: true },
     });

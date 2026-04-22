@@ -165,4 +165,215 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = { googleAuth, getMe };
+/**
+ * POST /dev-auth/login
+ * Login tanpa Google OAuth - untuk development/testing
+ * Body: { email, password (optional) }
+ */
+const devLogin = async (req, res) => {
+  try {
+    if (process.env.NODE_ENV !== 'development') {
+      return res.status(403).json({
+        success: false,
+        message: 'Dev auth hanya tersedia di mode development.',
+      });
+    }
+
+    const { email, name = 'Dev User', onboarding_data = null } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email wajib diisi.',
+      });
+    }
+
+    // Cari atau buat reseller
+    let reseller = await prisma.reseller.findFirst({
+      where: { email },
+      include: { tier: true },
+    });
+
+    const isNewUser = !reseller;
+
+    if (!reseller) {
+      reseller = await prisma.reseller.create({
+        data: {
+          google_id: `dev_${email}`,
+          email,
+          name,
+          status: 'active', // Dev: langsung active
+          onboarding_data: onboarding_data || null,
+        },
+        include: { tier: true },
+      });
+    } else if (onboarding_data) {
+      // Update onboarding data jika ada
+      reseller = await prisma.reseller.update({
+        where: { id: reseller.id },
+        data: { onboarding_data },
+        include: { tier: true },
+      });
+    }
+
+    // Buat JWT token
+    const token = jwt.sign(
+      {
+        id: reseller.id,
+        google_id: reseller.google_id,
+        email: reseller.email,
+        full_name: reseller.name,
+        status: reseller.status,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+
+    return res.status(200).json({
+      success: true,
+      is_new_user: isNewUser,
+      token,
+      reseller: {
+        id: reseller.id,
+        email: reseller.email,
+        full_name: reseller.name,
+        phone: reseller.phone,
+        address: reseller.address,
+        status: reseller.status,
+        tier: reseller.tier,
+        onboarding_data: reseller.onboarding_data,
+      },
+    });
+  } catch (error) {
+    console.error('[Dev Auth] Login error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat login development.',
+    });
+  }
+};
+
+/**
+ * POST /dev-auth/register
+ * Daftar akun development dengan email dan nama
+ * Body: { email, name, phone, address, onboarding_data }
+ */
+const devRegister = async (req, res) => {
+  try {
+    if (process.env.NODE_ENV !== 'development') {
+      return res.status(403).json({
+        success: false,
+        message: 'Dev auth hanya tersedia di mode development.',
+      });
+    }
+
+    const { email, name, phone = null, address = null, onboarding_data = null } = req.body;
+
+    if (!email || !name) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email dan nama harus diisi.',
+      });
+    }
+
+    // Check if email sudah ada
+    const exists = await prisma.reseller.findUnique({
+      where: { email },
+    });
+
+    if (exists) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email sudah terdaftar.',
+      });
+    }
+
+    // Buat reseller baru
+    const reseller = await prisma.reseller.create({
+      data: {
+        google_id: `dev_${email}`,
+        email,
+        name,
+        phone,
+        address,
+        status: 'active', // Dev: langsung active
+        onboarding_data: onboarding_data || null,
+      },
+      include: { tier: true },
+    });
+
+    // Buat JWT token
+    const token = jwt.sign(
+      {
+        id: reseller.id,
+        google_id: reseller.google_id,
+        email: reseller.email,
+        full_name: reseller.name,
+        status: reseller.status,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: 'Akun development berhasil dibuat.',
+      token,
+      reseller: {
+        id: reseller.id,
+        email: reseller.email,
+        full_name: reseller.name,
+        phone: reseller.phone,
+        address: reseller.address,
+        status: reseller.status,
+        tier: reseller.tier,
+        onboarding_data: reseller.onboarding_data,
+      },
+    });
+  } catch (error) {
+    console.error('[Dev Auth] Register error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat registrasi development.',
+    });
+  }
+};
+
+/**
+ * GET /dev-auth/users
+ * List semua dev users (untuk testing)
+ */
+const devListUsers = async (req, res) => {
+  try {
+    if (process.env.NODE_ENV !== 'development') {
+      return res.status(403).json({
+        success: false,
+        message: 'Dev auth hanya tersedia di mode development.',
+      });
+    }
+
+    const users = await prisma.reseller.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        status: true,
+        created_at: true,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      users,
+      total: users.length,
+    });
+  } catch (error) {
+    console.error('[Dev Auth] List users error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat mengambil daftar users.',
+    });
+  }
+};
+
+module.exports = { googleAuth, getMe, devLogin, devRegister, devListUsers };

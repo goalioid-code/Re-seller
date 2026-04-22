@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, ActivityIndicator, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as WebBrowser from 'expo-web-browser';
-import * as AuthSession from 'expo-auth-session';
+import * as Google from 'expo-auth-session/providers/google';
 import { useAuth } from '../../context/AuthContext';
 
 const { width, height } = Dimensions.get('window');
@@ -14,24 +14,14 @@ export default function WelcomeScreen({ navigation }) {
   const { login, loading } = useAuth();
   const [errorMessage, setErrorMessage] = useState(null);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const redirectUri = AuthSession.makeRedirectUri({ useProxy: true });
-  const discovery = {
-    authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-  };
-  const [request, response, promptAsync] = AuthSession.useAuthRequest(
-    {
-      clientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
-      scopes: ['openid', 'profile', 'email'],
-      responseType: AuthSession.ResponseType.IdToken,
-      redirectUri,
-      usePKCE: false,
-      extraParams: {
-        prompt: 'select_account',
-        nonce: 'calsub_nonce',
-      },
-    },
-    discovery
-  );
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID || process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+    webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+    scopes: ['openid', 'profile', 'email'],
+    selectAccount: true,
+    responseType: 'id_token',
+  });
 
   useEffect(() => {
     Animated.parallel([
@@ -97,7 +87,7 @@ export default function WelcomeScreen({ navigation }) {
     try {
       setErrorMessage(null);
       setGoogleLoading(true);
-      await promptAsync({ useProxy: true });
+      await promptAsync();
     } catch (err) {
       setGoogleLoading(false);
       const errorMsg = err.message || 'Gagal membuka login Google.';

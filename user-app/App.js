@@ -62,7 +62,12 @@ function PendingApprovalScreen() {
 // Root Navigator - Conditional based on auth state
 function RootNavigator() {
   const { isLoggedIn, loading, user } = useAuth();
+  
+  // User is considered approved if status is active
   const isApproved = user?.status === 'active';
+  
+  // A new user needs onboarding if they haven't filled out onboarding_data
+  const needsOnboarding = isLoggedIn && (!user?.onboarding_data || Object.keys(user.onboarding_data).length === 0);
 
   if (loading) {
     return (
@@ -80,62 +85,45 @@ function RootNavigator() {
         cardStyle: { backgroundColor: '#0F172A' }
       }}
     >
-      {isLoggedIn ? (
-        // Authenticated Stack
-        <Stack.Group screenOptions={{ presentation: 'card' }}>
-          {isApproved ? (
-            <>
-              <Stack.Screen 
-                name="MainApp" 
-                component={MainAppScreen}
-                options={{ animationEnabled: false }}
-              />
-              <Stack.Screen 
-                name="Profile" 
-                component={ProfileScreen}
-                options={{ animationEnabled: true }}
-              />
-            </>
-          ) : (
-            <Stack.Screen
-              name="PendingApproval"
-              component={PendingApprovalScreen}
-              options={{ animationEnabled: false }}
-            />
-          )}
-        </Stack.Group>
-      ) : (
-        // Unauthenticated Stack - Onboarding Flow
+      {!isLoggedIn ? (
+        // Unauthenticated Stack
         <Stack.Group screenOptions={{ presentation: 'card' }}>
           <Stack.Screen 
             name="Welcome" 
             component={WelcomeScreen}
             options={{ animationEnabled: false }}
           />
+        </Stack.Group>
+      ) : needsOnboarding ? (
+        // Needs Onboarding (Authenticated but no data)
+        <Stack.Group screenOptions={{ presentation: 'card' }}>
+          <Stack.Screen name="Target" component={TargetScreen} />
+          <Stack.Screen name="Category" component={CategoryScreen} />
+          <Stack.Screen name="Experience" component={ExperienceScreen} />
+          <Stack.Screen name="Analyzing" component={AnalyzingScreen} />
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+        </Stack.Group>
+      ) : isApproved ? (
+        // Fully Authenticated Stack
+        <Stack.Group screenOptions={{ presentation: 'card' }}>
           <Stack.Screen 
-            name="Target" 
-            component={TargetScreen}
-            options={{ animationEnabled: true }}
+            name="MainApp" 
+            component={MainAppScreen}
+            options={{ animationEnabled: false }}
           />
           <Stack.Screen 
-            name="Category" 
-            component={CategoryScreen}
+            name="Profile" 
+            component={ProfileScreen}
             options={{ animationEnabled: true }}
           />
-          <Stack.Screen 
-            name="Experience" 
-            component={ExperienceScreen}
-            options={{ animationEnabled: true }}
-          />
-          <Stack.Screen 
-            name="Analyzing" 
-            component={AnalyzingScreen}
-            options={{ animationEnabled: true }}
-          />
-          <Stack.Screen 
-            name="SignUp" 
-            component={SignUpScreen}
-            options={{ animationEnabled: true }}
+        </Stack.Group>
+      ) : (
+        // Pending Approval Stack
+        <Stack.Group screenOptions={{ presentation: 'card' }}>
+          <Stack.Screen
+            name="PendingApproval"
+            component={PendingApprovalScreen}
+            options={{ animationEnabled: false }}
           />
         </Stack.Group>
       )}

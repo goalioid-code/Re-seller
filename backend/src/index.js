@@ -3,10 +3,13 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./routes/auth');
+const devAuthRoutes = require('./routes/dev-auth');
+const adminRoutes = require('./routes/admin');
 const resellerRoutes = require('./routes/resellers');
 const orderRoutes = require('./routes/orders');
 const paymentRoutes = require('./routes/payments');
 const productionRoutes = require('./routes/production');
+const erpSyncRoutes = require('./routes/erp-sync');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +29,15 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 // ============================================================
 app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes); // Admin management endpoints
+app.use('/erp-sync', erpSyncRoutes); // ERP sync endpoints (no auth needed for testing)
+
+// Development only routes
+if (process.env.NODE_ENV === 'development') {
+  app.use('/dev-auth', devAuthRoutes);
+  console.log('[Server] ℹ️  Dev auth routes aktif (NODE_ENV=development)');
+}
+
 app.use('/resellers', resellerRoutes);
 app.use('/orders', orderRoutes);
 app.use('/payments', paymentRoutes);
