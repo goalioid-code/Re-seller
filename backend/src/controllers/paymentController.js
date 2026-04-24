@@ -85,28 +85,62 @@ const initiatePayment = async (req, res) => {
       },
     });
 
+    if (!process.env.MIDTRANS_SERVER_KEY || !process.env.MIDTRANS_CLIENT_KEY) {
+      return res.status(503).json({
+        success: false,
+        message: 'Pembayaran belum dikonfigurasi: isi MIDTRANS_SERVER_KEY & MIDTRANS_CLIENT_KEY di .env',
+      });
+    }
+
+    // Midtrans minta jumlah bulat; phone tidak boleh null untuk beberapa metode
+    const gross = Math.round(Number(requiredAmount)) || 0;
+    if (gross < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Nilai pembayaran tidak valid.',
+      });
+    }
+
+    const firstName = (order.reseller.name && String(order.reseller.name).trim().slice(0, 50)) || 'Reseller';
+    const phone = String(order.reseller.phone || '08100000000').replace(/\D/g, '').slice(0, 15) || '08100000000';
+
     // Generate Midtrans Snap Token
     const transactionDetails = {
       transaction_details: {
         order_id: midtransOrderId,
-        gross_amount: requiredAmount,
+        gross_amount: gross,
       },
       customer_details: {
-        first_name: order.reseller.name,
-        email: order.reseller.email,
-        phone: order.reseller.phone,
+        first_name: firstName,
+        email: order.reseller.email || 'noreply@local.invalid',
+        phone,
       },
       item_details: [
         {
           id: payment_type,
-          price: requiredAmount,
+          price: gross,
           quantity: 1,
-          name: `Pembayaran ${payment_type.replace('_', ' ').toUpperCase()} - ${order.po_number}`,
-        }
+          name: `Pembayaran ${payment_type.replace('_', ' ').toUpperCase()} - ${order.po_number}`.slice(0, 50),
+        },
       ],
     };
 
     const snapResponse = await snap.createTransaction(transactionDetails);
+    const tokenSnap = snapResponse?.token;
+    const isProd = process.env.MIDTRANS_IS_PRODUCTION === 'true';
+    const snapBase = isProd
+      ? 'https://app.midtrans.com/snap/v2/vtweb'
+      : 'https://app.sandbox.midtrans.com/snap/v2/vtweb';
+    const redirect =
+      snapResponse?.redirect_url ||
+      snapResponse?.redirectUrl ||
+      (tokenSnap ? `${snapBase}/${tokenSnap}` : null);
+    if (!redirect) {
+      return res.status(502).json({
+        success: false,
+        message: 'Respons Midtrans tidak berisi token/URL redirect.',
+      });
+    }
 
     return res.status(201).json({
       success: true,
@@ -114,14 +148,21 @@ const initiatePayment = async (req, res) => {
       payment: {
         ...payment,
         snap_token: snapResponse.token,
-        snap_redirect_url: snapResponse.redirect_url,
+        snap_redirect_url: redirect,
       },
     });
   } catch (error) {
+    const msg =
+      (error && error.message) ||
+      (error && error.ApiResponse) ||
+      String(error);
     console.error('[Payment] Initiate error:', error);
     return res.status(500).json({
       success: false,
-      message: 'Terjadi kesalahan saat membuat pembayaran.',
+      message:
+        process.env.NODE_ENV === 'development'
+          ? `Midtrans: ${msg}`
+          : 'Terjadi kesalahan saat membuat pembayaran. Periksa kunci Midtrans dan jaringan.',
     });
   }
 };

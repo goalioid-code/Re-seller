@@ -8,10 +8,18 @@ const { v4: uuidv4 } = require('uuid');
  */
 const uploadFile = async (req, res) => {
   try {
+    if (!process.env.R2_ENDPOINT || !process.env.R2_ACCESS_KEY_ID || !process.env.R2_SECRET_ACCESS_KEY) {
+      return res.status(503).json({
+        success: false,
+        message:
+          'Storage R2 belum dikonfigurasi. Isi R2_ENDPOINT, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_PUBLIC_URL di .env (lihat contoh di dokumentasi).',
+      });
+    }
+
     if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: 'Tidak ada file yang diunggah.',
+        message: 'Tidak ada file yang diunggah. Pastikan field form bernama "file" (multipart).',
       });
     }
 

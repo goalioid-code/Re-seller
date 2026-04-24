@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
 import tw from 'twrnc';
-import { Bell, Package, TrendingUp, Users } from 'lucide-react-native';
+import { Bell, Package, TrendingUp, CreditCard } from 'lucide-react-native';
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = () => {
@@ -46,11 +48,29 @@ export default function HomeScreen() {
         </View>
 
         {/* Sync Info (placeholder for superapps_data.tasks) */}
-        <View style={tw`bg-blue-600/10 p-5 rounded-3xl border border-blue-500/20 mb-8`}>
+        <View style={tw`bg-blue-600/10 p-5 rounded-3xl border border-blue-500/20 mb-4`}>
           <Text style={tw`text-blue-400 font-bold mb-2`}>ℹ️ Sinkronisasi ERP Aktif</Text>
           <Text style={tw`text-gray-400 text-sm leading-5`}>
             Data pesanan disinkronkan secara real-time dari skema superapps_data. Segera cek dashboard master untuk detail LK.
           </Text>
+        </View>
+
+        <View style={tw`flex-row gap-3 mb-8`}>
+          <TouchableOpacity
+            style={tw`flex-1 bg-blue-600/90 py-4 rounded-2xl items-center`}
+            onPress={() => router.push('/order/create' as any)}
+            activeOpacity={0.9}
+          >
+            <Text style={tw`text-white font-extrabold`}>+ Buat order</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={tw`flex-1 bg-[#1E293B] border border-gray-800 py-4 rounded-2xl items-center flex-row justify-center`}
+            onPress={() => router.push('/payment/history' as any)}
+            activeOpacity={0.9}
+          >
+            <CreditCard size={20} color="#3B82F6" style={tw`mr-2`} />
+            <Text style={tw`text-white font-bold`}>Pembayaran</Text>
+          </TouchableOpacity>
         </View>
 
         <Text style={tw`text-white text-lg font-bold mb-4`}>Aktivitas Terbaru</Text>

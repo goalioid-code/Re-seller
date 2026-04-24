@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { adminApiClient } from '../utils/apiClient';
 
 export const AdminAuthContext = createContext({});
 

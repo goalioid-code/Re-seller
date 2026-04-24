@@ -404,13 +404,24 @@ const requestWhatsAppOTP = async (req, res) => {
     const message = `Kode OTP CALSUB Anda adalah: *${otp}*. Kode ini berlaku selama 5 menit. Jangan bagikan kode ini kepada siapapun.`;
     await sendWhatsApp(formattedPhone, message);
 
-    return res.status(200).json({
+    const responsePayload = {
       success: true,
       message: 'Kode OTP telah dikirim ke WhatsApp Anda.',
-    });
+    };
+
+    // Development helper: return OTP in response for local testing.
+    if (process.env.NODE_ENV === 'development') {
+      responsePayload.dev_otp = otp;
+    }
+
+    return res.status(200).json(responsePayload);
   } catch (error) {
     console.error('[Auth] WA Request error:', error);
-    return res.status(500).json({ success: false, message: 'Gagal mengirim OTP.' });
+    const devMessage =
+      process.env.NODE_ENV === 'development'
+        ? (error && error.message) || 'Gagal mengirim OTP.'
+        : 'Gagal mengirim OTP.';
+    return res.status(500).json({ success: false, message: devMessage });
   }
 };
 
@@ -420,7 +431,7 @@ const requestWhatsAppOTP = async (req, res) => {
  */
 const verifyWhatsAppOTP = async (req, res) => {
   try {
-    const { phone, otp } = req.body;
+    const { phone, otp, full_name, email } = req.body;
     if (!phone || !otp) {
       return res.status(400).json({ success: false, message: 'Nomor WhatsApp dan OTP wajib diisi.' });
     }
@@ -436,29 +447,47 @@ const verifyWhatsAppOTP = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Kode OTP salah atau sudah kadaluarsa.' });
     }
 
-    // OTP Benar -> Hapus dari Redis
-    await redis.del(`otp:wa:${formattedPhone}`);
-
-    // Cari atau buat reseller berdasarkan nomor HP
+    // Cari user by phone
     let reseller = await prisma.reseller.findFirst({
       where: { phone: formattedPhone },
     });
 
     const isNewUser = !reseller;
 
+    // User baru: wajib isi nama + email dulu
+    if (!reseller && (!full_name || !email)) {
+      return res.status(200).json({
+        success: true,
+        needs_profile: true,
+        message: 'Lengkapi nama dan email untuk menyelesaikan pendaftaran.',
+      });
+    }
+
     if (!reseller) {
-      // Untuk register via WA, kita buat dummy email atau biarkan kosong jika schema membolehkan
-      // Tapi schema biasanya minta email @unique. Kita buat email dummy phone@calsub.com
+      const normalizedEmail = String(email).trim().toLowerCase();
+      const existingEmail = await prisma.reseller.findUnique({
+        where: { email: normalizedEmail },
+      });
+      if (existingEmail) {
+        return res.status(400).json({
+          success: false,
+          message: 'Email sudah terdaftar. Gunakan email lain.',
+        });
+      }
+
       reseller = await prisma.reseller.create({
         data: {
           google_id: `wa_${formattedPhone}`,
-          email: `${formattedPhone}@wa.calsub.com`,
-          name: `User WA ${formattedPhone.slice(-4)}`,
+          email: normalizedEmail,
+          name: String(full_name).trim(),
           phone: formattedPhone,
           status: 'pending', // Baru daftar via WA tetap pending
         },
       });
     }
+
+    // OTP Benar dan flow selesai -> Hapus OTP
+    await redis.del(`otp:wa:${formattedPhone}`);
 
     // Buat JWT token
     const token = jwt.sign(

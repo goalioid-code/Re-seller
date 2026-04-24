@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../lib/supabase';
+import { fetchWithTimeout, getApiBaseUrl } from '../lib/api';
 
 interface User {
   id: string;
@@ -20,7 +21,11 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (idToken: string, onboardingData?: any) => Promise<any>;
-  whatsappLogin: (phone: string, otp: string) => Promise<any>;
+  whatsappLogin: (
+    phone: string,
+    otp: string,
+    profileData?: { full_name: string; email: string } | null
+  ) => Promise<any>;
   logout: () => Promise<void>;
   devLogin: (email: string) => Promise<any>;
   devRegister: (userData: any) => Promise<any>;
@@ -41,6 +46,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     bootstrapAsync();
   }, []);
 
+  const fetchResellerFromToken = async (bearer: string) => {
+    const apiUrl = getApiBaseUrl();
+    const response = await fetchWithTimeout(`${apiUrl}/auth/me`, {
+      headers: { Authorization: `Bearer ${bearer}` },
+    });
+    const data = await response.json();
+    if (response.ok && data.success && data.reseller) {
+      return data.reseller;
+    }
+    return null;
+  };
+
   const bootstrapAsync = async () => {
     try {
       const savedToken = await AsyncStorage.getItem('jwtToken');
@@ -49,6 +66,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (savedToken && savedUser) {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
+        // Sinkronkan status/role ke server (hindari stale `pending` di device).
+        const fresh = await fetchResellerFromToken(savedToken);
+        if (fresh) {
+          setUser(fresh);
+          await AsyncStorage.setItem('userData', JSON.stringify(fresh));
+        }
       }
     } catch (e) {
       console.error('[Auth] Bootstrap error:', e);
@@ -62,8 +85,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
 
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/auth/google`, {
+      const apiUrl = getApiBaseUrl();
+      const response = await fetchWithTimeout(`${apiUrl}/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -93,22 +116,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const whatsappLogin = async (phone: string, otp: string) => {
+  const whatsappLogin = async (
+    phone: string,
+    otp: string,
+    profileData: { full_name: string; email: string } | null = null
+  ) => {
     try {
       setLoading(true);
       setError(null);
 
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/auth/whatsapp/verify`, {
+      const apiUrl = getApiBaseUrl();
+      const response = await fetchWithTimeout(`${apiUrl}/auth/whatsapp/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, otp }),
+        body: JSON.stringify({ phone, otp, ...profileData }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.message || 'Verifikasi gagal');
+      }
+
+      if (data.needs_profile) {
+        return data;
       }
 
       await AsyncStorage.setItem('jwtToken', data.token);
@@ -131,8 +162,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
 
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/dev-auth/login`, {
+      const apiUrl = getApiBaseUrl();
+      const response = await fetchWithTimeout(`${apiUrl}/dev-auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -164,8 +195,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
 
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/dev-auth/register`, {
+      const apiUrl = getApiBaseUrl();
+      const response = await fetchWithTimeout(`${apiUrl}/dev-auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
@@ -209,8 +240,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateProfile = async (profileData: any) => {
     try {
       setLoading(true);
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/resellers/profile`, {
+      const apiUrl = getApiBaseUrl();
+      const response = await fetchWithTimeout(`${apiUrl}/resellers/profile`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -234,8 +265,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const getMe = async () => {
     if (!token) return;
     try {
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiUrl}/auth/me`, {
+      const apiUrl = getApiBaseUrl();
+      const response = await fetchWithTimeout(`${apiUrl}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

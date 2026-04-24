@@ -1,46 +1,72 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import './App.css'
 import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext'
 import Login from './screens/Login'
+import ResellersModule from './modules/ResellersModule'
+import OrdersModule from './modules/OrdersModule'
+import ProductionModule from './modules/ProductionModule'
+import CommissionsModule from './modules/CommissionsModule'
+
+const MODULES = [
+  { key: 'resellers', label: 'Reseller', icon: '👥' },
+  { key: 'orders', label: 'Orders', icon: '📦' },
+  { key: 'production', label: 'Produksi', icon: '🏭' },
+  { key: 'commissions', label: 'Komisi', icon: '💰' },
+]
 
 function Dashboard() {
   const { admin, logout } = useAdminAuth()
+  const [activeModule, setActiveModule] = useState('resellers')
+
+  const moduleTitle = useMemo(
+    () => MODULES.find((m) => m.key === activeModule)?.label ?? 'Dashboard',
+    [activeModule]
+  )
 
   return (
-    <div className="dashboard-layout">
-      <section id="center">
-        <div className="hero">
-          <h1>🚀 CALSUB Reseller</h1>
-          <p className="subtitle">Admin Dashboard Portal</p>
+    <div className="admin-shell">
+      <aside className="sidebar">
+        <div>
+          <h1 className="brand-title">CALSUB Admin</h1>
+          <p className="brand-subtitle">Portal manajemen operasional</p>
         </div>
-        <div className="card">
-          <h2>Selamat Datang, {admin?.name}!</h2>
-          <p>
-            Ini adalah portal internal tim CALSUB untuk mengelola reseller, pesanan, dan produksi.
-          </p>
-          <div className="status-grid">
-            <div className="status-item">
-              <strong>Role Anda:</strong>
-              <span className="badge success">{admin?.role}</span>
-            </div>
-            <button onClick={logout} className="logout-button">Logout</button>
-          </div>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
+        <nav className="menu-list">
+          {MODULES.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              className={`menu-item ${activeModule === item.key ? 'active' : ''}`}
+              onClick={() => setActiveModule(item.key)}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </nav>
 
-      <section id="next-steps">
-        <div id="docs">
-          <h2>Modul Admin (Sprint 5)</h2>
-          <div className="modules-grid">
-            <div className="module-card">👥 Reseller</div>
-            <div className="module-card">📦 Orders</div>
-            <div className="module-card">🏭 Produksi</div>
-            <div className="module-card">💰 Komisi</div>
-          </div>
+        <div className="sidebar-footer">
+          <p>{admin?.name}</p>
+          <small>{admin?.role}</small>
+          <button type="button" onClick={logout} className="logout-button">
+            Logout
+          </button>
         </div>
-      </section>
+      </aside>
+
+      <main className="content">
+        <header className="content-header">
+          <div>
+            <h2>{moduleTitle}</h2>
+            <p>Kelola modul {moduleTitle.toLowerCase()} dari panel admin.</p>
+          </div>
+        </header>
+
+        {activeModule === 'resellers' && <ResellersModule />}
+        {activeModule === 'orders' && <OrdersModule />}
+        {activeModule === 'production' && <ProductionModule />}
+        {activeModule === 'commissions' && <CommissionsModule />}
+      </main>
     </div>
   )
 }

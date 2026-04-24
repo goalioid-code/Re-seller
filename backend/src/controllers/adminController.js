@@ -304,6 +304,137 @@ const rejectReseller = async (req, res) => {
 };
 
 /**
+ * PUT /admin/resellers/:id/deactivate
+ * Ubah status reseller active -> inactive
+ */
+const deactivateReseller = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const reseller = await prisma.reseller.findUnique({ where: { id } });
+
+    if (!reseller) {
+      return res.status(404).json({
+        success: false,
+        message: 'Reseller tidak ditemukan.',
+      });
+    }
+
+    if (reseller.status !== 'active') {
+      return res.status(400).json({
+        success: false,
+        message: 'Hanya reseller dengan status active yang bisa di-deactivate.',
+      });
+    }
+
+    const updated = await prisma.reseller.update({
+      where: { id },
+      data: { status: 'inactive' },
+      include: { tier: true },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `Reseller ${updated.name} berhasil di-deactivate.`,
+      reseller: updated,
+    });
+  } catch (error) {
+    console.error('[Admin] Deactivate reseller error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat deactivate reseller.',
+    });
+  }
+};
+
+/**
+ * PUT /admin/resellers/:id/reactivate
+ * Ubah status reseller inactive -> active
+ */
+const reactivateReseller = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const reseller = await prisma.reseller.findUnique({ where: { id } });
+
+    if (!reseller) {
+      return res.status(404).json({
+        success: false,
+        message: 'Reseller tidak ditemukan.',
+      });
+    }
+
+    if (reseller.status !== 'inactive') {
+      return res.status(400).json({
+        success: false,
+        message: 'Hanya reseller dengan status inactive yang bisa di-reactivate.',
+      });
+    }
+
+    const updated = await prisma.reseller.update({
+      where: { id },
+      data: { status: 'active' },
+      include: { tier: true },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `Reseller ${updated.name} berhasil di-reactivate.`,
+      reseller: updated,
+    });
+  } catch (error) {
+    console.error('[Admin] Reactivate reseller error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat reactivate reseller.',
+    });
+  }
+};
+
+/**
+ * DELETE /admin/resellers/:id
+ * Hapus reseller jika tidak punya data transaksi terkait
+ */
+const deleteReseller = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const reseller = await prisma.reseller.findUnique({ where: { id } });
+
+    if (!reseller) {
+      return res.status(404).json({
+        success: false,
+        message: 'Reseller tidak ditemukan.',
+      });
+    }
+
+    const [orderCount, commissionCount, pointCount] = await Promise.all([
+      prisma.order.count({ where: { reseller_id: id } }),
+      prisma.commission.count({ where: { reseller_id: id } }),
+      prisma.point.count({ where: { reseller_id: id } }),
+    ]);
+
+    if (orderCount > 0 || commissionCount > 0 || pointCount > 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          'Reseller tidak bisa dihapus karena sudah memiliki data transaksi. Gunakan deactivate untuk menonaktifkan akun.',
+      });
+    }
+
+    await prisma.reseller.delete({ where: { id } });
+
+    return res.status(200).json({
+      success: true,
+      message: `Reseller ${reseller.name} berhasil dihapus.`,
+    });
+  } catch (error) {
+    console.error('[Admin] Delete reseller error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat menghapus reseller.',
+    });
+  }
+};
+
+/**
  * PUT /admin/resellers/:id/tier
  * Update tier komisi reseller
  */
@@ -359,5 +490,8 @@ module.exports = {
   getResellerDetail,
   approveReseller,
   rejectReseller,
+  deactivateReseller,
+  reactivateReseller,
+  deleteReseller,
   updateResellerTier,
 };

@@ -15,7 +15,7 @@ const sendWhatsApp = async (target, message) => {
       return { status: true, message: 'Simulation success' };
     }
 
-    const response = await fetch('https://api.foonte.com/send', {
+    const response = await fetch('https://api.fonnte.com/send', {
       method: 'POST',
       headers: {
         'Authorization': token,
@@ -28,6 +28,10 @@ const sendWhatsApp = async (target, message) => {
     });
 
     const data = await response.json();
+    if (!response.ok || data?.status === false || data?.Status === false) {
+      const reason = data?.reason || data?.message || `HTTP ${response.status}`;
+      throw new Error(`Fonnte error: ${reason}`);
+    }
     return data;
   } catch (error) {
     console.error('[Foonte] Error:', error);

@@ -7,6 +7,9 @@ const {
   getResellerDetail,
   approveReseller,
   rejectReseller,
+  deactivateReseller,
+  reactivateReseller,
+  deleteReseller,
   updateResellerTier,
 } = require('../controllers/adminController');
 
@@ -72,6 +75,24 @@ router.put('/resellers/:id/approve', approveReseller);
  * }
  */
 router.put('/resellers/:id/reject', rejectReseller);
+
+/**
+ * PUT /admin/resellers/:id/deactivate
+ * Nonaktifkan reseller active menjadi inactive
+ */
+router.put('/resellers/:id/deactivate', deactivateReseller);
+
+/**
+ * PUT /admin/resellers/:id/reactivate
+ * Aktifkan kembali reseller inactive menjadi active
+ */
+router.put('/resellers/:id/reactivate', reactivateReseller);
+
+/**
+ * DELETE /admin/resellers/:id
+ * Hapus reseller jika tidak punya transaksi terkait
+ */
+router.delete('/resellers/:id', deleteReseller);
 
 /**
  * PUT /admin/resellers/:id/tier

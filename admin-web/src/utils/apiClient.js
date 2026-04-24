@@ -116,8 +116,11 @@ export const adminResellerAPI = {
     return adminApiClient.get(`/admin/resellers${query ? '?' + query : ''}`);
   },
   getResellerDetail: (resellerId) => adminApiClient.get(`/admin/resellers/${resellerId}`),
-  approveReseller: (resellerId) => adminApiClient.post(`/admin/resellers/${resellerId}/approve`),
-  rejectReseller: (resellerId, reason) => adminApiClient.post(`/admin/resellers/${resellerId}/reject`, { reason }),
+  approveReseller: (resellerId) => adminApiClient.put(`/admin/resellers/${resellerId}/approve`, {}),
+  rejectReseller: (resellerId, reason) => adminApiClient.put(`/admin/resellers/${resellerId}/reject`, { reason }),
+  deactivateReseller: (resellerId) => adminApiClient.put(`/admin/resellers/${resellerId}/deactivate`, {}),
+  reactivateReseller: (resellerId) => adminApiClient.put(`/admin/resellers/${resellerId}/reactivate`, {}),
+  deleteReseller: (resellerId) => adminApiClient.delete(`/admin/resellers/${resellerId}`),
   setResellerTier: (resellerId, tierId) => adminApiClient.put(`/admin/resellers/${resellerId}/tier`, { tier_id: tierId }),
 };
 

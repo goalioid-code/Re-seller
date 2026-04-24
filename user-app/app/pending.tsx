@@ -1,11 +1,19 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text } from 'react-native';
 import { useAuth } from '../src/contexts/AuthContext';
 import tw from 'twrnc';
-import { Clock, LogOut } from 'lucide-react-native';
+import { Clock } from 'lucide-react-native';
 
 export default function PendingScreen() {
-  const { logout } = useAuth();
+  const { getMe } = useAuth();
+
+  useEffect(() => {
+    void getMe();
+    const timer = setInterval(() => {
+      void getMe();
+    }, 10000);
+    return () => clearInterval(timer);
+  }, [getMe]);
 
   return (
     <View style={tw`flex-1 bg-[#0F172A] p-6 justify-center items-center`}>
@@ -19,14 +27,9 @@ export default function PendingScreen() {
           Akun Anda sedang dalam proses peninjauan oleh tim admin CALSUB. 
           Silakan cek kembali secara berkala.
         </Text>
-
-        <TouchableOpacity 
-          style={tw`bg-red-600/10 h-14 px-8 rounded-xl items-center justify-center flex-row border border-red-500/20 w-full`}
-          onPress={logout}
-        >
-          <LogOut size={20} color="#EF4444" />
-          <Text style={tw`text-red-500 font-bold text-lg ml-3`}>Logout</Text>
-        </TouchableOpacity>
+        <Text style={tw`text-gray-500 text-xs text-center`}>
+          Status dicek otomatis setiap beberapa detik.
+        </Text>
       </View>
     </View>
   );

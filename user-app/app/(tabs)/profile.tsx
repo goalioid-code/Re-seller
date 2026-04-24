@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
 import tw from 'twrnc';
-import { LogOut, User as UserIcon, Shield, ChevronRight } from 'lucide-react-native';
+import { LogOut, User as UserIcon, Shield, ChevronRight, CreditCard } from 'lucide-react-native';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
+  const router = useRouter();
 
   return (
     <View style={tw`flex-1 bg-[#0F172A] p-6 pt-12`}>
@@ -22,6 +24,16 @@ export default function ProfileScreen() {
       </View>
 
       <View style={tw`bg-[#1E293B] rounded-3xl border border-gray-800 overflow-hidden mb-8`}>
+        <TouchableOpacity
+          style={tw`flex-row items-center justify-between p-5 border-b border-gray-800`}
+          onPress={() => router.push('/payment/history' as any)}
+        >
+          <View style={tw`flex-row items-center`}>
+            <CreditCard size={20} color="#3B82F6" />
+            <Text style={tw`text-white ml-3`}>Riwayat Pembayaran</Text>
+          </View>
+          <ChevronRight size={20} color="#475569" />
+        </TouchableOpacity>
         <TouchableOpacity style={tw`flex-row items-center justify-between p-5 border-b border-gray-800`}>
           <View style={tw`flex-row items-center`}>
             <Shield size={20} color="#94A3B8" />
