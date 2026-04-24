@@ -22,11 +22,32 @@ const getProductionStatus = async (req, res) => {
     }
 
     // Get all production statuses with stage info
-    const productionStatuses = await prisma.productionStatus.findMany({
+    let productionStatuses = await prisma.productionStatus.findMany({
       where: { order_id },
       include: { stage: true },
       orderBy: { stage: { order_index: 'asc' } },
     });
+
+    // Jika belum ada status sama sekali, buat timeline default dari master stage.
+    if (productionStatuses.length === 0) {
+      const stages = await prisma.productionStage.findMany({
+        orderBy: { order_index: 'asc' },
+      });
+      const created = await Promise.all(
+        stages.map((stage) =>
+          prisma.productionStatus.create({
+            data: {
+              order_id,
+              stage_id: stage.id,
+              status: stage.order_index === 1 ? 'in_progress' : 'pending',
+              started_at: stage.order_index === 1 ? new Date() : null,
+            },
+            include: { stage: true },
+          }),
+        ),
+      );
+      productionStatuses = created.sort((a, b) => a.stage.order_index - b.stage.order_index);
+    }
 
     // Format response
     const timeline = productionStatuses.map((ps) => ({
@@ -47,14 +68,20 @@ const getProductionStatus = async (req, res) => {
 
     // Get current stage (first incomplete or last completed)
     const currentStage = timeline.find((t) => t.status !== 'completed') || timeline[timeline.length - 1];
+    const lastUpdated =
+      timeline
+        .map((t) => new Date(t.updated_at || 0).getTime())
+        .filter((ts) => Number.isFinite(ts) && ts > 0)
+        .sort((a, b) => b - a)[0] || Date.now();
 
     return res.status(200).json({
       success: true,
       production: {
         order_id,
+        order_status: order.status,
         current_stage: currentStage,
         timeline,
-        last_updated: new Date(),
+        last_updated: new Date(lastUpdated),
       },
     });
   } catch (error) {

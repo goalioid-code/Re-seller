@@ -6,6 +6,7 @@ const {
   getERPProductionStatus,
   getERPProductionStages,
   syncERPToDatabase,
+  syncRealtimeProductionFromERP,
 } = require('../controllers/erpController');
 
 // ============================================================
@@ -59,5 +60,11 @@ router.get('/production-status/:order_id', getERPProductionStatus);
  * - type: 'all' (default), 'stages'
  */
 router.post('/sync-to-db', syncERPToDatabase);
+
+/**
+ * POST /erp-sync/sync-production
+ * Sinkronisasi realtime status produksi ERP -> DB lokal.
+ */
+router.post('/sync-production', syncRealtimeProductionFromERP);
 
 module.exports = router;

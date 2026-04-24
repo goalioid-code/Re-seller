@@ -187,6 +187,24 @@ export default function OrderDetailScreen() {
         </View>
 
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Tracking & Lembar Kerja</Text>
+          <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.secondaryAction}
+              onPress={() => router.push(`/order/production/${order.id}` as any)}
+            >
+              <Text style={styles.secondaryActionText}>Lihat Tracking Produksi</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.secondaryAction}
+              onPress={() => router.push(`/order/work-order/${order.id}` as any)}
+            >
+              <Text style={styles.secondaryActionText}>Review & Approve Lembar Kerja</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Pembayaran</Text>
           <View style={styles.card}>
             <View style={styles.totalRow}>
@@ -357,5 +375,17 @@ const styles = StyleSheet.create({
   },
   uploadButtonText: { color: '#FFF', fontSize: 16, fontWeight: '700' },
   buttonDisabled: { opacity: 0.7 },
+  secondaryAction: {
+    backgroundColor: '#334155',
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    marginBottom: 10,
+  },
+  secondaryActionText: {
+    color: '#E2E8F0',
+    fontWeight: '700',
+    textAlign: 'center',
+  },
   errorText: { color: '#EF4444', fontSize: 16 },
 });

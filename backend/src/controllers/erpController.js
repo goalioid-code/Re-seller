@@ -187,10 +187,110 @@ const syncERPToDatabase = async (req, res) => {
   }
 };
 
+/**
+ * POST /erp-sync/sync-production
+ * Sinkronisasi status produksi terbaru dari ERP ke DB lokal (Supabase/Postgres).
+ * - Cocokkan data ERP ke local order via po_number.
+ * - Upsert timeline status per stage.
+ */
+const syncRealtimeProductionFromERP = async (req, res) => {
+  try {
+    const erpOrders = await erpService.getOrdersFromERP();
+    const erpStages = await erpService.getProductionStagesFromERP();
+
+    // Pastikan master stage tersedia
+    for (const stage of erpStages) {
+      await prisma.productionStage.upsert({
+        where: { id: stage.id },
+        update: {
+          name: stage.name,
+          order_index: stage.order_index,
+          description: stage.description,
+        },
+        create: {
+          id: stage.id,
+          name: stage.name,
+          order_index: stage.order_index,
+          description: stage.description,
+        },
+      });
+    }
+
+    const localOrders = await prisma.order.findMany({
+      select: { id: true, po_number: true },
+    });
+    const localByPo = new Map(localOrders.map((o) => [o.po_number, o]));
+
+    let syncedOrders = 0;
+    let syncedStatuses = 0;
+    let skipped = 0;
+
+    for (const erpOrder of erpOrders) {
+      const localOrder = localByPo.get(erpOrder.po_number);
+      if (!localOrder) {
+        skipped += 1;
+        continue;
+      }
+
+      const erpTimeline = await erpService.getProductionStatusFromERP(erpOrder.id);
+      for (const row of erpTimeline) {
+        const existing = await prisma.productionStatus.findFirst({
+          where: {
+            order_id: localOrder.id,
+            stage_id: row.stage_id,
+          },
+          select: { id: true },
+        });
+        if (existing) {
+          await prisma.productionStatus.update({
+            where: { id: existing.id },
+            data: {
+              status: row.status,
+              started_at: row.started_at ? new Date(row.started_at) : null,
+              completed_at: row.completed_at ? new Date(row.completed_at) : null,
+              duration_minutes: row.duration_minutes ?? null,
+            },
+          });
+        } else {
+          await prisma.productionStatus.create({
+            data: {
+              order_id: localOrder.id,
+              stage_id: row.stage_id,
+              status: row.status,
+              started_at: row.started_at ? new Date(row.started_at) : null,
+              completed_at: row.completed_at ? new Date(row.completed_at) : null,
+              duration_minutes: row.duration_minutes ?? null,
+            },
+          });
+        }
+        syncedStatuses += 1;
+      }
+      syncedOrders += 1;
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Sinkronisasi realtime produksi selesai.',
+      summary: {
+        synced_orders: syncedOrders,
+        synced_statuses: syncedStatuses,
+        skipped_orders_without_local_po_match: skipped,
+      },
+    });
+  } catch (error) {
+    console.error('[ERP Sync] Realtime production sync error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat sinkronisasi realtime produksi.',
+    });
+  }
+};
+
 module.exports = {
   getERPOrders,
   getERPWorkOrders,
   getERPProductionStatus,
   getERPProductionStages,
   syncERPToDatabase,
+  syncRealtimeProductionFromERP,
 };
