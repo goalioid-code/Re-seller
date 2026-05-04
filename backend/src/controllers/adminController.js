@@ -5,6 +5,7 @@
 
 const prisma = require('../lib/prisma');
 const jwt = require('jsonwebtoken');
+const { finalizeOrderFromProduction } = require('../services/orderCompletionService');
 
 /**
  * POST /admin/auth/login
@@ -483,6 +484,153 @@ const updateResellerTier = async (req, res) => {
   }
 };
 
+/**
+ * PATCH /admin/production/:order_id/stages/:stage_id
+ * Update status tahapan produksi oleh admin.
+ */
+const updateProductionStage = async (req, res) => {
+  try {
+    const { order_id, stage_id } = req.params;
+    const { status, notes } = req.body || {};
+    const allowedStatuses = ['pending', 'in_progress', 'completed'];
+
+    if (!status || !allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Status tidak valid. Gunakan: pending, in_progress, atau completed.',
+      });
+    }
+
+    const order = await prisma.order.findUnique({
+      where: { id: order_id },
+      select: { id: true, status: true },
+    });
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order tidak ditemukan.',
+      });
+    }
+
+    const targetStage = await prisma.productionStage.findUnique({
+      where: { id: stage_id },
+      select: { id: true, order_index: true, name: true },
+    });
+    if (!targetStage) {
+      return res.status(404).json({
+        success: false,
+        message: 'Stage tidak ditemukan.',
+      });
+    }
+
+    // Pastikan status tiap stage untuk order ini tersedia.
+    const allStages = await prisma.productionStage.findMany({
+      orderBy: { order_index: 'asc' },
+      select: { id: true, order_index: true },
+    });
+    const existingStatuses = await prisma.productionStatus.findMany({
+      where: { order_id },
+      select: { id: true, stage_id: true },
+    });
+    const existingStageIds = new Set(existingStatuses.map((s) => s.stage_id));
+    const missingStages = allStages.filter((s) => !existingStageIds.has(s.id));
+    if (missingStages.length > 0) {
+      await Promise.all(
+        missingStages.map((stage) =>
+          prisma.productionStatus.create({
+            data: {
+              order_id,
+              stage_id: stage.id,
+              status: 'pending',
+            },
+          }),
+        ),
+      );
+    }
+
+    const stageStatuses = await prisma.productionStatus.findMany({
+      where: { order_id },
+      include: {
+        stage: {
+          select: { id: true, order_index: true, name: true },
+        },
+      },
+      orderBy: { stage: { order_index: 'asc' } },
+    });
+    const targetStatus = stageStatuses.find((s) => s.stage_id === stage_id);
+
+    if (!targetStatus) {
+      return res.status(404).json({
+        success: false,
+        message: 'Status stage untuk order ini tidak ditemukan.',
+      });
+    }
+
+    // Validasi transisi: stage sebelumnya harus completed untuk mulai/selesai.
+    if (targetStage.order_index > 1 && (status === 'in_progress' || status === 'completed')) {
+      const previousStage = stageStatuses.find((s) => s.stage.order_index === targetStage.order_index - 1);
+      if (!previousStage || previousStage.status !== 'completed') {
+        return res.status(400).json({
+          success: false,
+          message: 'Tidak bisa lanjut. Stage sebelumnya belum selesai.',
+        });
+      }
+    }
+
+    const now = new Date();
+    const updateData = {
+      status,
+      notes: typeof notes === 'string' ? notes : targetStatus.notes,
+    };
+
+    if (status === 'pending') {
+      updateData.started_at = null;
+      updateData.completed_at = null;
+      updateData.duration_minutes = null;
+    } else if (status === 'in_progress') {
+      updateData.started_at = targetStatus.started_at || now;
+      updateData.completed_at = null;
+      updateData.duration_minutes = null;
+    } else if (status === 'completed') {
+      const startedAt = targetStatus.started_at || now;
+      const completedAt = now;
+      updateData.started_at = startedAt;
+      updateData.completed_at = completedAt;
+      updateData.duration_minutes = Math.max(1, Math.round((completedAt - startedAt) / 60000));
+    }
+
+    const updatedStage = await prisma.productionStatus.update({
+      where: { id: targetStatus.id },
+      data: updateData,
+      include: {
+        stage: {
+          select: { id: true, name: true, order_index: true },
+        },
+      },
+    });
+
+    let order_completion = null;
+    try {
+      order_completion = await finalizeOrderFromProduction(order_id);
+    } catch (e) {
+      console.error('[Admin] finalizeOrderFromProduction:', e);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Stage ${updatedStage.stage.name} berhasil diupdate menjadi ${status}.`,
+      production_stage: updatedStage,
+      order_completion,
+    });
+  } catch (error) {
+    console.error('[Admin] Update production stage error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat mengupdate stage produksi.',
+    });
+  }
+};
+
 module.exports = {
   adminLogin,
   getPendingResellers,
@@ -494,4 +642,5 @@ module.exports = {
   reactivateReseller,
   deleteReseller,
   updateResellerTier,
+  updateProductionStage,
 };

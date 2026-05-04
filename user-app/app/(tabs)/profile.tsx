@@ -3,11 +3,24 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
 import tw from 'twrnc';
-import { LogOut, User as UserIcon, Shield, ChevronRight, CreditCard } from 'lucide-react-native';
+import {
+  LogOut,
+  User as UserIcon,
+  Shield,
+  ChevronRight,
+  CreditCard,
+  Wallet,
+  Star,
+  Gift,
+} from 'lucide-react-native';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const handleLogout = async () => {
+    await logout();
+    router.replace('/(auth)/login');
+  };
 
   return (
     <View style={tw`flex-1 bg-[#0F172A] p-6 pt-12`}>
@@ -34,6 +47,36 @@ export default function ProfileScreen() {
           </View>
           <ChevronRight size={20} color="#475569" />
         </TouchableOpacity>
+        <TouchableOpacity
+          style={tw`flex-row items-center justify-between p-5 border-b border-gray-800`}
+          onPress={() => router.push('/commission' as any)}
+        >
+          <View style={tw`flex-row items-center`}>
+            <Wallet size={20} color="#10B981" />
+            <Text style={tw`text-white ml-3`}>Komisi & pencairan</Text>
+          </View>
+          <ChevronRight size={20} color="#475569" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={tw`flex-row items-center justify-between p-5 border-b border-gray-800`}
+          onPress={() => router.push('/points' as any)}
+        >
+          <View style={tw`flex-row items-center`}>
+            <Star size={20} color="#FBBF24" />
+            <Text style={tw`text-white ml-3`}>Poin</Text>
+          </View>
+          <ChevronRight size={20} color="#475569" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={tw`flex-row items-center justify-between p-5 border-b border-gray-800`}
+          onPress={() => router.push('/rewards/catalog' as any)}
+        >
+          <View style={tw`flex-row items-center`}>
+            <Gift size={20} color="#A78BFA" />
+            <Text style={tw`text-white ml-3`}>Katalog hadiah</Text>
+          </View>
+          <ChevronRight size={20} color="#475569" />
+        </TouchableOpacity>
         <TouchableOpacity style={tw`flex-row items-center justify-between p-5 border-b border-gray-800`}>
           <View style={tw`flex-row items-center`}>
             <Shield size={20} color="#94A3B8" />
@@ -44,7 +87,7 @@ export default function ProfileScreen() {
         
         <TouchableOpacity 
           style={tw`flex-row items-center justify-between p-5`}
-          onPress={logout}
+          onPress={handleLogout}
         >
           <View style={tw`flex-row items-center`}>
             <LogOut size={20} color="#EF4444" />

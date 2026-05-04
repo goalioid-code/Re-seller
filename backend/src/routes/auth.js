@@ -4,7 +4,9 @@ const {
   googleAuth, 
   getMe, 
   requestWhatsAppOTP, 
-  verifyWhatsAppOTP 
+  verifyWhatsAppOTP,
+  requestEmailOTP,
+  verifyEmailOTP,
 } = require('../controllers/authController');
 const authMiddleware = require('../middlewares/auth');
 
@@ -14,6 +16,10 @@ router.post('/google', googleAuth);
 // WhatsApp OTP
 router.post('/whatsapp/request', requestWhatsAppOTP);
 router.post('/whatsapp/verify', verifyWhatsAppOTP);
+
+// Email OTP
+router.post('/email/request', requestEmailOTP);
+router.post('/email/verify', verifyEmailOTP);
 
 // GET /auth/me — Ambil data reseller yang sedang login (protected)
 router.get('/me', authMiddleware, getMe);

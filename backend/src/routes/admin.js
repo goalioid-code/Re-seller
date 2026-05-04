@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const adminAuthMiddleware = require('../middlewares/adminAuth');
 const {
   adminLogin,
   getPendingResellers,
@@ -11,6 +12,7 @@ const {
   reactivateReseller,
   deleteReseller,
   updateResellerTier,
+  updateProductionStage,
 } = require('../controllers/adminController');
 
 // ============================================================
@@ -29,6 +31,9 @@ const {
  * }
  */
 router.post('/auth/login', adminLogin);
+
+// Semua route admin (kecuali login) butuh JWT admin
+router.use(adminAuthMiddleware);
 
 /**
  * GET /admin/resellers/pending
@@ -104,5 +109,17 @@ router.delete('/resellers/:id', deleteReseller);
  * }
  */
 router.put('/resellers/:id/tier', updateResellerTier);
+
+/**
+ * PATCH /admin/production/:order_id/stages/:stage_id
+ * Update status tahapan produksi oleh admin.
+ *
+ * Request body:
+ * {
+ *   "status": "pending|in_progress|completed",
+ *   "notes": "catatan optional"
+ * }
+ */
+router.patch('/production/:order_id/stages/:stage_id', updateProductionStage);
 
 module.exports = router;

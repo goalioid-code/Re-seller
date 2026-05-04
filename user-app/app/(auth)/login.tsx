@@ -13,10 +13,11 @@ export default function LoginScreen() {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [fullName, setFullName] = useState('');
+  const [authChannel, setAuthChannel] = useState<'whatsapp' | 'email'>('email');
   const [stage, setStage] = useState<'login' | 'otp' | 'profile'>('login');
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState('');
-  const { devLogin, whatsappLogin, isLoggedIn, user, loading: authLoading } = useAuth();
+  const { devLogin, whatsappLogin, emailLogin, isLoggedIn, user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -42,21 +43,29 @@ export default function LoginScreen() {
   };
 
   const handleRequestOTP = async () => {
-    if (!phone) return Alert.alert('Error', 'Masukkan nomor WhatsApp');
+    if (authChannel === 'whatsapp' && !phone) return Alert.alert('Error', 'Masukkan nomor WhatsApp');
+    if (authChannel === 'email' && !email) return Alert.alert('Error', 'Masukkan email');
     setFeedback('');
     setLoading(true);
     try {
       const apiUrl = getApiBaseUrl();
-      const response = await fetchWithTimeout(`${apiUrl}/auth/whatsapp/request`, {
+      const response = await fetchWithTimeout(
+        `${apiUrl}/auth/${authChannel === 'whatsapp' ? 'whatsapp' : 'email'}/request`,
+        {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone }),
-      });
+        body: JSON.stringify(authChannel === 'whatsapp' ? { phone } : { email: email.trim().toLowerCase() }),
+        }
+      );
       const data = await response.json().catch(() => ({}));
       if (data.success) {
         setStage('otp');
-        setFeedback('OTP berhasil diminta. Silakan cek WhatsApp Anda.');
-        Alert.alert('Sukses', 'OTP telah dikirim ke WhatsApp Anda.');
+        setFeedback(
+          authChannel === 'whatsapp'
+            ? 'OTP berhasil diminta. Silakan cek WhatsApp Anda.'
+            : 'OTP berhasil diminta. Silakan cek email Anda.'
+        );
+        Alert.alert('Sukses', authChannel === 'whatsapp' ? 'OTP telah dikirim ke WhatsApp Anda.' : 'OTP telah dikirim ke email Anda.');
       } else {
         throw new Error(data.message || `Request OTP gagal (${response.status})`);
       }
@@ -77,10 +86,17 @@ export default function LoginScreen() {
     setFeedback('');
     setLoading(true);
     try {
-      const result = await whatsappLogin(phone, otp);
+      const result =
+        authChannel === 'whatsapp'
+          ? await whatsappLogin(phone, otp)
+          : await emailLogin(email.trim().toLowerCase(), otp);
       if (result?.needs_profile) {
         setStage('profile');
-        setFeedback('Nomor baru terdeteksi. Lengkapi nama dan email untuk daftar.');
+        setFeedback(
+          authChannel === 'whatsapp'
+            ? 'Nomor baru terdeteksi. Lengkapi nama dan email untuk daftar.'
+            : 'Email baru terdeteksi. Lengkapi nama untuk daftar.'
+        );
         return;
       }
       setFeedback('Verifikasi OTP berhasil.');
@@ -95,14 +111,20 @@ export default function LoginScreen() {
 
   const handleCompleteProfile = async () => {
     if (!fullName.trim()) return Alert.alert('Error', 'Masukkan nama lengkap');
-    if (!email.trim()) return Alert.alert('Error', 'Masukkan email');
+    if (authChannel === 'whatsapp' && !email.trim()) return Alert.alert('Error', 'Masukkan email');
     setFeedback('');
     setLoading(true);
     try {
-      await whatsappLogin(phone, otp, {
-        full_name: fullName.trim(),
-        email: email.trim().toLowerCase(),
-      });
+      if (authChannel === 'whatsapp') {
+        await whatsappLogin(phone, otp, {
+          full_name: fullName.trim(),
+          email: email.trim().toLowerCase(),
+        });
+      } else {
+        await emailLogin(email.trim().toLowerCase(), otp, {
+          full_name: fullName.trim(),
+        });
+      }
       setFeedback('Pendaftaran berhasil. Menunggu verifikasi admin.');
       Alert.alert('Sukses', 'Akun berhasil dibuat. Silakan tunggu verifikasi admin.');
     } catch (err: any) {
@@ -124,35 +146,63 @@ export default function LoginScreen() {
         {stage === 'login' ? (
           <>
             <Text style={tw`text-white text-xl font-bold mb-6`}>Login Ke Akun</Text>
-            
+
+            <View style={tw`flex-row mb-4 bg-[#0F172A] p-1 rounded-xl border border-gray-700`}>
+              <TouchableOpacity
+                style={tw`${authChannel === 'email' ? 'bg-blue-600' : 'bg-transparent'} flex-1 h-10 rounded-lg items-center justify-center flex-row`}
+                onPress={() => setAuthChannel('email')}
+              >
+                <Mail size={16} color="white" />
+                <Text style={tw`text-white ml-2 font-semibold`}>Email</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={tw`${authChannel === 'whatsapp' ? 'bg-green-600' : 'bg-transparent'} flex-1 h-10 rounded-lg items-center justify-center flex-row`}
+                onPress={() => setAuthChannel('whatsapp')}
+              >
+                <MessageCircle size={16} color="white" />
+                <Text style={tw`text-white ml-2 font-semibold`}>WhatsApp</Text>
+              </TouchableOpacity>
+            </View>
+
             <View style={tw`mb-4`}>
-              <Text style={tw`text-gray-400 mb-2 ml-1`}>Nomor WhatsApp</Text>
+              <Text style={tw`text-gray-400 mb-2 ml-1`}>{authChannel === 'whatsapp' ? 'Nomor WhatsApp' : 'Email'}</Text>
               <View style={tw`flex-row items-center bg-[#0F172A] rounded-xl px-4 border border-gray-700`}>
-                <MessageCircle size={20} color="#94A3B8" />
+                {authChannel === 'whatsapp' ? (
+                  <MessageCircle size={20} color="#94A3B8" />
+                ) : (
+                  <Mail size={20} color="#94A3B8" />
+                )}
                 <TextInput
                   style={tw`flex-1 h-12 text-white ml-3`}
-                  placeholder="0812xxxx"
+                  placeholder={authChannel === 'whatsapp' ? '0812xxxx' : 'email@contoh.com'}
                   placeholderTextColor="#475569"
-                  value={phone}
-                  onChangeText={setPhone}
-                  keyboardType="phone-pad"
+                  value={authChannel === 'whatsapp' ? phone : email}
+                  onChangeText={authChannel === 'whatsapp' ? setPhone : setEmail}
+                  keyboardType={authChannel === 'whatsapp' ? 'phone-pad' : 'email-address'}
+                  autoCapitalize="none"
                 />
               </View>
             </View>
 
             <TouchableOpacity 
-              style={tw`bg-green-600 h-14 rounded-xl items-center justify-center flex-row mb-6`}
+              style={tw`${authChannel === 'whatsapp' ? 'bg-green-600' : 'bg-blue-600'} h-14 rounded-xl items-center justify-center flex-row mb-6`}
               onPress={handleRequestOTP}
               disabled={loading}
             >
               {loading ? <ActivityIndicator color="white" /> : (
                 <>
-                  <Image
-                    source={require('../../assets/wa-logo.webp')}
-                    style={tw`w-13 h-13 mr-3`}
-                    resizeMode="contain"
-                  />
-                  <Text style={tw`text-white font-bold text-lg mr-2`}>Kirim OTP via WhatsApp</Text>
+                  {authChannel === 'whatsapp' ? (
+                    <Image
+                      source={require('../../assets/wa-logo.webp')}
+                      style={tw`w-13 h-13 mr-3`}
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <Mail size={20} color="white" />
+                  )}
+                  <Text style={tw`text-white font-bold text-lg mr-2`}>
+                    {authChannel === 'whatsapp' ? 'Kirim OTP via WhatsApp' : 'Kirim OTP via Email'}
+                  </Text>
                 </>
               )}
             </TouchableOpacity>
@@ -190,7 +240,9 @@ export default function LoginScreen() {
         ) : stage === 'otp' ? (
           <>
             <Text style={tw`text-white text-xl font-bold mb-2`}>Verifikasi OTP</Text>
-            <Text style={tw`text-gray-400 mb-8`}>Masukkan 6 digit kode yang dikirim ke {phone}</Text>
+            <Text style={tw`text-gray-400 mb-8`}>
+              Masukkan 6 digit kode yang dikirim ke {authChannel === 'whatsapp' ? phone : email}
+            </Text>
 
             <View style={tw`mb-8`}>
               <View style={tw`flex-row items-center bg-[#0F172A] rounded-xl px-4 border border-gray-700`}>
@@ -224,7 +276,9 @@ export default function LoginScreen() {
               onPress={() => setStage('login')}
               style={tw`items-center`}
             >
-              <Text style={tw`text-gray-400`}>Ganti nomor WhatsApp</Text>
+              <Text style={tw`text-gray-400`}>
+                {authChannel === 'whatsapp' ? 'Ganti nomor WhatsApp' : 'Ganti email'}
+              </Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -260,6 +314,7 @@ export default function LoginScreen() {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  editable={authChannel === 'whatsapp'}
                 />
               </View>
             </View>

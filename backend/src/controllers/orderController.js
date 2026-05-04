@@ -220,6 +220,13 @@ const updateOrder = async (req, res) => {
       });
     }
 
+    if (status === 'completed') {
+      return res.status(400).json({
+        success: false,
+        message: 'Status selesai ditetapkan otomatis setelah tahapan produksi selesai.',
+      });
+    }
+
     const updateData = {};
     if (design_file_url !== undefined) updateData.design_file_url = design_file_url;
     if (mockup_file_url !== undefined) updateData.mockup_file_url = mockup_file_url;

@@ -1,4 +1,5 @@
 const prisma = require('../lib/prisma');
+const pointsService = require('../services/pointsService');
 
 /**
  * PUT /resellers/profile
@@ -51,50 +52,32 @@ const getDashboard = async (req, res) => {
   try {
     const resellerId = req.reseller.id;
 
-    // Ambil data komisi (saldo total)
-    const commissions = await prisma.commission.findMany({
-      where: { reseller_id: resellerId, status: 'confirmed' },
-    });
-    const totalCommission = commissions.reduce((sum, c) => sum + c.amount, 0);
-
-    // Ambil total poin aktif (belum expired)
-    const points = await prisma.point.findMany({
-      where: {
-        reseller_id: resellerId,
-        type: 'earned',
-        OR: [
-          { expires_at: null },
-          { expires_at: { gt: new Date() } },
-        ],
-      },
-    });
-    const pointsEarned = points.reduce((sum, p) => sum + p.amount, 0);
-
-    const pointsRedeemed = await prisma.point.aggregate({
-      where: { reseller_id: resellerId, type: 'redeemed' },
-      _sum: { amount: true },
-    });
-    const totalPoints = pointsEarned + (pointsRedeemed._sum.amount || 0);
-
-    // Notifikasi poin yang akan expired dalam 30 hari
-    const thirtyDaysFromNow = new Date();
-    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-    const expiringPoints = await prisma.point.findMany({
-      where: {
-        reseller_id: resellerId,
-        type: 'earned',
-        expires_at: {
-          lte: thirtyDaysFromNow,
-          gt: new Date(),
+    const [confirmedAgg, withdrawalAgg] = await Promise.all([
+      prisma.commission.aggregate({
+        where: { reseller_id: resellerId, status: 'confirmed' },
+        _sum: { amount: true },
+      }),
+      prisma.commissionWithdrawal.aggregate({
+        where: {
+          reseller_id: resellerId,
+          status: { in: ['pending', 'approved', 'completed'] },
         },
-      },
-    });
-    const expiringPointsTotal = expiringPoints.reduce((sum, p) => sum + p.amount, 0);
+        _sum: { amount: true },
+      }),
+    ]);
+    const commissionGross = confirmedAgg._sum.amount ?? 0;
+    const commissionLocked = withdrawalAgg._sum.amount ?? 0;
+    const availableCommission = Math.max(0, Math.round((commissionGross - commissionLocked) * 100) / 100);
+
+    const totalPoints = await pointsService.getPointBalance(resellerId);
+    const expiring = await pointsService.getExpiringPointsSummary(resellerId, 30);
+    const expiringPointsTotal = expiring.total;
 
     return res.status(200).json({
       success: true,
       dashboard: {
-        total_commission: totalCommission,
+        total_commission: commissionGross,
+        available_commission: availableCommission,
         total_points: totalPoints,
         expiring_points: expiringPointsTotal,
         has_expiring_points: expiringPointsTotal > 0,

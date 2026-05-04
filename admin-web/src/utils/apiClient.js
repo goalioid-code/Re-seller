@@ -133,8 +133,14 @@ export const adminOrderAPI = {
   getOrderDetail: (orderId) => adminApiClient.get(`/admin/orders/${orderId}`),
   updateOrderStatus: (orderId, status) => adminApiClient.patch(`/admin/orders/${orderId}/status`, { status }),
   updateProductionStatus: (orderId, stageId, status) =>
-    adminApiClient.patch(`/admin/orders/${orderId}/production/${stageId}`, { status }),
+    adminApiClient.patch(`/admin/production/${orderId}/stages/${stageId}`, { status }),
   cancelOrder: (orderId, reason) => adminApiClient.post(`/admin/orders/${orderId}/cancel`, { reason }),
+};
+
+// Production API (Admin)
+export const adminProductionAPI = {
+  updateStageStatus: (orderId, stageId, payload) =>
+    adminApiClient.patch(`/admin/production/${orderId}/stages/${stageId}`, payload),
 };
 
 // Payment API (Admin)

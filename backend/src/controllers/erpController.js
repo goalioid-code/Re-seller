@@ -5,6 +5,7 @@
 
 const erpService = require('../services/erpService');
 const prisma = require('../lib/prisma');
+const { finalizeOrderFromProduction } = require('../services/orderCompletionService');
 
 /**
  * GET /erp-sync/orders
@@ -266,6 +267,11 @@ const syncRealtimeProductionFromERP = async (req, res) => {
         syncedStatuses += 1;
       }
       syncedOrders += 1;
+      try {
+        await finalizeOrderFromProduction(localOrder.id);
+      } catch (e) {
+        console.error('[ERP Sync] finalizeOrderFromProduction', localOrder.id, e);
+      }
     }
 
     return res.status(200).json({

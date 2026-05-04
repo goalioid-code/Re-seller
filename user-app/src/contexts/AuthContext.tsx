@@ -26,6 +26,11 @@ interface AuthContextType {
     otp: string,
     profileData?: { full_name: string; email: string } | null
   ) => Promise<any>;
+  emailLogin: (
+    email: string,
+    otp: string,
+    profileData?: { full_name: string; phone?: string } | null
+  ) => Promise<any>;
   logout: () => Promise<void>;
   devLogin: (email: string) => Promise<any>;
   devRegister: (userData: any) => Promise<any>;
@@ -130,6 +135,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone, otp, ...profileData }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Verifikasi gagal');
+      }
+
+      if (data.needs_profile) {
+        return data;
+      }
+
+      await AsyncStorage.setItem('jwtToken', data.token);
+      await AsyncStorage.setItem('userData', JSON.stringify(data.reseller));
+
+      setToken(data.token);
+      setUser(data.reseller);
+
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const emailLogin = async (
+    email: string,
+    otp: string,
+    profileData: { full_name: string; phone?: string } | null = null
+  ) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const apiUrl = getApiBaseUrl();
+      const response = await fetchWithTimeout(`${apiUrl}/auth/email/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp, ...profileData }),
       });
 
       const data = await response.json();
@@ -290,6 +336,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         error,
         login,
         whatsappLogin,
+        emailLogin,
         logout,
         devLogin,
         devRegister,

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const prisma = require('../lib/prisma');
 const redis = require('../lib/redis');
 const { sendWhatsApp } = require('../lib/foonte');
+const { sendEmailOTP } = require('../lib/resend');
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -513,6 +514,127 @@ const verifyWhatsAppOTP = async (req, res) => {
   }
 };
 
+/**
+ * POST /auth/email/request
+ * Request OTP via Email
+ */
+const requestEmailOTP = async (req, res) => {
+  try {
+    const rawEmail = req.body?.email;
+    const email = String(rawEmail || '').trim().toLowerCase();
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email wajib diisi.' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    await redis.set(`otp:email:${email}`, otp, 'EX', 300);
+    await sendEmailOTP(email, otp);
+
+    const responsePayload = {
+      success: true,
+      message: 'Kode OTP telah dikirim ke email Anda.',
+    };
+
+    if (process.env.NODE_ENV === 'development') {
+      responsePayload.dev_otp = otp;
+    }
+
+    return res.status(200).json(responsePayload);
+  } catch (error) {
+    console.error('[Auth] Email Request error:', error);
+    const devMessage =
+      process.env.NODE_ENV === 'development'
+        ? (error && error.message) || 'Gagal mengirim OTP email.'
+        : 'Gagal mengirim OTP email.';
+    return res.status(500).json({ success: false, message: devMessage });
+  }
+};
+
+/**
+ * POST /auth/email/verify
+ * Verifikasi OTP email dan login/register
+ */
+const verifyEmailOTP = async (req, res) => {
+  try {
+    const rawEmail = req.body?.email;
+    const email = String(rawEmail || '').trim().toLowerCase();
+    const otp = String(req.body?.otp || '').trim();
+    const fullName = String(req.body?.full_name || '').trim();
+    const rawPhone = String(req.body?.phone || '').trim();
+
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, message: 'Email dan OTP wajib diisi.' });
+    }
+
+    const savedOtp = await redis.get(`otp:email:${email}`);
+    if (!savedOtp || savedOtp !== otp) {
+      return res.status(400).json({ success: false, message: 'Kode OTP salah atau sudah kadaluarsa.' });
+    }
+
+    let reseller = await prisma.reseller.findUnique({
+      where: { email },
+    });
+
+    const isNewUser = !reseller;
+    if (!reseller && !fullName) {
+      return res.status(200).json({
+        success: true,
+        needs_profile: true,
+        message: 'Lengkapi nama untuk menyelesaikan pendaftaran.',
+      });
+    }
+
+    let phone = rawPhone || null;
+    if (phone) {
+      if (phone.startsWith('0')) phone = `62${phone.slice(1)}`;
+      if (!phone.startsWith('62')) phone = `62${phone}`;
+    }
+
+    if (!reseller) {
+      reseller = await prisma.reseller.create({
+        data: {
+          google_id: `email_${email}`,
+          email,
+          name: fullName,
+          phone,
+          status: 'pending',
+        },
+      });
+    } else if (fullName || phone) {
+      reseller = await prisma.reseller.update({
+        where: { id: reseller.id },
+        data: {
+          name: fullName || reseller.name,
+          phone: phone || reseller.phone,
+        },
+      });
+    }
+
+    await redis.del(`otp:email:${email}`);
+
+    const token = jwt.sign(
+      {
+        id: reseller.id,
+        email: reseller.email,
+        phone: reseller.phone,
+        status: reseller.status,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+
+    return res.status(200).json({
+      success: true,
+      token,
+      is_new_user: isNewUser,
+      reseller,
+    });
+  } catch (error) {
+    console.error('[Auth] Email Verify error:', error);
+    return res.status(500).json({ success: false, message: 'Terjadi kesalahan saat verifikasi email.' });
+  }
+};
+
 module.exports = {
   googleAuth,
   getMe,
@@ -521,4 +643,6 @@ module.exports = {
   devListUsers,
   requestWhatsAppOTP,
   verifyWhatsAppOTP,
+  requestEmailOTP,
+  verifyEmailOTP,
 };

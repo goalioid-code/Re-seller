@@ -142,6 +142,27 @@ export const paymentAPI = {
 export const resellerAPI = {
   updateProfile: (profileData) => apiClient.put('/resellers/profile', profileData),
   getDashboard: () => apiClient.get('/resellers/dashboard'),
+  getCommissionSummary: () => apiClient.get('/resellers/commission/summary'),
+  getCommissionHistory: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return apiClient.get(`/resellers/commission/history${q ? `?${q}` : ''}`);
+  },
+  requestCommissionWithdrawal: (body) => apiClient.post('/resellers/commission/withdrawals', body),
+  getCommissionWithdrawals: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return apiClient.get(`/resellers/commission/withdrawals${q ? `?${q}` : ''}`);
+  },
+  getPointsSummary: () => apiClient.get('/resellers/points/summary'),
+  getPointsHistory: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return apiClient.get(`/resellers/points/history${q ? `?${q}` : ''}`);
+  },
+  listRewards: () => apiClient.get('/resellers/rewards'),
+  redeemReward: (body) => apiClient.post('/resellers/rewards/redeem', body),
+  listRewardRedemptions: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return apiClient.get(`/resellers/rewards/redemptions${q ? `?${q}` : ''}`);
+  },
 };
 
 export default apiClient;
