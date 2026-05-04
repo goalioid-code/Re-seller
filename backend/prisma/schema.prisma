@@ -148,6 +148,7 @@ model Order {
   due_date            DateTime
   description         String?
   notes               String?
+  internal_notes      String?
   subtotal            Float              @default(0)
   discount            Float              @default(0)
   total_amount        Float              @default(0)
@@ -194,11 +195,20 @@ model OrderPayment {
   payment_method          String?
   status                  String    @default("pending")
   proof_url               String?
+  admin_notes             String?
   created_at              DateTime  @default(now())
   completed_at            DateTime?
   order                   Order     @relation(fields: [order_id], references: [id], onDelete: Cascade)
 
   @@map("order_payments")
+}
+
+model SystemConfig {
+  id                         String   @id @default("global")
+  min_commission_withdrawal  Float    @default(1000000)
+  updated_at                 DateTime @updatedAt
+
+  @@map("system_config")
 }
 
 model WorkOrder {

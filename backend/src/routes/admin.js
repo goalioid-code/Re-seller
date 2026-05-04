@@ -14,112 +14,97 @@ const {
   updateResellerTier,
   updateProductionStage,
 } = require('../controllers/adminController');
+const {
+  getAdminDashboard,
+  listProductionStagesAdmin,
+  listAdminOrders,
+  getAdminOrderDetail,
+  patchOrderInternalNotes,
+  listPendingPaymentsAdmin,
+  confirmPaymentAdmin,
+  rejectPaymentAdmin,
+  listWithdrawalsAdmin,
+  approveWithdrawalAdmin,
+  rejectWithdrawalAdmin,
+  listCommissionTiersAdmin,
+  updateCommissionTierAdmin,
+  listRewardsAdmin,
+  createRewardAdmin,
+  updateRewardAdmin,
+  deleteRewardAdmin,
+  listRewardRedemptionsAdmin,
+  approveRedemptionAdmin,
+  rejectRedemptionAdmin,
+  reportOrdersCsv,
+  reportResellersCsv,
+  reportFinancialCsv,
+  reportOrdersJson,
+  reportResellersJson,
+  reportFinancialJson,
+  getSystemConfig,
+  patchSystemConfig,
+  getResellerPerformanceAdmin,
+} = require('../controllers/adminOpsController');
 
-// ============================================================
-// ADMIN ROUTES
-// Endpoints untuk admin management & approval
-// ============================================================
-
-/**
- * POST /admin/auth/login
- * Admin login (development: tidak perlu password)
- * 
- * Request body:
- * {
- *   "email": "admin@calsub.com",
- *   "password": "optional-dev"
- * }
- */
 router.post('/auth/login', adminLogin);
 
-// Semua route admin (kecuali login) butuh JWT admin
 router.use(adminAuthMiddleware);
 
-/**
- * GET /admin/resellers/pending
- * Daftar reseller yang menunggu approval
- * Development only endpoint
- */
+router.get('/dashboard', getAdminDashboard);
+
 router.get('/resellers/pending', getPendingResellers);
-
-/**
- * GET /admin/resellers
- * Daftar semua reseller dengan filter
- * 
- * Query params:
- * - status: pending, active, inactive
- * - page: halaman (default 1)
- * - limit: jumlah per halaman (default 20)
- */
 router.get('/resellers', getAllResellers);
-
-/**
- * GET /admin/resellers/:id
- * Detail reseller (dengan riwayat komisi, order, poin)
- */
 router.get('/resellers/:id', getResellerDetail);
-
-/**
- * PUT /admin/resellers/:id/approve
- * Approve reseller dari pending menjadi active
- * 
- * Request body:
- * {
- *   "notes": "Approval notes (optional)"
- * }
- */
+router.get('/resellers/:id/performance', getResellerPerformanceAdmin);
 router.put('/resellers/:id/approve', approveReseller);
-
-/**
- * PUT /admin/resellers/:id/reject
- * Reject reseller dari pending menjadi inactive
- * 
- * Request body:
- * {
- *   "reason": "Alasan penolakan (optional)"
- * }
- */
 router.put('/resellers/:id/reject', rejectReseller);
-
-/**
- * PUT /admin/resellers/:id/deactivate
- * Nonaktifkan reseller active menjadi inactive
- */
 router.put('/resellers/:id/deactivate', deactivateReseller);
-
-/**
- * PUT /admin/resellers/:id/reactivate
- * Aktifkan kembali reseller inactive menjadi active
- */
 router.put('/resellers/:id/reactivate', reactivateReseller);
-
-/**
- * DELETE /admin/resellers/:id
- * Hapus reseller jika tidak punya transaksi terkait
- */
 router.delete('/resellers/:id', deleteReseller);
-
-/**
- * PUT /admin/resellers/:id/tier
- * Update tier komisi reseller
- * 
- * Request body:
- * {
- *   "tier_id": "uuid-of-tier"
- * }
- */
 router.put('/resellers/:id/tier', updateResellerTier);
 
-/**
- * PATCH /admin/production/:order_id/stages/:stage_id
- * Update status tahapan produksi oleh admin.
- *
- * Request body:
- * {
- *   "status": "pending|in_progress|completed",
- *   "notes": "catatan optional"
- * }
- */
+router.get('/orders', listAdminOrders);
+router.get('/orders/:id', getAdminOrderDetail);
+router.patch('/orders/:id/internal-notes', patchOrderInternalNotes);
+
+router.get('/production/stages', listProductionStagesAdmin);
 router.patch('/production/:order_id/stages/:stage_id', updateProductionStage);
+
+router.get('/payments/pending', listPendingPaymentsAdmin);
+router.post('/payments/:id/confirm', confirmPaymentAdmin);
+router.post('/payments/:id/reject', rejectPaymentAdmin);
+
+router.get('/withdrawals', listWithdrawalsAdmin);
+router.post('/withdrawals/:id/approve', approveWithdrawalAdmin);
+router.post('/withdrawals/:id/reject', rejectWithdrawalAdmin);
+
+router.get('/tiers', listCommissionTiersAdmin);
+router.patch('/tiers/:id', updateCommissionTierAdmin);
+
+router.get('/rewards', listRewardsAdmin);
+router.post('/rewards', createRewardAdmin);
+router.patch('/rewards/:id', updateRewardAdmin);
+router.delete('/rewards/:id', deleteRewardAdmin);
+
+router.get('/reward-redemptions', listRewardRedemptionsAdmin);
+router.post('/reward-redemptions/:id/approve', approveRedemptionAdmin);
+router.post('/reward-redemptions/:id/reject', rejectRedemptionAdmin);
+
+router.get('/reports/dashboard', getAdminDashboard);
+router.get('/reports/orders', (req, res) => {
+  if (req.query.format === 'csv') return reportOrdersCsv(req, res);
+  return reportOrdersJson(req, res);
+});
+router.get('/reports/resellers', (req, res) => {
+  if (req.query.format === 'csv') return reportResellersCsv(req, res);
+  return reportResellersJson(req, res);
+});
+router.get('/reports/financial', (req, res) => {
+  if (req.query.format === 'csv') return reportFinancialCsv(req, res);
+  return reportFinancialJson(req, res);
+});
+
+router.get('/settings', getSystemConfig);
+router.patch('/settings', patchSystemConfig);
 
 module.exports = router;

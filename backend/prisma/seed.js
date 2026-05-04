@@ -105,6 +105,13 @@ async function main() {
   });
   console.log('✅ Default admin created');
 
+  await prisma.systemConfig.upsert({
+    where: { id: 'global' },
+    update: {},
+    create: { id: 'global', min_commission_withdrawal: 1_000_000 },
+  });
+  console.log('✅ System config');
+
   console.log('✨ Database seeding completed successfully!');
 }
 

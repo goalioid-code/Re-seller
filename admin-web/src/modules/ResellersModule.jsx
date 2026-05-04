@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { adminResellerAPI } from '../utils/apiClient'
 
 const STATUS_OPTIONS = [
@@ -57,7 +58,15 @@ export default function ResellersModule() {
   }
 
   return (
-    <section className="module-card">
+    <>
+      <header className="content-header">
+        <div>
+          <h2>Reseller</h2>
+          <p>Daftar, filter status, approve / tolak pendaftaran, dan kelola akun.</p>
+        </div>
+      </header>
+
+      <section className="module-card">
       <div className="module-toolbar">
         <div className="toolbar-left">
           <label htmlFor="status-filter">Filter status</label>
@@ -89,13 +98,14 @@ export default function ResellersModule() {
               <th>Email</th>
               <th>Status</th>
               <th>Dibuat</th>
+              <th>Detail</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
             {!loading && resellers.length === 0 && (
               <tr>
-                <td colSpan={5} className="empty-cell">
+                <td colSpan={6} className="empty-cell">
                   Tidak ada data reseller.
                 </td>
               </tr>
@@ -114,6 +124,11 @@ export default function ResellersModule() {
                     <span className={`status-badge ${reseller.status}`}>{reseller.status}</span>
                   </td>
                   <td>{new Date(reseller.created_at).toLocaleDateString('id-ID')}</td>
+                  <td>
+                    <Link className="link-button" to={`/app/resellers/${reseller.id}`}>
+                      Profil
+                    </Link>
+                  </td>
                   <td>
                     <div className="actions">
                       <button
@@ -186,5 +201,6 @@ export default function ResellersModule() {
         </table>
       </div>
     </section>
+    </>
   )
 }

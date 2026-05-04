@@ -231,11 +231,17 @@ const approveReseller = async (req, res) => {
       });
     }
 
-    // Update status ke active
+    let tierId = reseller.tier_id;
+    if (!tierId) {
+      const silver = await prisma.commissionTier.findFirst({ where: { name: 'Silver' } });
+      if (silver) tierId = silver.id;
+    }
+
     const updated = await prisma.reseller.update({
       where: { id },
       data: {
         status: 'active',
+        ...(tierId ? { tier_id: tierId } : {}),
       },
       include: { tier: true },
     });

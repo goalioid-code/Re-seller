@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 
-export const AdminAuthContext = createContext({});
+export const AdminAuthContext = createContext(null);
 
 export const AdminAuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
@@ -36,7 +36,8 @@ export const AdminAuthProvider = ({ children }) => {
 
       // This will be implemented as an admin login endpoint
       // For now, using the pattern established for backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/auth/login`, {
+      const base = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${base}/admin/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -96,7 +97,7 @@ export const AdminAuthProvider = ({ children }) => {
 
 export const useAdminAuth = () => {
   const context = React.useContext(AdminAuthContext);
-  if (!context) {
+  if (context == null) {
     throw new Error('useAdminAuth must be used within AdminAuthProvider');
   }
   return context;

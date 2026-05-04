@@ -1,7 +1,19 @@
 const prisma = require('../lib/prisma');
 const pointsService = require('../services/pointsService');
 
-const MIN_WITHDRAWAL_IDR = 1_000_000;
+const MIN_WITHDRAWAL_FALLBACK = 1_000_000;
+
+async function getMinWithdrawalIdr() {
+  try {
+    const cfg = await prisma.systemConfig.findUnique({ where: { id: 'global' } });
+    if (cfg && cfg.min_commission_withdrawal != null && cfg.min_commission_withdrawal > 0) {
+      return cfg.min_commission_withdrawal;
+    }
+  } catch {
+    // tabel belum dimigrasi
+  }
+  return MIN_WITHDRAWAL_FALLBACK;
+}
 
 async function getCommissionSummary(req, res) {
   try {
@@ -33,9 +45,12 @@ async function getCommissionSummary(req, res) {
     const totalWithdrawnOrPending = withdrawalAgg._sum.amount ?? 0;
     const availableBalance = Math.max(0, Math.round((totalEarned - totalWithdrawnOrPending) * 100) / 100);
 
-    const completedOrders = await prisma.order.count({
-      where: { reseller_id: resellerId, status: 'completed' },
-    });
+    const [completedOrders, minWithdrawal] = await Promise.all([
+      prisma.order.count({
+        where: { reseller_id: resellerId, status: 'completed' },
+      }),
+      getMinWithdrawalIdr(),
+    ]);
 
     const tiersAsc = [...tiers].sort((a, b) => a.min_orders - b.min_orders);
     const currentTier = reseller?.tier || null;
@@ -89,7 +104,7 @@ async function getCommissionSummary(req, res) {
         tiers,
         completed_orders: completedOrders,
         tier_progress: tierProgress,
-        min_withdrawal: MIN_WITHDRAWAL_IDR,
+        min_withdrawal: minWithdrawal,
       },
     });
   } catch (e) {
@@ -129,12 +144,13 @@ async function requestCommissionWithdrawal(req, res) {
   try {
     const resellerId = req.reseller.id;
     const { amount, bank_name, bank_account, account_name, notes } = req.body || {};
+    const minW = await getMinWithdrawalIdr();
 
     const amt = typeof amount === 'number' ? amount : parseFloat(amount);
-    if (!amt || Number.isNaN(amt) || amt < MIN_WITHDRAWAL_IDR) {
+    if (!amt || Number.isNaN(amt) || amt < minW) {
       return res.status(400).json({
         success: false,
-        message: `Nominal minimal pencairan Rp ${MIN_WITHDRAWAL_IDR.toLocaleString('id-ID')}.`,
+        message: `Nominal minimal pencairan Rp ${minW.toLocaleString('id-ID')}.`,
       });
     }
 
