@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Verifikasi KTP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#58413f",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-primary-container": "#ff9a91",
+                        "primary-fixed": "#ffdad6",
+                        "outline": "#8c716e",
+                        "surface-container-low": "#fff0ef",
+                        "on-secondary-container": "#636262",
+                        "on-primary": "#ffffff",
+                        "on-background": "#251817",
+                        "secondary": "#5f5e5e",
+                        "tertiary-container": "#5c4300",
+                        "error": "#ba1a1a",
+                        "surface": "#fff8f7",
+                        "primary-container": "#8b1a1a",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-tertiary-container": "#dcaf4d",
+                        "surface-container": "#ffe9e6",
+                        "secondary-container": "#e2dfde",
+                        "surface-dim": "#ecd5d2",
+                        "on-surface": "#251817",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#3b2d2c",
+                        "background": "#fff8f7",
+                        "outline-variant": "#e0bfbc",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "inverse-primary": "#ffb3ac",
+                        "surface-container-highest": "#f5dddb",
+                        "on-tertiary-fixed": "#261a00",
+                        "tertiary-fixed": "#ffdea0",
+                        "tertiary": "#402e00",
+                        "surface-variant": "#f5dddb",
+                        "primary": "#690008",
+                        "surface-tint": "#ac322e",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#410003",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "surface-container-high": "#fbe3e0",
+                        "surface-bright": "#fff8f7",
+                        "inverse-on-surface": "#ffedeb",
+                        "on-secondary-fixed": "#1c1b1b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "container-margin": "20px",
+                        "lg": "24px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "button-text": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h1": ["Inter"],
+                        "subheadline": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "button-text": ["16px", { "lineHeight": "1", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h1": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "subheadline": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        .bg-maroon-gradient {
+            background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+        }
+        .glow-top {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 200px;
+            background: radial-gradient(ellipse at center, rgba(212,168,71,0.15) 0%, rgba(212,168,71,0) 70%);
+            pointer-events: none;
+        }
+        .shiba-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(212,168,71,0.2) 0%, rgba(212,168,71,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .glass-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        .upload-area {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px dashed #D4A847;
+            backdrop-filter: blur(5px);
+        }
+        .ocr-panel {
+            background: rgba(212, 168, 71, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        .gold-gradient-btn {
+            background: linear-gradient(90deg, #D4A847 0%, #E6C27A 100%);
+        }
+        .text-gold {
+            color: #D4A847;
+        }
+        .text-muted-gold {
+            color: rgba(212, 168, 71, 0.7);
+        }
+        
+        /* Hide scrollbar for clean app feel */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-maroon-gradient min-h-screen text-on-primary flex justify-center items-center font-['Inter'] relative overflow-hidden">
+<!-- Mobile Device Container (iPhone 14 Pro size max) -->
+<main class="w-full max-w-[390px] h-full min-h-screen relative flex flex-col justify-between overflow-y-auto">
+<!-- Top Gold Glow Effect -->
+<div class="glow-top"></div>
+<!-- Header Section -->
+<header class="w-full px-gutter pt-lg pb-md flex justify-between items-center z-10">
+<!-- Brand Logo Placeholder -->
+<div class="font-h1 text-[18px] font-black tracking-tight text-on-primary">
+                CALSUB.
+            </div>
+<!-- Progress Indicator -->
+<div class="flex flex-col items-end gap-xs">
+<span class="font-label-caps text-[10px] text-gold uppercase tracking-wider">85% selesai</span>
+<div class="flex gap-[2px]">
+<!-- 12 chunks filled -->
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<div class="h-1 w-2 rounded-full bg-on-tertiary-container"></div>
+<!-- 2 chunks empty -->
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<div class="flex-1 px-gutter flex flex-col gap-md pb-xl z-10">
+<!-- Hero / Mascot Area -->
+<div class="relative w-full h-[140px] flex justify-center items-center mt-sm mb-sm">
+<div class="shiba-glow"></div>
+<!-- Mascot Image -->
+<img alt="Calman Mascot" class="relative z-10 w-28 h-28 object-cover rounded-full shadow-[0_0_30px_rgba(212,168,71,0.3)] border-2 border-white/10" data-alt="A highly detailed, 3D rendered cartoon Shiba Inu dog mascot named Calman. The dog is smiling in a friendly, approachable manner and is holding a modern smartphone to take a picture. The lighting is cinematic, set against a dark maroon background with a subtle, warm gold glow radiating from behind the dog, fitting a premium, playful app aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxFOMaksQu_sX9n9gJZtzRH1POiVXginu5Gpq9bLPk0OpcsdNvS0iRonCvgdNACvHZBXnaULwTO2yv9ZRvtJbRP8FcVkHpU3R4gb12Hz6gMvjfekKRjezkHd4ORbflWuEtV7RXyqnT6l7YUgdCxy_xSPiboLiauemNYNebNGs_3g73mfIXK9T7gK5mCTYNdezuZxfmJERhRNGCwQV93v2ozY_aTFBAoarmh_vSJ-sPK419uDgvSyXWkcUIUTk_1sz_5gUS3P7w9w"/>
+</div>
+<!-- Chat Bubbles Area -->
+<div class="flex flex-col gap-sm w-full">
+<!-- Bubble 1 -->
+<div class="flex gap-sm items-end">
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/20">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A close up, stylized cartoon 3D portrait of a friendly Shiba Inu dog's face. The lighting is soft and warm, designed as a small circular avatar image for a premium digital interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2NT7Pam1x1NnV1CXUD9qw-q9NLvEnXBv1HGfnzoEWepP6TXvAYQHkswXsZyyXEexXDtGs9DuerbvvU95acapshByVBcsaXP9QKFL9e1lRXT6Nw2BhY3_fJx2p0r_Oei57S5uJ6MoJ8JCnZ2IVfFhKM7b-srC-b9cTlWSeccqv4tUV6pFJm56n4l7__gLKlQxwgNLLS6beek61NdRvlxqS4PfFZP_8xPZW8k6c1i4xpUK7kOuSB5rMf3A-y4ajMLJ_gdiT3VL5UQ"/>
+</div>
+<div class="glass-bubble rounded-2xl rounded-bl-none px-md py-sm font-subheadline text-on-primary shadow-lg max-w-[85%]">
+                        Yuk verifikasi! 📸
+                    </div>
+</div>
+<!-- Bubble 2 -->
+<div class="flex gap-sm items-end">
+<div class="w-8 h-8 shrink-0 opacity-0"></div> <!-- Spacer for alignment -->
+<div class="glass-bubble rounded-2xl rounded-bl-none px-md py-sm font-body-sm text-on-primary/90 shadow-lg max-w-[90%] leading-relaxed">
+                        Foto KTP kamu, sistem akan otomatis baca data (OCR Smart). Cuma butuh 3 detik!
+                    </div>
+</div>
+</div>
+<!-- Upload Area -->
+<button class="upload-area w-full rounded-2xl flex flex-col items-center justify-center py-xl mt-sm group transition-all active:scale-[0.98] cursor-pointer">
+<span class="material-symbols-outlined text-[48px] text-gold mb-sm group-hover:scale-110 transition-transform">
+                    photo_camera
+                </span>
+<span class="font-button-text text-on-primary text-[16px] mb-xs">
+                    Tap untuk ambil foto KTP
+                </span>
+<span class="font-body-sm text-muted-gold text-[12px] mb-md">
+                    atau pilih dari galeri
+                </span>
+<!-- Small KTP Illustration -->
+<div class="w-24 h-14 border border-on-tertiary-container/40 rounded-md relative flex items-center justify-center opacity-80">
+<div class="w-4 h-5 border border-on-tertiary-container/50 rounded-sm absolute left-2"></div>
+<div class="flex flex-col gap-1 absolute left-8 w-12">
+<div class="h-[2px] w-full bg-on-tertiary-container/30 rounded-full"></div>
+<div class="h-[2px] w-4/5 bg-on-tertiary-container/30 rounded-full"></div>
+<div class="h-[2px] w-full bg-on-tertiary-container/30 rounded-full"></div>
+</div>
+</div>
+</button>
+<!-- OCR Smart Panel -->
+<div class="ocr-panel rounded-xl p-md border border-on-tertiary-container/20 flex flex-col gap-xs mt-xs">
+<div class="flex items-center gap-xs text-gold font-button-text text-[13px]">
+<span>✨</span>
+<span>OCR Smart aktif</span>
+</div>
+<p class="font-body-sm text-[12px] text-on-primary/80 leading-relaxed">
+                    Sistem otomatis baca: NIK, Nama, Tempat/Tgl Lahir, Alamat. Cek hasil setelah foto diupload.
+                </p>
+</div>
+<!-- Tips Row -->
+<div class="flex justify-between items-center px-sm mt-xs">
+<div class="flex flex-col items-center gap-[2px]">
+<span class="text-[16px]">💡</span>
+<span class="font-body-sm text-[11px] text-muted-gold">Pencahayaan cukup</span>
+</div>
+<div class="flex flex-col items-center gap-[2px]">
+<span class="text-[16px]">📐</span>
+<span class="font-body-sm text-[11px] text-muted-gold">Sejajar bingkai</span>
+</div>
+<div class="flex flex-col items-center gap-[2px]">
+<span class="text-[16px]">🚫</span>
+<span class="font-body-sm text-[11px] text-muted-gold">Tidak buram</span>
+</div>
+</div>
+</div>
+<!-- Bottom Actions Area -->
+<div class="w-full px-gutter pb-xl z-10 flex flex-col gap-md">
+<!-- CTA Button -->
+<button class="gold-gradient-btn w-full py-[16px] rounded-full flex justify-center items-center gap-sm shadow-[0_4px_20px_rgba(212,168,71,0.2)] active:scale-95 transition-transform">
+<span class="font-button-text text-on-background text-[16px] font-bold">Buka Kamera</span>
+<span class="material-symbols-outlined text-on-background text-[20px]">
+                    camera_alt
+                </span>
+</button>
+<!-- Footer Links -->
+<div class="flex justify-between items-center px-sm mt-xs">
+<button class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-on-primary/50 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">volume_off</span>
+</button>
+<button class="font-button-text text-[14px] text-on-primary/30 cursor-not-allowed">
+                    Lewati <span class="material-symbols-outlined text-[14px] align-middle ml-xs">arrow_downward</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>

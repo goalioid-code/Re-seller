@@ -5,6 +5,7 @@ import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
 import { ArrowLeft, Wallet } from 'lucide-react-native';
+import { stitchColors } from '../../src/theme/stitch';
 
 type Summary = {
   available_balance: number;
@@ -74,33 +75,33 @@ export default function CommissionScreen() {
   if (loading) {
     return (
       <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-[#0F172A]`}>
+    <View style={[tw`flex-1`, { backgroundColor: stitchColors.pageSoft }]}>
       <View style={tw`flex-row items-center px-5 pt-12 pb-4`}>
         <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-2`}>
-          <ArrowLeft color="#fff" size={24} />
+          <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
-        <Text style={tw`text-white text-xl font-bold`}>Komisi</Text>
+        <Text style={[tw`text-xl font-bold`, { color: stitchColors.primary }]}>Komisi</Text>
       </View>
 
       <ScrollView
         style={tw`flex-1 px-5`}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor="#3B82F6" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor={stitchColors.primary} />}
       >
-        <View style={tw`bg-[#1E293B] rounded-3xl border border-gray-800 p-5 mb-4`}>
+        <View style={[tw`rounded-3xl p-5 mb-4`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1 }]}>
           <View style={tw`flex-row items-center mb-2`}>
-            <Wallet size={22} color="#3B82F6" />
-            <Text style={tw`text-gray-400 ml-2 text-sm`}>Saldo bisa dicairkan</Text>
+            <Wallet size={22} color={stitchColors.primary} />
+            <Text style={[tw`ml-2 text-sm`, { color: stitchColors.textMutedLight }]}>Saldo bisa dicairkan</Text>
           </View>
-          <Text style={tw`text-white text-3xl font-extrabold`}>
+          <Text style={[tw`text-3xl font-extrabold`, { color: stitchColors.textOnLight }]}>
             Rp {Number(summary?.available_balance ?? 0).toLocaleString('id-ID')}
           </Text>
-          <Text style={tw`text-gray-500 text-xs mt-2`}>
+          <Text style={[tw`text-xs mt-2`, { color: stitchColors.textMutedLight }]}>
             Terhitung: komisi terkonfirmasi dikurangi pengajuan pencairan aktif.
           </Text>
         </View>

@@ -15,6 +15,7 @@ import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
 import { ArrowLeft, Gift } from 'lucide-react-native';
+import { stitchColors } from '../../src/theme/stitch';
 
 type Reward = {
   id: string;
@@ -96,23 +97,23 @@ export default function RewardsCatalogScreen() {
   if (loading) {
     return (
       <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-[#0F172A]`}>
+    <View style={[tw`flex-1`, { backgroundColor: stitchColors.pageSoft }]}>
       <View style={tw`flex-row items-center px-5 pt-12 pb-4`}>
         <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-2`}>
-          <ArrowLeft color="#fff" size={24} />
+          <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
         <View style={tw`flex-1`}>
-          <Text style={tw`text-white text-xl font-bold`}>Katalog hadiah</Text>
-          <Text style={tw`text-gray-500 text-xs`}>Saldo poin: {balance.toLocaleString('id-ID')}</Text>
+          <Text style={[tw`text-xl font-bold`, { color: stitchColors.primary }]}>Katalog hadiah</Text>
+          <Text style={[tw`text-xs`, { color: stitchColors.textMutedLight }]}>Saldo poin: {balance.toLocaleString('id-ID')}</Text>
         </View>
         <TouchableOpacity onPress={() => router.push('/rewards/redemptions' as any)} style={tw`px-3 py-2`}>
-          <Text style={tw`text-blue-400 text-sm font-semibold`}>Riwayat</Text>
+          <Text style={[tw`text-sm font-semibold`, { color: stitchColors.primary }]}>Riwayat</Text>
         </TouchableOpacity>
       </View>
 
@@ -120,18 +121,18 @@ export default function RewardsCatalogScreen() {
         data={rewards}
         keyExtractor={(item) => item.id}
         contentContainerStyle={tw`px-5 pb-24`}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor="#3B82F6" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor={stitchColors.primary} />}
         ListEmptyComponent={<Text style={tw`text-gray-500 text-center py-10`}>Belum ada hadiah aktif.</Text>}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={tw`bg-[#1E293B] border border-gray-800 rounded-2xl p-4 mb-3 flex-row`}
+            style={[tw`rounded-2xl p-4 mb-3 flex-row`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1 }]}
             onPress={() => setPick(item)}
           >
             <View style={tw`bg-violet-600/30 w-12 h-12 rounded-xl items-center justify-center mr-3`}>
               <Gift color="#A78BFA" size={22} />
             </View>
             <View style={tw`flex-1`}>
-              <Text style={tw`text-white font-bold`}>{item.name}</Text>
+              <Text style={[tw`font-bold`, { color: stitchColors.textOnLight }]}>{item.name}</Text>
               {item.description ? (
                 <Text style={tw`text-gray-500 text-xs mt-1`} numberOfLines={2}>
                   {item.description}

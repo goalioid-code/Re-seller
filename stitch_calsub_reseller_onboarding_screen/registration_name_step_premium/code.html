@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Registrasi</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdea0",
+                        "surface-container-highest": "#f5dddb",
+                        "inverse-primary": "#ffb3ac",
+                        "primary-fixed": "#ffdad6",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "surface-container": "#ffe9e6",
+                        "surface": "#fff8f7",
+                        "background": "#fff8f7",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "on-secondary": "#ffffff",
+                        "outline": "#8c716e",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#3b2d2c",
+                        "surface-container-low": "#fff0ef",
+                        "surface-dim": "#ecd5d2",
+                        "on-tertiary-container": "#dcaf4d",
+                        "on-surface-variant": "#58413f",
+                        "inverse-on-surface": "#ffedeb",
+                        "secondary-container": "#e2dfde",
+                        "secondary": "#5f5e5e",
+                        "on-secondary-fixed-variant": "#474746",
+                        "secondary-fixed": "#e5e2e1",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-secondary-container": "#636262",
+                        "primary": "#690008",
+                        "on-surface": "#251817",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#e0bfbc",
+                        "surface-bright": "#fff8f7",
+                        "on-tertiary-fixed": "#261a00",
+                        "tertiary-container": "#5c4300",
+                        "on-primary-fixed": "#410003",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "tertiary": "#402e00",
+                        "primary-container": "#8b1a1a",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#ff9a91",
+                        "surface-container-high": "#fbe3e0",
+                        "on-background": "#251817",
+                        "surface-variant": "#f5dddb",
+                        "surface-tint": "#ac322e",
+                        "maroon-gradient-start": "#2A0A0A",
+                        "maroon-gradient-end": "#1A0606",
+                        "gold-accent": "#D4A847",
+                        "gold-gradient-start": "#E5BC5C",
+                        "gold-gradient-end": "#D4A847"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "unit": "4px",
+                        "sm": "8px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "subheadline": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "button-text": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "subheadline": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "button-text": ["16px", { "lineHeight": "1", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        .glass-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        .glow-top {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(212, 168, 71, 0.1) 0%, rgba(212, 168, 71, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background: #D4A847;
+            border-radius: 50%;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .gold-gradient-btn {
+            background: linear-gradient(90deg, #E5BC5C 0%, #D4A847 100%);
+        }
+        .ios-keyboard {
+            background: rgba(28, 28, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="w-[390px] h-[844px] mx-auto relative flex flex-col justify-between overflow-hidden">
+<!-- Ambient Glow -->
+<div class="glow-top"></div>
+<!-- Floating Particles -->
+<div class="particle w-1.5 h-1.5 top-[15%] left-[20%] shadow-[0_0_8px_#D4A847]"></div>
+<div class="particle w-1 h-1 top-[30%] right-[15%] shadow-[0_0_8px_#D4A847]"></div>
+<div class="particle w-2 h-2 top-[45%] left-[10%] shadow-[0_0_8px_#D4A847] opacity-40"></div>
+<!-- HEADER: TopAppBar Shared Component Logic applied manually for this specific screen context -->
+<header class="relative z-10 flex items-center justify-between px-6 pt-12 pb-4">
+<!-- Logo Placeholder -->
+<div class="w-[90px] h-[30px] flex items-center">
+<span class="font-h1 text-h1 text-white tracking-tight">Calsub</span>
+</div>
+<!-- Progress Bar -->
+<div class="flex flex-col items-end gap-1">
+<span class="font-label-caps text-label-caps text-gold-accent">15% selesai</span>
+<div class="flex gap-1 mt-1">
+<div class="h-1 w-6 rounded-full bg-gold-accent"></div>
+<div class="h-1 w-6 rounded-full bg-white/20"></div>
+<div class="h-1 w-6 rounded-full bg-white/20"></div>
+<div class="h-1 w-6 rounded-full bg-white/20"></div>
+<div class="h-1 w-6 rounded-full bg-white/20"></div>
+<div class="h-1 w-6 rounded-full bg-white/20"></div>
+</div>
+</div>
+</header>
+<!-- CHAT AREA -->
+<main class="relative z-10 flex-1 px-6 py-6 flex flex-col gap-6 justify-center">
+<!-- Avatar & Bubbles Container -->
+<div class="flex gap-3 items-end">
+<!-- Calman Avatar -->
+<div class="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/20">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A highly detailed close-up portrait of an approachable, professional young Asian man smiling warmly. He is wearing a sleek dark suit. The background is a clean, dark studio setting with subtle, warm studio lighting that highlights his facial features. The image conveys trust, professionalism, and high-end service, fitting a premium reseller aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtZFxV6G5e2Bv2qIlkl0XN1S54h7KTTH_albII2XcJ3Y9DLo0MkUaR9eLBAbd0haEqPMOX5Emcg8AJyOnVZgra2aSQASpFi3S1mibLNz8jdsNm73gcyAdxFEjVOBOlbNfbUzOG4_V_3Af4XK3Y4wgKdgVkzRzNJweJbZh3JP0qrbicqK1d2DSsUtDkjsieEy1BFM9ITdROjusgRbcj2epmm18dECq-2LVCK80l_KEzTWXFuuvu_4bnELt3bFV_VVuRZhp9TAaVNA"/>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Bubble 1 -->
+<div class="glass-bubble rounded-2xl rounded-bl-none px-4 py-3 max-w-[260px]">
+<p class="font-body-lg text-[15px] leading-relaxed text-white">Halo! Saya Calman 👋</p>
+</div>
+<!-- Bubble 2 -->
+<div class="glass-bubble rounded-2xl rounded-bl-none px-4 py-3 max-w-[260px]">
+<p class="font-body-lg text-[15px] leading-relaxed text-white">Kenalan dulu yuk! Siapa nama kamu?</p>
+</div>
+</div>
+</div>
+</main>
+<!-- INPUT AREA & CTA -->
+<div class="relative z-10 px-6 pb-6 flex flex-col gap-4">
+<div class="relative">
+<input autofocus="" class="w-full bg-white/5 border border-gold-accent/50 rounded-2xl px-4 py-4 text-white placeholder-gold-accent/50 focus:outline-none focus:border-gold-accent focus:ring-1 focus:ring-gold-accent font-body-lg text-[16px] transition-colors" placeholder="Ketik nama kamu..." type="text"/>
+<div class="absolute right-4 bottom-4 font-label-caps text-[10px] text-gold-accent/70">
+                0/50
+            </div>
+</div>
+<div class="flex justify-between items-center mt-2">
+<!-- Mute Icon -->
+<button class="w-10 h-10 rounded-full bg-maroon-gradient-start border border-white/10 flex items-center justify-center hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-white/70 text-sm">volume_off</span>
+</button>
+<!-- Skip or Continue Action -->
+<div class="flex items-center gap-4">
+<button class="font-button-text text-[14px] text-gold-accent/70 hover:text-gold-accent transition-colors">
+                    Lewati ↓
+                </button>
+<button class="gold-gradient-btn text-maroon-gradient-start font-button-text text-button-text px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity shadow-[0_4px_15px_rgba(212,168,71,0.3)]">
+                    Lanjutkan
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- IOS KEYBOARD MOCKUP -->
+<div class="ios-keyboard w-full h-[290px] relative z-20 flex flex-col pb-safe">
+<!-- Predictive Text Bar -->
+<div class="h-10 flex items-center justify-between px-4 border-b border-white/10">
+<div class="text-white/50 font-body-sm text-sm">"Nama"</div>
+<div class="w-[1px] h-4 bg-white/10"></div>
+<div class="text-white font-body-sm text-sm">Budi</div>
+<div class="w-[1px] h-4 bg-white/10"></div>
+<div class="text-white/50 font-body-sm text-sm">Siti</div>
+</div>
+<!-- Keyboard Image Placeholder -->
+<div class="flex-1 w-full bg-[#1A1A1A] relative">
+<img alt="Keyboard Mockup" class="w-full h-full object-cover opacity-30 grayscale" data-alt="A stylized, close-up abstract digital rendering of an illuminated modern keyboard interface. The lighting is dark and moody, featuring sleek, minimalist geometric shapes representing keys. The overall aesthetic is high-tech, premium, and seamless, perfectly blending into a sophisticated dark-mode mobile application interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2Y0vo6ixxdS1GzhN8yC2GMBso7eSqBK19gzf1hVJHTaKznlFGCw4xWbbIBFaLIurV40I5W41sne-BBbuVTdYaUpGGyOf69mNDJsNPhcKLPxD7D67xghcrN1WorqRNgXHnTxn8wGGgdvlieLlKC1o4ROfGe-ijPAU9BBjvZQATLqoE5dOlDvil0tojID8caF0QeIGqXDzAP_JjFJdj5nliTk0cOPEG9BicxXhjvDHdZxsyTin0b4bRV8mDXVB6sgPizcf9OvLg_w"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#1C1C1E] to-transparent"></div>
+</div>
+</div>
+</body></html>

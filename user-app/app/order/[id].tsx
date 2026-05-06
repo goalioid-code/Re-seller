@@ -14,6 +14,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { uploadToR2 } from '../../src/utils/upload';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
+import { stitchColors } from '../../src/theme/stitch';
 
 export default function OrderDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -125,7 +126,7 @@ export default function OrderDetailScreen() {
   if (loading || !orderId) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
@@ -289,7 +290,7 @@ function getStatusColor(status: string) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
+  container: { flex: 1, backgroundColor: stitchColors.pageSoft },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -297,13 +298,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  headerTitle: { color: '#FFF', fontSize: 18, fontWeight: '700' },
+  headerTitle: { color: stitchColors.primary, fontSize: 18, fontWeight: '700' },
   backButton: { padding: 8 },
-  backButtonText: { color: '#3B82F6', fontSize: 14, fontWeight: '600' },
+  backButtonText: { color: stitchColors.primary, fontSize: 14, fontWeight: '600' },
   scrollContent: { padding: 24 },
   centerContainer: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: stitchColors.pageSoft,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -313,12 +314,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  poNumber: { color: '#FFF', fontSize: 20, fontWeight: '800' },
+  poNumber: { color: stitchColors.textOnLight, fontSize: 20, fontWeight: '800' },
   statusBadge: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 },
   statusText: { color: '#FFF', fontSize: 12, fontWeight: '800' },
   section: { marginBottom: 32 },
   sectionTitle: {
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: stitchColors.textMutedLight,
     fontSize: 14,
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -326,22 +327,22 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   card: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#fff',
     borderRadius: 16,
     padding: 20,
     marginBottom: 12,
   },
   infoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
-  infoLabel: { color: 'rgba(255, 255, 255, 0.4)', fontSize: 14 },
-  infoValue: { color: '#FFF', fontSize: 14, fontWeight: '600' },
-  productName: { color: '#FFF', fontSize: 16, fontWeight: '700', marginBottom: 4 },
-  productSub: { color: '#3B82F6', fontSize: 14, fontWeight: '600', marginBottom: 8 },
-  productDetail: { color: 'rgba(255, 255, 255, 0.5)', fontSize: 13, marginTop: 2 },
+  infoLabel: { color: stitchColors.textMutedLight, fontSize: 14 },
+  infoValue: { color: stitchColors.textOnLight, fontSize: 14, fontWeight: '600' },
+  productName: { color: stitchColors.textOnLight, fontSize: 16, fontWeight: '700', marginBottom: 4 },
+  productSub: { color: stitchColors.primary, fontSize: 14, fontWeight: '600', marginBottom: 8 },
+  productDetail: { color: stitchColors.textMutedLight, fontSize: 13, marginTop: 2 },
   totalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  totalLabel: { color: '#FFF', fontSize: 16, fontWeight: '600' },
-  totalValue: { color: '#FFF', fontSize: 20, fontWeight: '800' },
+  totalLabel: { color: stitchColors.textOnLight, fontSize: 16, fontWeight: '600' },
+  totalValue: { color: stitchColors.textOnLight, fontSize: 20, fontWeight: '800' },
   payButton: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: stitchColors.primary,
     height: 56,
     borderRadius: 12,
     justifyContent: 'center',
@@ -387,5 +388,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
   },
-  errorText: { color: '#EF4444', fontSize: 16 },
+  errorText: { color: stitchColors.danger, fontSize: 16 },
 });

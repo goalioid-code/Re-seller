@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { useAuth } from '../../context/AuthContext';
+import { stitchColors } from '../../theme/stitch';
 
 const { width, height } = Dimensions.get('window');
 WebBrowser.maybeCompleteAuthSession();
@@ -109,7 +110,7 @@ export default function WelcomeScreen({ navigation }) {
         {/* Logo */}
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../../assets/calma-logo.png')}
+            source={require('../../../assets/stitch/calman-avatar.jpg')}
             style={styles.logoImage}
             resizeMode="contain"
           />
@@ -141,7 +142,7 @@ export default function WelcomeScreen({ navigation }) {
           activeOpacity={0.8}
         >
           {loading || googleLoading ? (
-            <ActivityIndicator size="small" color="#0F172A" />
+            <ActivityIndicator size="small" color={stitchColors.page} />
           ) : (
             <>
               <View style={styles.googleIconWrapper}>
@@ -187,7 +188,7 @@ function FeatureItem({ icon, text }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: stitchColors.page,
     justifyContent: 'space-between',
     paddingHorizontal: 24,
   },
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     borderRadius: 150,
-    backgroundColor: 'rgba(255, 140, 0, 0.1)',
+    backgroundColor: stitchColors.goldSoft,
     top: -100,
     right: -100,
   },
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
     width: 250,
     height: 250,
     borderRadius: 125,
-    backgroundColor: 'rgba(59, 130, 246, 0.08)',
+    backgroundColor: 'rgba(139,26,26,0.12)',
     bottom: -50,
     left: -80,
   },

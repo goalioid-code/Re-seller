@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Registration Step 7</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-primary-fixed": "#410003",
+                "on-tertiary": "#ffffff",
+                "primary-fixed": "#ffdad6",
+                "surface-container-low": "#fff0ef",
+                "tertiary-fixed": "#ffdea0",
+                "inverse-primary": "#ffb3ac",
+                "surface-variant": "#f5dddb",
+                "on-tertiary-container": "#dcaf4d",
+                "on-secondary-fixed-variant": "#474746",
+                "on-primary-container": "#ff9a91",
+                "surface-container-highest": "#f5dddb",
+                "secondary-fixed-dim": "#c8c6c5",
+                "on-tertiary-fixed-variant": "#5c4300",
+                "primary-container": "#8b1a1a",
+                "on-primary-fixed-variant": "#8a1a1a",
+                "tertiary-container": "#5c4300",
+                "surface-tint": "#ac322e",
+                "primary-fixed-dim": "#ffb3ac",
+                "on-secondary-fixed": "#1c1b1b",
+                "inverse-surface": "#3b2d2c",
+                "error-container": "#ffdad6",
+                "secondary-fixed": "#e5e2e1",
+                "primary": "#690008",
+                "on-surface": "#251817",
+                "tertiary": "#402e00",
+                "surface-bright": "#fff8f7",
+                "on-background": "#251817",
+                "surface-container-lowest": "#ffffff",
+                "on-primary": "#ffffff",
+                "secondary": "#5f5e5e",
+                "outline": "#8c716e",
+                "surface-container": "#ffe9e6",
+                "on-secondary-container": "#636262",
+                "surface-container-high": "#fbe3e0",
+                "on-error-container": "#93000a",
+                "outline-variant": "#e0bfbc",
+                "on-secondary": "#ffffff",
+                "tertiary-fixed-dim": "#eec05c",
+                "surface-dim": "#ecd5d2",
+                "on-tertiary-fixed": "#261a00",
+                "on-surface-variant": "#58413f",
+                "secondary-container": "#e2dfde",
+                "error": "#ba1a1a",
+                "background": "#fff8f7",
+                "inverse-on-surface": "#ffedeb",
+                "surface": "#fff8f7",
+                "on-error": "#ffffff"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "md": "16px",
+                "container-margin": "20px",
+                "xl": "32px",
+                "lg": "24px",
+                "gutter": "16px",
+                "xs": "4px",
+                "unit": "4px",
+                "sm": "8px"
+        },
+        "fontFamily": {
+                "button-text": [
+                        "Inter"
+                ],
+                "body-sm": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "subheadline": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "h1": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "button-text": [
+                        "16px",
+                        {
+                                "lineHeight": "1",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-sm": [
+                        "14px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "subheadline": [
+                        "15px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "h1": [
+                        "28px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+  body {
+    background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .mobile-container {
+    width: 390px;
+    height: 844px;
+    background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+  }
+  .gold-glow {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(212,168,71,0.15) 0%, rgba(212,168,71,0) 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glass-bubble {
+    background: rgba(255, 255, 255, 0.08);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+  }
+  .card-selected {
+    background: rgba(212, 168, 71, 0.25);
+    border: 1px solid #D4A847;
+  }
+  .card-unselected {
+    background: rgba(255, 255, 255, 0.06);
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+  }
+  .gold-gradient {
+    background: linear-gradient(90deg, #D4A847 0%, #F3D27E 100%);
+  }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-sm text-body-sm bg-[#1A0606]">
+<div class="mobile-container rounded-3xl mx-auto border-[8px] border-black">
+<div class="gold-glow"></div>
+<!-- Header -->
+<header class="flex justify-between items-center p-lg relative z-10 pt-10">
+<div class="text-white font-h1 text-[18px] tracking-wider uppercase">CALSUB</div>
+<div class="flex flex-col items-end gap-1">
+<div class="text-[#D4A847] font-label-caps text-[10px]">42% selesai</div>
+<div class="flex gap-[2px]">
+<div class="h-1.5 w-3 rounded-full gold-gradient"></div>
+<div class="h-1.5 w-3 rounded-full gold-gradient"></div>
+<div class="h-1.5 w-3 rounded-full gold-gradient"></div>
+<div class="h-1.5 w-3 rounded-full gold-gradient"></div>
+<div class="h-1.5 w-3 rounded-full gold-gradient"></div>
+<div class="h-1.5 w-3 rounded-full gold-gradient"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<div class="relative z-10 flex justify-center mt-4 mb-2">
+<div class="relative w-48 h-48 flex justify-center items-center">
+<div class="absolute w-40 h-40 bg-[#D4A847]/20 rounded-full blur-2xl"></div>
+<img alt="A medium-sized 3D Shiba Inu mascot named Calman floating in the upper center. He has cream fur, a maroon polo with a white 'C', khaki shorts, white sneakers, and a bluetooth earpiece. His pose is encouraging and supportive, with both paws gesturing forward and a warm smile. He casts a soft drop shadow with a subtle gold radial glow behind him in a dark premium setting." class="w-full h-full object-contain drop-shadow-xl z-10 rounded-full mix-blend-luminosity opacity-80" data-alt="A medium-sized 3D Shiba Inu mascot named Calman floating in the upper center. He has cream fur, a maroon polo with a white 'C', khaki shorts, white sneakers, and a bluetooth earpiece. His pose is encouraging and supportive, with both paws gesturing forward and a warm smile. He casts a soft drop shadow with a subtle gold radial glow behind him in a dark premium setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWfrEkiaAvYBsRFIeT8AYhpsZWHkws-QLD5fu_bBDBFdccQxTYaU_O3WQiHSOLDHLAXrbX77czGCKIGOZBoXFwQQhNuOdJe72ZT_aFF06MD7uSvMT9mZEZPF9OivtST1vJHu5viHR11V_dUiG3BSwVtP5drSprBNtbvUtyEBYALJdQWO4HlZkLURzXHxKz-fZfzhKKEJB3w8_RSmO06362G-o0EMybScpKrr9NRLTbNbVzxsNL8_qEazRbINjxI1U-Hg79eXGFkQ"/>
+</div>
+</div>
+<!-- Content Canvas -->
+<div class="flex-1 flex flex-col px-lg relative z-10">
+<!-- Chat Bubbles -->
+<div class="flex flex-col gap-3 mb-8">
+<div class="flex gap-3 items-end">
+<img alt="Close up face of a Shiba Inu mascot used as an avatar." class="w-10 h-10 rounded-full object-cover border border-white/20" data-alt="Close up face of a Shiba Inu mascot used as an avatar, set against a dark background with premium lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj9EHSEod1EJSFNciYtrLzS0X21jJuH9jJcet6CeGDw3-145lF4xAHO4ntrqlnhRwEtUeF3TY7DrfkVZZoDJNuMHonuhvzazyo9EQ5mCCAFqLi57TG3a2FvjBXWZljwgNq0ZUJMk3Uoq38xn4Q6dP2fD6PR6FmW0VC9i6kVNemG1g4Pxxw4yxSiqKmKW-AIbTrNEv6mp7nMV8gH12oERu67gCpW7t8deNvX80_SUYXOQf0H0KpH32bcBawvP-hg0HWQgRufaEmuQ"/>
+<div class="glass-bubble rounded-2xl rounded-bl-none px-4 py-3 text-white font-body-sm shadow-sm max-w-[80%]">
+          Sip!
+        </div>
+</div>
+<div class="flex gap-3 items-end">
+<img alt="Close up face of a Shiba Inu mascot used as an avatar." class="w-10 h-10 rounded-full object-cover border border-white/20 opacity-0" data-alt="Close up face of a Shiba Inu mascot used as an avatar, set against a dark background with premium lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQ-H6b8d3ABGDu3uPEPUtYigE5gJ2R99SDZCH-4SAN-ReRI2tt36M0LMJp5cZNUzBWqmqHgm6LzMpn-ImzclUM8etKiQoxXenNsmX1lBPvzcjngthVFElHEl8m7GKGKv8HlTcLK0sVK-BH7PVUrEJqKlFItqwYYo6goStMLLjPFnead5zh8DD5XkzisbN98GvL8ZxnYuyoAKlXozL7PFsWYpp4aw2v2yaDV5v5s342DUnAy9I5FtF0xQyMOpGvLqCwV0l4_JwOpA"/>
+<div class="glass-bubble rounded-2xl rounded-tl-none px-4 py-3 text-white font-body-sm shadow-sm max-w-[85%] leading-relaxed">
+          Mau dibantu Calsub bikin identitas brand kamu? (logo, nama, dll)
+        </div>
+</div>
+</div>
+<!-- Selection Cards -->
+<div class="flex flex-col gap-4 mb-auto">
+<!-- Selected Card -->
+<button class="card-selected rounded-2xl p-4 flex items-center justify-between transition-transform active:scale-95 text-left">
+<div>
+<div class="text-white font-body-lg font-semibold mb-1">Ya, saya butuh bantuan ✨</div>
+<div class="text-[#D4A847] font-body-sm opacity-90">Tim Calsub bantu setup brand kamu</div>
+</div>
+<span class="material-symbols-outlined text-[#D4A847]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<!-- Unselected Card -->
+<button class="card-unselected rounded-2xl p-4 flex items-center justify-between transition-transform active:scale-95 text-left">
+<div>
+<div class="text-white/90 font-body-lg font-semibold mb-1">Tidak, cukup jualan saja</div>
+<div class="text-white/50 font-body-sm">Langsung mulai dengan toko digital</div>
+</div>
+</button>
+</div>
+<!-- Actions Area -->
+<div class="mt-8 mb-6 flex items-center justify-between">
+<button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20 active:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-white/70 text-sm">volume_off</span>
+</button>
+<div class="flex items-center gap-4">
+<button class="text-[#D4A847] font-button-text text-sm opacity-80 active:opacity-100 transition-opacity">
+          Lewati ↓
+        </button>
+<button class="gold-gradient rounded-full px-6 py-3 text-[#2A0A0A] font-button-text font-bold shadow-[0_4px_15px_rgba(212,168,71,0.3)] flex items-center gap-2 active:scale-95 transition-transform">
+          Lanjutkan
+          <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

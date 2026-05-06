@@ -5,6 +5,7 @@ import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
 import { ArrowLeft } from 'lucide-react-native';
+import { stitchColors } from '../../src/theme/stitch';
 
 type Row = {
   id: string;
@@ -44,29 +45,29 @@ export default function RewardRedemptionsScreen() {
   if (loading) {
     return (
       <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-[#0F172A]`}>
+    <View style={[tw`flex-1`, { backgroundColor: stitchColors.pageSoft }]}>
       <View style={tw`flex-row items-center px-5 pt-12 pb-4`}>
         <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-2`}>
-          <ArrowLeft color="#fff" size={24} />
+          <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
-        <Text style={tw`text-white text-xl font-bold`}>Riwayat penukaran</Text>
+        <Text style={[tw`text-xl font-bold`, { color: stitchColors.primary }]}>Riwayat penukaran</Text>
       </View>
 
       <FlatList
         data={rows}
         keyExtractor={(item) => item.id}
         contentContainerStyle={tw`px-5 pb-24`}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor="#3B82F6" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor={stitchColors.primary} />}
         ListEmptyComponent={<Text style={tw`text-gray-500 text-center py-10`}>Belum ada penukaran.</Text>}
         renderItem={({ item }) => (
-          <View style={tw`bg-[#1E293B] border border-gray-800 rounded-2xl p-4 mb-3`}>
-            <Text style={tw`text-white font-bold`}>{item.reward?.name || 'Hadiah'}</Text>
+          <View style={[tw`rounded-2xl p-4 mb-3`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1 }]}>
+            <Text style={[tw`font-bold`, { color: stitchColors.textOnLight }]}>{item.reward?.name || 'Hadiah'}</Text>
             <Text style={tw`text-gray-400 text-sm mt-1`}>{item.points_used.toLocaleString('id-ID')} poin</Text>
             <Text style={tw`text-gray-500 text-xs mt-2`}>{item.status}</Text>
             <Text style={tw`text-gray-600 text-xs mt-1`}>

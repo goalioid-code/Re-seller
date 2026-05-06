@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
+import { stitchColors } from '../theme/stitch';
 
 /**
  * ProgressBar - Indikator step onboarding
@@ -53,18 +54,18 @@ const styles = StyleSheet.create({
   },
   track: {
     height: 6,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: stitchColors.goldSoft,
     borderRadius: 99,
     overflow: 'hidden',
   },
   fill: {
     height: '100%',
-    backgroundColor: '#FF8C00',
+    backgroundColor: stitchColors.gold,
     borderRadius: 99,
   },
   label: {
     fontSize: 12,
-    color: 'rgba(255,255,255,0.5)',
+    color: stitchColors.textMutedLight,
     fontWeight: '600',
     minWidth: 28,
   },

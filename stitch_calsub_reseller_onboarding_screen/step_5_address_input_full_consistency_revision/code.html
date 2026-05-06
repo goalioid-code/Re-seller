@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registration Step 5: Address Input</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#e0bfbc",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-container": "#ffe9e6",
+                        "on-background": "#251817",
+                        "surface-container-low": "#fff0ef",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#8b1a1a",
+                        "on-surface": "#251817",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "primary-fixed": "#ffdad6",
+                        "secondary-container": "#e2dfde",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "surface-variant": "#f5dddb",
+                        "primary": "#690008",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-tertiary-fixed": "#261a00",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface": "#fff8f7",
+                        "on-tertiary-container": "#dcaf4d",
+                        "on-secondary-container": "#636262",
+                        "surface-tint": "#ac322e",
+                        "tertiary": "#402e00",
+                        "surface-container-high": "#fbe3e0",
+                        "on-surface-variant": "#58413f",
+                        "secondary": "#5f5e5e",
+                        "inverse-surface": "#3b2d2c",
+                        "surface-bright": "#fff8f7",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#ecd5d2",
+                        "on-primary-container": "#ff9a91",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdea0",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-primary-fixed": "#410003",
+                        "inverse-primary": "#ffb3ac",
+                        "inverse-on-surface": "#ffedeb",
+                        "outline": "#8c716e",
+                        "tertiary-container": "#5c4300",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "background": "#fff8f7",
+                        "surface-container-highest": "#f5dddb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "subheadline": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "button-text": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "subheadline": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "button-text": ["16px", { "lineHeight": "1", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .premium-bg {
+            background: linear-gradient(135deg, #2A0A0A 0%, #1A0606 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #D4A847;
+            color: white;
+        }
+        .glass-input:focus, .glass-input.filled {
+            border-color: #D4A847;
+            background: rgba(255, 255, 255, 0.05);
+            outline: none;
+        }
+        .gold-text {
+            color: #D4A847;
+        }
+        .gold-gradient-btn {
+            background: linear-gradient(90deg, #D4A847 0%, #B8860B 100%);
+            color: #1A0606;
+        }
+        
+        /* Progress Bar Segments */
+        .progress-segment {
+            flex-grow: 1;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 1px;
+        }
+        .progress-segment.active {
+            background: #D4A847;
+        }
+        
+        select option {
+            background-color: #1A0606;
+            color: white;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="premium-bg min-h-screen text-on-primary font-body-lg flex justify-center selection:bg-tertiary-fixed-dim selection:text-tertiary">
+<!-- Mobile Frame Container -->
+<div class="w-full max-w-[430px] min-h-[932px] h-screen relative flex flex-col overflow-x-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+<!-- Navigation Suppressed for Transactional Intent -->
+<!-- Header Row -->
+<header class="flex justify-between items-center px-lg py-md pt-xl z-10">
+<div class="font-h1 text-h1 tracking-tighter text-on-primary">
+                CALSUB
+            </div>
+<!-- Progress Indicator -->
+<div class="flex flex-col items-end gap-1 w-1/3">
+<span class="font-label-caps text-label-caps text-white/60">28% selesai</span>
+<div class="flex w-full mt-1">
+<div class="progress-segment active"></div>
+<div class="progress-segment active"></div>
+<div class="progress-segment active"></div>
+<div class="progress-segment active"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+<div class="progress-segment"></div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col px-lg pb-xl overflow-y-auto custom-scrollbar">
+<!-- Hero / Mascot Area -->
+<div class="w-full h-[159px] flex items-center justify-center relative mt-sm mb-md">
+<img alt="3D render of a friendly Shiba Inu mascot holding a red location pin, set against a dark maroon gradient background, high-quality 3D style." class="h-full object-contain filter drop-shadow-2xl opacity-90 mix-blend-screen" data-alt="A high-quality 3D render of a friendly, cartoonish Shiba Inu mascot holding a vibrant red location pin. The mascot has a welcoming smile and soft lighting, set against a deep maroon and burgundy gradient background. The style is modern, premium, and polished, reflecting a high-end app onboarding experience. Lighting is soft and volumetric, highlighting the mascot's features." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD07NOcr1iPAtiwyTocWF6JEM4-6kODAbPLnKqdU_ZCCQQLrvC4leCE4yEcKdDZ-lePXZ-1dckJGfBad2kF9ACOyf5bnecRxxru-gzJqubXSX-A08E6OTch5rcaibGa2bN2CBtus8djaShGnhxUyGg1uH8eqyilFsdWG77M5dDjx2dbwNh5iKF3UfD-bp65UhZCAGPjNESAg83SBxABZ7ryKbixsYnAZaRbA9nfe59iw7DIWsbIqzWcPjPWZXNsCyLihUh4FZ1OIg"/>
+</div>
+<!-- Chat Bubbles -->
+<div class="flex flex-col gap-sm mb-lg relative z-10">
+<div class="glass-panel self-start rounded-[16px] rounded-bl-sm px-md py-sm max-w-[85%] shadow-lg">
+<p class="font-body-lg text-body-lg text-on-primary">Mantap! 📍</p>
+</div>
+<div class="glass-panel self-start rounded-[16px] rounded-bl-sm px-md py-sm max-w-[90%] shadow-lg">
+<p class="font-body-lg text-body-lg text-on-primary">Sekarang isi alamat lengkap. Buat pengiriman &amp; verifikasi data.</p>
+</div>
+</div>
+<!-- Form Area -->
+<form class="flex flex-col gap-sm">
+<!-- Dropdown 1: Provinsi -->
+<div class="relative">
+<select class="glass-input filled w-full appearance-none rounded-[16px] px-md pt-7 pb-3 font-body-lg text-body-lg text-on-primary cursor-pointer">
+<option value="Jawa Barat">Jawa Barat</option>
+</select>
+<label class="absolute text-[10px] uppercase font-bold tracking-widest text-[#D4A847] top-2 left-md pointer-events-none">Provinsi</label>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-[#D4A847] pointer-events-none">expand_more</span>
+</div>
+<!-- Dropdown 2: Kota / Kabupaten -->
+<div class="relative">
+<select class="glass-input filled w-full appearance-none rounded-[16px] px-md pt-7 pb-3 font-body-lg text-body-lg text-on-primary cursor-pointer">
+<option value="Kota Bekasi">Kota Bekasi</option>
+</select>
+<label class="absolute text-[10px] uppercase font-bold tracking-widest text-[#D4A847] top-2 left-md pointer-events-none">Kota / Kabupaten</label>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-[#D4A847] pointer-events-none">expand_more</span>
+</div>
+<!-- Dropdown 3: Kecamatan -->
+<div class="relative">
+<select class="glass-input filled w-full appearance-none rounded-[16px] px-md pt-7 pb-3 font-body-lg text-body-lg text-on-primary cursor-pointer">
+<option value="Bekasi Barat">Bekasi Barat</option>
+</select>
+<label class="absolute text-[10px] uppercase font-bold tracking-widest text-[#D4A847] top-2 left-md pointer-events-none">Kecamatan</label>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-[#D4A847] pointer-events-none">expand_more</span>
+</div>
+<!-- Dropdown 4: Kelurahan / Desa -->
+<div class="relative">
+<select class="glass-input filled w-full appearance-none rounded-[16px] px-md pt-7 pb-3 font-body-lg text-body-lg text-on-primary cursor-pointer">
+<option value="Kranji">Kranji</option>
+</select>
+<label class="absolute text-[10px] uppercase font-bold tracking-widest text-[#D4A847] top-2 left-md pointer-events-none">Kelurahan / Desa</label>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-[#D4A847] pointer-events-none">expand_more</span>
+</div>
+<!-- Dropdown 5: Kode Pos (Auto-filled, locked) -->
+<div class="relative">
+<input class="glass-input filled w-full rounded-[16px] px-md pt-7 pb-3 font-body-lg text-body-lg text-on-primary/70 cursor-not-allowed" readonly="" type="text" value="17135"/>
+<label class="absolute text-[10px] uppercase font-bold tracking-widest text-[#D4A847]/70 top-2 left-md pointer-events-none">Kode Pos</label>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-white/40 pointer-events-none">lock</span>
+</div>
+<!-- Textarea: Detail Alamat -->
+<div class="relative mt-xs">
+<textarea class="glass-input w-full rounded-[16px] px-md py-md font-body-lg text-body-lg text-on-primary placeholder:text-white/40 resize-none" placeholder="Nama jalan, RT/RW, no rumah, patokan..." rows="3"></textarea>
+</div>
+</form>
+<!-- Info Note -->
+<div class="flex items-start gap-sm mt-md px-xs">
+<span class="text-lg">💡</span>
+<p class="font-body-sm text-body-sm text-[#D4A847]/80 mt-1">Alamat ini juga digunakan untuk verifikasi rekening</p>
+</div>
+<!-- Spacer -->
+<div class="flex-grow min-h-[2rem]"></div>
+<!-- Actions Area -->
+<div class="flex flex-col items-end gap-lg mt-auto pt-md">
+<button class="gold-gradient-btn flex items-center justify-center gap-xs px-8 py-4 rounded-full font-button-text text-button-text shadow-[0_4px_20px_rgba(212,168,71,0.3)] hover:scale-105 active:scale-95 transition-transform" type="button">
+                    Lanjutkan
+                    <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+</button>
+<button class="flex items-center gap-xs text-[#D4A847]/60 hover:text-[#D4A847] transition-colors self-center mt-sm" type="button">
+<span class="material-symbols-outlined text-lg">volume_off</span>
+<span class="font-label-caps text-label-caps">Lewati ↓</span>
+</button>
+</div>
+</main>
+</div>
+</body></html>

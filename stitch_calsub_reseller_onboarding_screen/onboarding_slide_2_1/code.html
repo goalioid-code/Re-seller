@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#690008",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-low": "#fff0ef",
+                      "surface-container": "#ffe9e6",
+                      "secondary": "#5f5e5e",
+                      "inverse-surface": "#3b2d2c",
+                      "surface-container-highest": "#f5dddb",
+                      "error-container": "#ffdad6",
+                      "secondary-container": "#e2dfde",
+                      "on-primary-fixed": "#410003",
+                      "on-tertiary": "#ffffff",
+                      "on-surface": "#251817",
+                      "tertiary-fixed-dim": "#eec05c",
+                      "on-background": "#251817",
+                      "outline": "#8c716e",
+                      "tertiary-container": "#5c4300",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "background": "#fff8f7",
+                      "surface-tint": "#ac322e",
+                      "primary-fixed": "#ffdad6",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "surface-dim": "#ecd5d2",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-primary-container": "#ff9a91",
+                      "inverse-on-surface": "#ffedeb",
+                      "on-primary-fixed-variant": "#8a1a1a",
+                      "inverse-primary": "#ffb3ac",
+                      "on-tertiary-fixed": "#261a00",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#636262",
+                      "on-primary": "#ffffff",
+                      "on-secondary-fixed-variant": "#474746",
+                      "tertiary-fixed": "#ffdea0",
+                      "surface": "#fff8f7",
+                      "on-surface-variant": "#58413f",
+                      "surface-container-high": "#fbe3e0",
+                      "primary-fixed-dim": "#ffb3ac",
+                      "on-tertiary-container": "#dcaf4d",
+                      "outline-variant": "#e0bfbc",
+                      "secondary-fixed": "#e5e2e1",
+                      "primary-container": "#8b1a1a",
+                      "on-error-container": "#93000a",
+                      "surface-bright": "#fff8f7",
+                      "tertiary": "#402e00",
+                      "surface-variant": "#f5dddb",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-margin": "20px",
+                      "xs": "4px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "gutter": "16px",
+                      "xl": "32px",
+                      "unit": "4px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "button-text": ["Inter"],
+                      "h1": ["Inter"],
+                      "subheadline": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "button-text": ["16px", {"lineHeight": "1", "fontWeight": "600"}],
+                      "h1": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "subheadline": ["15px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg antialiased relative overflow-hidden">
+<!-- Subtle Top Gradient -->
+<div class="absolute top-0 left-0 w-full h-[353px] bg-gradient-to-b from-surface-container to-transparent z-0 pointer-events-none"></div>
+<!-- Top Navigation Area -->
+<header class="w-full flex justify-between items-center px-6 py-4 z-50 relative">
+<div class="w-[80px]">
+<img alt="Calsub Logo" class="w-full h-auto object-contain" data-alt="A clean, modern typographic logo for a premium sportswear reseller platform. The logo is rendered in a deep, rich maroon color, set against a soft, warm cream background. The design is minimalist, emphasizing professional trust and high-end aesthetic, utilizing sleek sans-serif letterforms." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwMZ6U5-gYxylNFehUOeTs2aROpcRzUTBnMogTeSOccC24oAdkxxWxb5FsqiRgGkLzmc75voyg6_6vEx5e3Mmun3dF_3MTyUFd9KnakTjCpN9j5px3VaYqDUsuy4RACCNcQPCoy65c2vdcn8KSG0711fc_SjN9ySPIY8HZrap8YKmzbbLuJibWy9ec4SUUrIbig7XP5EMib07BncIYY2bOyD_sar830-bkv7No3YPDZTZRRZscaqBJps-20JmA9BS6ykW8lMom_Q"/>
+</div>
+<button class="font-button-text text-button-text text-secondary hover:text-primary transition-colors">
+            Lewati
+        </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col relative z-10 w-full max-w-md mx-auto">
+<!-- Hero 3D Character Area (Top 55% equivalent) -->
+<div class="flex-1 flex items-center justify-center pt-8 pb-4 px-6 relative w-full min-h-[397px]">
+<div class="relative w-full max-w-[320px] aspect-square flex items-center justify-center">
+<!-- Decorative Glow -->
+<div class="absolute inset-0 bg-tertiary-fixed-dim blur-3xl opacity-20 rounded-full scale-75"></div>
+<img alt="Calman Character" class="w-full h-full object-contain relative z-10 drop-shadow-2xl mix-blend-multiply" data-alt="A highly detailed, Pixar-quality 3D render of a friendly male character named 'Calman'. He is striking a dynamic, celebratory pose. He wears a sleek, modern maroon polo shirt featuring a small 'C' logo on the chest, and sports a discreet wireless bluetooth headset. He triumphantly holds a giant, shiny 3D gold coin in one hand. Several smaller, sparkling gold coins float magically around him in mid-air. The lighting is soft, cinematic, and premium, casting gentle shadows against a warm, minimalist cream background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsZutErc946LC1pz1Gb_jDRLs1TrR4Bhqr8b__kJtFMtVtIBSlMUWrkgMcgTbVPZbYvfsx944k9KkA0n-bdOmexp_41EskX_u9775cJohpyoMwQzedrgsITc_T1R3wyj4bKWSf2cpiNJYdLJmxn8OVngyJrlKyCLhO1RjvlhaO5I-fJ5D832UIIXWxxsdsa_ouEXUlnUGc2CUXmDDTUreapVn4ZfJHhesR22yr8djEal2bUjNX4WkJKbnQkxUVCGvUow886o_9iA"/>
+</div>
+</div>
+<!-- Text Area (Middle 30% equivalent) -->
+<div class="flex flex-col items-center text-center px-8 pb-32 gap-sm">
+<h1 class="font-h1 text-h1 text-on-surface tracking-tight">Komisi Cair,<br/>Bukan Janji</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[280px]">
+                Setiap pcs jersey terjual = komisi langsung masuk dompet digital.
+            </p>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="absolute bottom-0 left-0 w-full z-50 flex justify-between items-center px-8 pb-10 max-w-md mx-auto left-1/2 -translate-x-1/2">
+<!-- Slide Indicators -->
+<div class="flex gap-xs items-center">
+<div class="w-[6px] h-[6px] rounded-full bg-secondary-fixed"></div>
+<div class="w-lg h-[6px] rounded-full bg-primary-container transition-all duration-300"></div>
+<div class="w-[6px] h-[6px] rounded-full bg-secondary-fixed"></div>
+</div>
+<!-- Next Action FAB -->
+<button class="w-[56px] h-[56px] rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-[0_8px_20px_rgba(105,0,8,0.2)] active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_forward</span>
+</button>
+</nav>
+</body></html>

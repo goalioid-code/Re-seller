@@ -15,6 +15,7 @@ import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
 import { ArrowLeft } from 'lucide-react-native';
+import { stitchColors } from '../../src/theme/stitch';
 
 export default function CommissionWithdrawScreen() {
   const router = useRouter();
@@ -70,14 +71,14 @@ export default function CommissionWithdrawScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={tw`flex-1 bg-[#0F172A]`}
+      style={[tw`flex-1`, { backgroundColor: stitchColors.pageSoft }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={tw`flex-row items-center px-5 pt-12 pb-4`}>
         <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-2`}>
-          <ArrowLeft color="#fff" size={24} />
+          <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
-        <Text style={tw`text-white text-xl font-bold`}>Pencairan komisi</Text>
+        <Text style={[tw`text-xl font-bold`, { color: stitchColors.primary }]}>Pencairan komisi</Text>
       </View>
 
       <ScrollView style={tw`flex-1 px-5`} keyboardShouldPersistTaps="handled">
@@ -87,7 +88,7 @@ export default function CommissionWithdrawScreen() {
 
         <Text style={tw`text-gray-400 text-xs mb-1`}>Nominal (Rp)</Text>
         <TextInput
-          style={tw`bg-[#1E293B] border border-gray-700 rounded-xl px-4 py-3 text-white mb-4`}
+          style={[tw`rounded-xl px-4 py-3 mb-4`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1, color: stitchColors.textOnLight }]}
           placeholder="1000000"
           placeholderTextColor="#64748B"
           keyboardType="numeric"
@@ -97,7 +98,7 @@ export default function CommissionWithdrawScreen() {
 
         <Text style={tw`text-gray-400 text-xs mb-1`}>Nama bank</Text>
         <TextInput
-          style={tw`bg-[#1E293B] border border-gray-700 rounded-xl px-4 py-3 text-white mb-4`}
+          style={[tw`rounded-xl px-4 py-3 mb-4`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1, color: stitchColors.textOnLight }]}
           placeholder="BCA"
           placeholderTextColor="#64748B"
           value={bankName}
@@ -106,7 +107,7 @@ export default function CommissionWithdrawScreen() {
 
         <Text style={tw`text-gray-400 text-xs mb-1`}>Nomor rekening</Text>
         <TextInput
-          style={tw`bg-[#1E293B] border border-gray-700 rounded-xl px-4 py-3 text-white mb-4`}
+          style={[tw`rounded-xl px-4 py-3 mb-4`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1, color: stitchColors.textOnLight }]}
           placeholder="1234567890"
           placeholderTextColor="#64748B"
           keyboardType="numeric"
@@ -116,7 +117,7 @@ export default function CommissionWithdrawScreen() {
 
         <Text style={tw`text-gray-400 text-xs mb-1`}>Nama pemilik rekening</Text>
         <TextInput
-          style={tw`bg-[#1E293B] border border-gray-700 rounded-xl px-4 py-3 text-white mb-4`}
+          style={[tw`rounded-xl px-4 py-3 mb-4`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1, color: stitchColors.textOnLight }]}
           placeholder="Sesuai buku tabungan"
           placeholderTextColor="#64748B"
           value={accountName}
@@ -125,7 +126,7 @@ export default function CommissionWithdrawScreen() {
 
         <Text style={tw`text-gray-400 text-xs mb-1`}>Catatan (opsional)</Text>
         <TextInput
-          style={tw`bg-[#1E293B] border border-gray-700 rounded-xl px-4 py-3 text-white mb-6`}
+          style={[tw`rounded-xl px-4 py-3 mb-6`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1, color: stitchColors.textOnLight }]}
           placeholder="Keterangan untuk admin"
           placeholderTextColor="#64748B"
           value={notes}
@@ -133,7 +134,7 @@ export default function CommissionWithdrawScreen() {
         />
 
         <TouchableOpacity
-          style={tw`bg-blue-600 py-4 rounded-2xl items-center mb-10 ${submitting ? 'opacity-60' : ''}`}
+          style={[tw`py-4 rounded-2xl items-center mb-10 ${submitting ? 'opacity-60' : ''}`, { backgroundColor: stitchColors.primary }]}
           onPress={() => void submit()}
           disabled={submitting}
         >

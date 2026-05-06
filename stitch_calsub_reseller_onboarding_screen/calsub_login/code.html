@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "primary-fixed": "#ffdad6",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "secondary-fixed": "#e5e2e1",
+                        "outline": "#8c716e",
+                        "surface-container": "#ffe9e6",
+                        "primary": "#690008",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#251817",
+                        "surface-container-low": "#fff0ef",
+                        "surface-container-highest": "#f5dddb",
+                        "surface-bright": "#fff8f7",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "on-tertiary-container": "#dcaf4d",
+                        "secondary": "#5f5e5e",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#e0bfbc",
+                        "on-surface-variant": "#58413f",
+                        "on-primary-fixed": "#410003",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#ac322e",
+                        "on-secondary-fixed-variant": "#474746",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "tertiary": "#402e00",
+                        "surface-variant": "#f5dddb",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#261a00",
+                        "background": "#fff8f7",
+                        "on-primary-container": "#ff9a91",
+                        "surface-container-high": "#fbe3e0",
+                        "primary-container": "#8b1a1a",
+                        "tertiary-container": "#5c4300",
+                        "inverse-on-surface": "#ffedeb",
+                        "tertiary-fixed": "#ffdea0",
+                        "inverse-primary": "#ffb3ac",
+                        "on-secondary-container": "#636262",
+                        "secondary-container": "#e2dfde",
+                        "inverse-surface": "#3b2d2c",
+                        "on-surface": "#251817",
+                        "surface-dim": "#ecd5d2",
+                        "surface": "#fff8f7",
+                        "on-secondary-fixed": "#1c1b1b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "unit": "4px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "subheadline": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "button-text": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "subheadline": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "button-text": ["16px", { "lineHeight": "1", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h1": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #FAFAF7; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen text-on-surface antialiased flex flex-col items-center">
+<div class="w-full max-w-md mx-auto min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex items-center w-full px-6 py-4 bg-[#FAFAF7] dark:bg-stone-950 font-['Inter'] tracking-tight docked full-width top-0 flat no shadows text-[#8B1A1A] dark:text-red-400">
+<button class="p-2 -ml-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col px-6 pt-8 pb-12 w-full">
+<!-- Header Section -->
+<div class="mb-10">
+<h1 class="font-h1 text-h1 text-primary-container mb-3 tracking-tight">Selamat Datang Kembali</h1>
+<p class="font-body-lg text-body-lg text-secondary">Masuk untuk mengelola bisnis jersey Anda.</p>
+</div>
+<!-- Form -->
+<form class="flex flex-col gap-6 flex-grow">
+<!-- Email/WA Input -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-secondary px-1 uppercase tracking-wider">Email atau Nomor WhatsApp</label>
+<div class="relative bg-surface-container-lowest rounded-lg border border-outline-variant/30 focus-within:border-primary-container/50 focus-within:ring-1 focus-within:ring-primary-container/20 transition-all shadow-[0_8px_20px_rgba(0,0,0,0.02)]">
+<input class="w-full bg-transparent border-none py-4 px-4 font-body-lg text-body-lg text-on-surface placeholder:text-secondary-fixed-dim focus:ring-0 rounded-lg" placeholder="Masukkan email atau nomor WA" type="text"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-secondary px-1 uppercase tracking-wider">Kata Sandi</label>
+<div class="relative bg-surface-container-lowest rounded-lg border border-outline-variant/30 focus-within:border-primary-container/50 focus-within:ring-1 focus-within:ring-primary-container/20 transition-all shadow-[0_8px_20px_rgba(0,0,0,0.02)] flex items-center">
+<input class="w-full bg-transparent border-none py-4 pl-4 pr-12 font-body-lg text-body-lg text-on-surface placeholder:text-secondary-fixed-dim focus:ring-0 rounded-lg" placeholder="Masukkan kata sandi" type="password"/>
+<button class="absolute right-4 text-secondary hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Forgot Password -->
+<div class="flex justify-end mt-[-8px]">
+<a class="font-body-sm text-body-sm text-primary-container font-medium hover:opacity-80 transition-opacity" href="#">Lupa Kata Sandi?</a>
+</div>
+<!-- Primary Button -->
+<div class="mt-4">
+<button class="w-full py-4 px-6 bg-primary-container text-on-primary font-button-text text-button-text rounded-full active:scale-[0.98] transition-transform duration-200 shadow-[0_8px_20px_rgba(139,26,26,0.15)] hover:shadow-[0_8px_25px_rgba(139,26,26,0.25)] flex items-center justify-center" type="button">
+                        Masuk
+                    </button>
+</div>
+<!-- Divider -->
+<div class="flex items-center my-6">
+<div class="flex-grow h-px bg-outline-variant/30"></div>
+<span class="px-4 font-body-sm text-body-sm text-secondary">Atau masuk dengan</span>
+<div class="flex-grow h-px bg-outline-variant/30"></div>
+</div>
+<!-- Social Login -->
+<div class="flex justify-center gap-4">
+<button class="w-14 h-14 rounded-full bg-surface-container-lowest border border-outline-variant/30 flex items-center justify-center hover:bg-surface-variant transition-colors shadow-[0_4px_12px_rgba(0,0,0,0.03)] active:scale-95" type="button">
+<span class="font-bold text-lg">G</span>
+</button>
+<button class="w-14 h-14 rounded-full bg-surface-container-lowest border border-outline-variant/30 flex items-center justify-center hover:bg-surface-variant transition-colors shadow-[0_4px_12px_rgba(0,0,0,0.03)] active:scale-95" type="button">
+<span class="material-symbols-outlined" data-icon="apple">ios</span>
+</button>
+</div>
+</form>
+<!-- Footer Link -->
+<div class="mt-auto pt-8 text-center">
+<p class="font-body-sm text-body-sm text-secondary">
+                    Belum punya akun? <a class="text-primary-container font-semibold hover:opacity-80 transition-opacity" href="#">Daftar</a>
+</p>
+</div>
+</main>
+</div>
+</body></html>

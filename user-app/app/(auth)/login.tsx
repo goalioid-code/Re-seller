@@ -1,346 +1,280 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert, Image } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { useAuth } from '../../src/contexts/AuthContext';
-import tw from 'twrnc';
-import { Mail, MessageCircle, ArrowRight, Shield } from 'lucide-react-native';
-import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import { useRouter } from 'expo-router';
 import type { Href } from 'expo-router';
-import { getAuthRedirectHref } from '../../src/lib/authRedirect';
+import { stitchColors } from '../../src/theme/stitch';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [authChannel, setAuthChannel] = useState<'whatsapp' | 'email'>('email');
-  const [stage, setStage] = useState<'login' | 'otp' | 'profile'>('login');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [feedback, setFeedback] = useState('');
-  const { devLogin, whatsappLogin, emailLogin, isLoggedIn, user, loading: authLoading } = useAuth();
+  const { isLoggedIn, user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (authLoading) return;
-    const next = getAuthRedirectHref(isLoggedIn, user, false) as Href;
-    if (isLoggedIn && user && next !== '/(auth)/login') {
-      router.replace(next);
+    if (isLoggedIn && user) {
+      router.replace('/(tabs)' as Href);
     }
-  }, [isLoggedIn, user, authLoading, router]);
+  }, [isLoggedIn, user, authLoading]);
 
-  const handleDevLogin = async () => {
-    if (!email) return Alert.alert('Error', 'Masukkan email testing');
-    setFeedback('');
+  const handleLogin = async () => {
+    if (!identifier.trim()) return Alert.alert('Error', 'Masukkan email atau nomor WA');
+    if (!password.trim()) return Alert.alert('Error', 'Masukkan kata sandi');
     setLoading(true);
     try {
-      await devLogin(email);
+      // Placeholder login logic
+      Alert.alert('Info', 'Login functionality will be connected to backend');
     } catch (err: any) {
-      setFeedback(err?.message || 'Login dev gagal.');
-      Alert.alert('Login Gagal', err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRequestOTP = async () => {
-    if (authChannel === 'whatsapp' && !phone) return Alert.alert('Error', 'Masukkan nomor WhatsApp');
-    if (authChannel === 'email' && !email) return Alert.alert('Error', 'Masukkan email');
-    setFeedback('');
-    setLoading(true);
-    try {
-      const apiUrl = getApiBaseUrl();
-      const response = await fetchWithTimeout(
-        `${apiUrl}/auth/${authChannel === 'whatsapp' ? 'whatsapp' : 'email'}/request`,
-        {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(authChannel === 'whatsapp' ? { phone } : { email: email.trim().toLowerCase() }),
-        }
-      );
-      const data = await response.json().catch(() => ({}));
-      if (data.success) {
-        setStage('otp');
-        setFeedback(
-          authChannel === 'whatsapp'
-            ? 'OTP berhasil diminta. Silakan cek WhatsApp Anda.'
-            : 'OTP berhasil diminta. Silakan cek email Anda.'
-        );
-        Alert.alert('Sukses', authChannel === 'whatsapp' ? 'OTP telah dikirim ke WhatsApp Anda.' : 'OTP telah dikirim ke email Anda.');
-      } else {
-        throw new Error(data.message || `Request OTP gagal (${response.status})`);
-      }
-    } catch (err: any) {
-      const message =
-        err?.name === 'AbortError'
-          ? 'Request timeout. Pastikan backend aktif dan API URL mengarah ke IP laptop yang benar.'
-          : err?.message || 'Gagal mengirim OTP.';
-      setFeedback(message);
-      Alert.alert('Error', message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOTP = async () => {
-    if (!otp) return Alert.alert('Error', 'Masukkan kode OTP');
-    setFeedback('');
-    setLoading(true);
-    try {
-      const result =
-        authChannel === 'whatsapp'
-          ? await whatsappLogin(phone, otp)
-          : await emailLogin(email.trim().toLowerCase(), otp);
-      if (result?.needs_profile) {
-        setStage('profile');
-        setFeedback(
-          authChannel === 'whatsapp'
-            ? 'Nomor baru terdeteksi. Lengkapi nama dan email untuk daftar.'
-            : 'Email baru terdeteksi. Lengkapi nama untuk daftar.'
-        );
-        return;
-      }
-      setFeedback('Verifikasi OTP berhasil.');
-      Alert.alert('Sukses', 'Login berhasil!');
-    } catch (err: any) {
-      setFeedback(err?.message || 'Verifikasi OTP gagal.');
-      Alert.alert('Verifikasi Gagal', err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCompleteProfile = async () => {
-    if (!fullName.trim()) return Alert.alert('Error', 'Masukkan nama lengkap');
-    if (authChannel === 'whatsapp' && !email.trim()) return Alert.alert('Error', 'Masukkan email');
-    setFeedback('');
-    setLoading(true);
-    try {
-      if (authChannel === 'whatsapp') {
-        await whatsappLogin(phone, otp, {
-          full_name: fullName.trim(),
-          email: email.trim().toLowerCase(),
-        });
-      } else {
-        await emailLogin(email.trim().toLowerCase(), otp, {
-          full_name: fullName.trim(),
-        });
-      }
-      setFeedback('Pendaftaran berhasil. Menunggu verifikasi admin.');
-      Alert.alert('Sukses', 'Akun berhasil dibuat. Silakan tunggu verifikasi admin.');
-    } catch (err: any) {
-      setFeedback(err?.message || 'Gagal menyelesaikan pendaftaran.');
-      Alert.alert('Pendaftaran Gagal', err.message);
+      Alert.alert('Login Gagal', err?.message || 'Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <View style={tw`flex-1 bg-[#0F172A] p-6 justify-center`}>
-      <View style={tw`mb-10 items-center`}>
-        <Text style={tw`text-white text-3xl font-bold`}>CALSUB</Text>
-        <Text style={tw`text-gray-400 text-lg mt-2`}>Reseller Dashboard</Text>
+    <View style={styles.screen}>
+      {/* Back button */}
+      <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+        <Text style={styles.backIcon}>←</Text>
+      </TouchableOpacity>
+
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.heading}>Selamat Datang Kembali</Text>
+        <Text style={styles.subheading}>Masuk untuk mengelola bisnis jersey Anda.</Text>
       </View>
 
-      <View style={tw`bg-[#1E293B] p-6 rounded-3xl border border-gray-800`}>
-        {stage === 'login' ? (
-          <>
-            <Text style={tw`text-white text-xl font-bold mb-6`}>Login Ke Akun</Text>
+      {/* Form */}
+      <View style={styles.form}>
+        {/* Email/WA field */}
+        <Text style={styles.label}>EMAIL ATAU NOMOR WHATSAPP</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Masukkan email atau nomor WA"
+            placeholderTextColor="#B8A8A6"
+            value={identifier}
+            onChangeText={setIdentifier}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+        </View>
 
-            <View style={tw`flex-row mb-4 bg-[#0F172A] p-1 rounded-xl border border-gray-700`}>
-              <TouchableOpacity
-                style={tw`${authChannel === 'email' ? 'bg-blue-600' : 'bg-transparent'} flex-1 h-10 rounded-lg items-center justify-center flex-row`}
-                onPress={() => setAuthChannel('email')}
-              >
-                <Mail size={16} color="white" />
-                <Text style={tw`text-white ml-2 font-semibold`}>Email</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={tw`${authChannel === 'whatsapp' ? 'bg-green-600' : 'bg-transparent'} flex-1 h-10 rounded-lg items-center justify-center flex-row`}
-                onPress={() => setAuthChannel('whatsapp')}
-              >
-                <MessageCircle size={16} color="white" />
-                <Text style={tw`text-white ml-2 font-semibold`}>WhatsApp</Text>
-              </TouchableOpacity>
-            </View>
+        {/* Password field */}
+        <Text style={[styles.label, { marginTop: 16 }]}>KATA SANDI</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={[styles.input, { flex: 1 }]}
+            placeholder="Masukkan kata sandi"
+            placeholderTextColor="#B8A8A6"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity
+            style={styles.eyeBtn}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Text style={styles.eyeIcon}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+          </TouchableOpacity>
+        </View>
 
-            <View style={tw`mb-4`}>
-              <Text style={tw`text-gray-400 mb-2 ml-1`}>{authChannel === 'whatsapp' ? 'Nomor WhatsApp' : 'Email'}</Text>
-              <View style={tw`flex-row items-center bg-[#0F172A] rounded-xl px-4 border border-gray-700`}>
-                {authChannel === 'whatsapp' ? (
-                  <MessageCircle size={20} color="#94A3B8" />
-                ) : (
-                  <Mail size={20} color="#94A3B8" />
-                )}
-                <TextInput
-                  style={tw`flex-1 h-12 text-white ml-3`}
-                  placeholder={authChannel === 'whatsapp' ? '0812xxxx' : 'email@contoh.com'}
-                  placeholderTextColor="#475569"
-                  value={authChannel === 'whatsapp' ? phone : email}
-                  onChangeText={authChannel === 'whatsapp' ? setPhone : setEmail}
-                  keyboardType={authChannel === 'whatsapp' ? 'phone-pad' : 'email-address'}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
+        {/* Forgot password */}
+        <TouchableOpacity style={styles.forgotBtn}>
+          <Text style={styles.forgotText}>Lupa Kata Sandi?</Text>
+        </TouchableOpacity>
 
-            <TouchableOpacity 
-              style={tw`${authChannel === 'whatsapp' ? 'bg-green-600' : 'bg-blue-600'} h-14 rounded-xl items-center justify-center flex-row mb-6`}
-              onPress={handleRequestOTP}
-              disabled={loading}
-            >
-              {loading ? <ActivityIndicator color="white" /> : (
-                <>
-                  {authChannel === 'whatsapp' ? (
-                    <Image
-                      source={require('../../assets/wa-logo.webp')}
-                      style={tw`w-13 h-13 mr-3`}
-                      resizeMode="contain"
-                    />
-                  ) : (
-                    <Mail size={20} color="white" />
-                  )}
-                  <Text style={tw`text-white font-bold text-lg mr-2`}>
-                    {authChannel === 'whatsapp' ? 'Kirim OTP via WhatsApp' : 'Kirim OTP via Email'}
-                  </Text>
-                </>
-              )}
-            </TouchableOpacity>
-            {!!feedback && (
-              <Text style={tw`text-xs text-amber-300 mb-4`}>{feedback}</Text>
-            )}
+        {/* Login button */}
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.loginBtnText}>Masuk</Text>
+          )}
+        </TouchableOpacity>
 
-            <View style={tw`flex-row items-center my-4`}>
-              <View style={tw`flex-1 h-px bg-gray-800`} />
-              <Text style={tw`mx-4 text-gray-500`}>Atau Login Developer</Text>
-              <View style={tw`flex-1 h-px bg-gray-800`} />
-            </View>
+        {/* Divider */}
+        <View style={styles.divider}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>Atau masuk dengan</Text>
+          <View style={styles.dividerLine} />
+        </View>
 
-            <View style={tw`mb-4`}>
-              <View style={tw`flex-row items-center bg-[#0F172A] rounded-xl px-4 border border-gray-700`}>
-                <Mail size={20} color="#94A3B8" />
-                <TextInput
-                  style={tw`flex-1 h-12 text-white ml-3`}
-                  placeholder="Email Developer"
-                  placeholderTextColor="#475569"
-                  value={email}
-                  onChangeText={setEmail}
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity 
-              style={tw`bg-gray-700 h-12 rounded-xl items-center justify-center`}
-              onPress={handleDevLogin}
-              disabled={loading}
-            >
-              <Text style={tw`text-white font-bold`}>Login Dev</Text>
-            </TouchableOpacity>
-          </>
-        ) : stage === 'otp' ? (
-          <>
-            <Text style={tw`text-white text-xl font-bold mb-2`}>Verifikasi OTP</Text>
-            <Text style={tw`text-gray-400 mb-8`}>
-              Masukkan 6 digit kode yang dikirim ke {authChannel === 'whatsapp' ? phone : email}
-            </Text>
-
-            <View style={tw`mb-8`}>
-              <View style={tw`flex-row items-center bg-[#0F172A] rounded-xl px-4 border border-gray-700`}>
-                <Shield size={24} color="#94A3B8" />
-                <TextInput
-                  style={tw`flex-1 h-16 text-white ml-4 text-2xl font-bold tracking-widest`}
-                  placeholder="000000"
-                  placeholderTextColor="#475569"
-                  value={otp}
-                  onChangeText={setOtp}
-                  keyboardType="number-pad"
-                  maxLength={6}
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity 
-              style={tw`bg-blue-600 h-14 rounded-xl items-center justify-center mb-4`}
-              onPress={handleVerifyOTP}
-              disabled={loading}
-            >
-              {loading ? <ActivityIndicator color="white" /> : (
-                <Text style={tw`text-white font-bold text-lg`}>Verifikasi</Text>
-              )}
-            </TouchableOpacity>
-            {!!feedback && (
-              <Text style={tw`text-xs text-amber-300 mb-4`}>{feedback}</Text>
-            )}
-
-            <TouchableOpacity 
-              onPress={() => setStage('login')}
-              style={tw`items-center`}
-            >
-              <Text style={tw`text-gray-400`}>
-                {authChannel === 'whatsapp' ? 'Ganti nomor WhatsApp' : 'Ganti email'}
-              </Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <>
-            <Text style={tw`text-white text-xl font-bold mb-2`}>Lengkapi Pendaftaran</Text>
-            <Text style={tw`text-gray-400 mb-8`}>
-              Akun baru terdeteksi. Isi data berikut agar masuk ke daftar verifikasi admin.
-            </Text>
-
-            <View style={tw`mb-4`}>
-              <Text style={tw`text-gray-400 mb-2 ml-1`}>Nama Lengkap</Text>
-              <View style={tw`flex-row items-center bg-[#0F172A] rounded-xl px-4 border border-gray-700`}>
-                <Shield size={20} color="#94A3B8" />
-                <TextInput
-                  style={tw`flex-1 h-12 text-white ml-3`}
-                  placeholder="Nama lengkap"
-                  placeholderTextColor="#475569"
-                  value={fullName}
-                  onChangeText={setFullName}
-                />
-              </View>
-            </View>
-
-            <View style={tw`mb-8`}>
-              <Text style={tw`text-gray-400 mb-2 ml-1`}>Email</Text>
-              <View style={tw`flex-row items-center bg-[#0F172A] rounded-xl px-4 border border-gray-700`}>
-                <Mail size={20} color="#94A3B8" />
-                <TextInput
-                  style={tw`flex-1 h-12 text-white ml-3`}
-                  placeholder="email@contoh.com"
-                  placeholderTextColor="#475569"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  editable={authChannel === 'whatsapp'}
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={tw`bg-blue-600 h-14 rounded-xl items-center justify-center mb-4`}
-              onPress={handleCompleteProfile}
-              disabled={loading}
-            >
-              {loading ? <ActivityIndicator color="white" /> : (
-                <Text style={tw`text-white font-bold text-lg`}>Selesaikan Pendaftaran</Text>
-              )}
-            </TouchableOpacity>
-            {!!feedback && (
-              <Text style={tw`text-xs text-amber-300 mb-4`}>{feedback}</Text>
-            )}
-            <TouchableOpacity onPress={() => setStage('login')} style={tw`items-center`}>
-              <Text style={tw`text-gray-400`}>Kembali</Text>
-            </TouchableOpacity>
-          </>
-        )}
+        {/* Social buttons */}
+        <View style={styles.socialRow}>
+          <TouchableOpacity style={styles.socialBtn}>
+            <Text style={styles.socialIcon}>G</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.socialBtn}>
+            <Text style={styles.socialIcon}>iOS</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
-      <Text style={tw`text-gray-500 text-center mt-10`}>
-        CALSUB Management System v1.0
-      </Text>
+      {/* Bottom link */}
+      <View style={styles.bottomRow}>
+        <Text style={styles.bottomText}>Belum punya akun? </Text>
+        <TouchableOpacity onPress={() => router.push('/(onboarding)')}>
+          <Text style={styles.bottomLink}>Daftar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: stitchColors.pageSoft,
+    paddingHorizontal: 24,
+  },
+  backBtn: {
+    marginTop: 52,
+    width: 40,
+    height: 40,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  backIcon: {
+    color: stitchColors.primary,
+    fontSize: 28,
+    fontWeight: '300',
+  },
+  header: {
+    marginTop: 20,
+    marginBottom: 32,
+  },
+  heading: {
+    color: stitchColors.primary,
+    fontSize: 28,
+    fontWeight: '800',
+    marginBottom: 6,
+  },
+  subheading: {
+    color: stitchColors.textMutedLight,
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  form: {},
+  label: {
+    color: '#5F5E5E',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    marginBottom: 8,
+    marginLeft: 2,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#EDE0DE',
+    paddingHorizontal: 16,
+    minHeight: 54,
+  },
+  input: {
+    flex: 1,
+    color: stitchColors.textOnLight,
+    fontSize: 15,
+    paddingVertical: 14,
+  },
+  eyeBtn: {
+    padding: 8,
+  },
+  eyeIcon: {
+    fontSize: 18,
+  },
+  forgotBtn: {
+    alignSelf: 'flex-end',
+    marginTop: 10,
+    marginBottom: 24,
+  },
+  forgotText: {
+    color: stitchColors.primary,
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  loginBtn: {
+    backgroundColor: stitchColors.primary,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    shadowColor: '#8B1A1A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  loginBtnText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E0BFBC',
+  },
+  dividerText: {
+    color: '#8C716E',
+    fontSize: 12,
+    marginHorizontal: 12,
+  },
+  socialRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  socialBtn: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E0BFBC',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  socialIcon: {
+    color: stitchColors.textOnLight,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 'auto',
+    paddingBottom: 40,
+  },
+  bottomText: {
+    color: stitchColors.textMutedLight,
+    fontSize: 14,
+  },
+  bottomLink: {
+    color: stitchColors.primary,
+    fontSize: 14,
+    fontWeight: '700',
+  },
+});

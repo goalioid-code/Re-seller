@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Bank Account Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#ffb3ac",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#5f5e5e",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#58413f",
+                        "outline": "#8c716e",
+                        "surface-container-low": "#fff0ef",
+                        "surface": "#fff8f7",
+                        "on-surface": "#251817",
+                        "on-primary-container": "#ff9a91",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#5c4300",
+                        "primary-fixed": "#ffdad6",
+                        "surface-dim": "#ecd5d2",
+                        "surface-container": "#ffe9e6",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#261a00",
+                        "tertiary-fixed": "#ffdea0",
+                        "inverse-on-surface": "#ffedeb",
+                        "outline-variant": "#e0bfbc",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "inverse-surface": "#3b2d2c",
+                        "background": "#fff8f7",
+                        "secondary-container": "#e2dfde",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "on-background": "#251817",
+                        "primary": "#690008",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#f5dddb",
+                        "surface-variant": "#f5dddb",
+                        "on-tertiary-container": "#dcaf4d",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "inverse-primary": "#ffb3ac",
+                        "tertiary": "#402e00",
+                        "surface-container-high": "#fbe3e0",
+                        "secondary-fixed": "#e5e2e1",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "on-secondary-container": "#636262",
+                        "primary-container": "#8b1a1a",
+                        "surface-bright": "#fff8f7",
+                        "on-primary-fixed": "#410003",
+                        "surface-tint": "#ac322e",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "xl": "32px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "md": "16px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "button-text": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "subheadline": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "button-text": ["16px", { "lineHeight": "1", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "subheadline": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h1": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-image: linear-gradient(to bottom, #2A0A0A, #1A0606);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        .glass-dark {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-gold { color: #D4A847; }
+        .bg-gold-muted { background: rgba(212, 168, 71, 0.15); }
+        .border-gold { border-color: #D4A847; }
+        .btn-gold-gradient {
+            background: linear-gradient(135deg, #D4A847, #b08a38);
+        }
+        
+        /* Custom scrollbar to hide it for a cleaner app feel */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased max-w-[390px] mx-auto relative pb-lg flex flex-col font-['Inter']">
+<!-- Header Area -->
+<header class="flex justify-between items-center px-lg pt-lg pb-md">
+<!-- Logo Placeholder -->
+<div class="bg-white/90 text-primary-container font-h1 text-[16px] px-3 py-1 rounded-sm tracking-wider font-extrabold shadow-sm">
+            CALSUB
+        </div>
+<!-- Progress Bar -->
+<div class="flex flex-col items-end gap-1">
+<span class="text-gold font-label-caps text-[10px]">78% selesai</span>
+<div class="flex gap-[2px]">
+<!-- 11 filled, 3 empty -->
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-[#D4A847]"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+<div class="h-1.5 w-3 rounded-full bg-white/20"></div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-lg flex flex-col gap-lg">
+<!-- Hero Section: Mascot & Chat Bubbles -->
+<section class="flex gap-md items-start mt-sm">
+<!-- Mascot Image -->
+<div class="w-[70px] h-[70px] shrink-0 rounded-full overflow-hidden shadow-lg border border-white/10 bg-white/5 flex items-center justify-center">
+<img alt="Mascot" class="w-full h-full object-cover object-center" data-alt="A highly detailed 3D render of a cute Shiba Inu dog mascot named Calman holding a stack of money or a piggy bank with a happy, excited smile. The scene is lit with dramatic studio lighting against a dark maroon background, highlighting the premium, luxurious aesthetic of the Indonesian reseller app design system. The dog is stylized, friendly, and appealing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArMVJPmJWZ6b5EVtACIH6zs9TvU74C0dPczyxLvYZJjMfvZOm7ov85IKCD5khHJ2aAFvLLc65y8tKOGxJo_tDrEolgp-Bo8iSnRkSTLw4HwySsh660CZ9ZfY7y-UOOFmv1eedQRsqWM7qqzruJsCox57AyBvTb_1aiuFsXiuiX4BCBT4AIYiKrnROOqA5pV_4oHJ2ZZMCg6c-xDguz_NqPyTkuYXZPytN3V6NFnoqoE6V1441sjnamSHXw6cCC0df8ON8Tioudmw"/>
+</div>
+<!-- Chat Bubbles -->
+<div class="flex flex-col gap-sm flex-1 pt-1">
+<div class="glass-dark px-md py-sm rounded-2xl rounded-tl-sm w-fit font-body-sm text-white/90">
+                    Hampir selesai! 💰
+                </div>
+<div class="glass-dark px-md py-sm rounded-2xl rounded-tl-sm font-body-sm text-white/90 leading-relaxed shadow-md">
+                    Daftar rekening untuk pencairan komisi. <span class="text-gold font-semibold">PENTING:</span> nama rekening <span class="font-bold underline decoration-gold/50 underline-offset-2">HARUS SAMA</span> dengan KTP/Kartu Pelajar.
+                </div>
+</div>
+</section>
+<!-- Bank Form -->
+<section class="flex flex-col gap-md">
+<!-- Dropdown: Pilih Bank -->
+<div class="flex flex-col gap-1">
+<label class="text-gold font-label-caps opacity-90 pl-1">Pilih Bank</label>
+<div class="glass-dark rounded-[16px] px-md py-3 flex justify-between items-center cursor-pointer active:scale-[0.99] transition-transform">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-white/80" data-icon="account_balance">account_balance</span>
+</div>
+<span class="font-body-lg text-white font-medium">BCA</span>
+</div>
+<span class="material-symbols-outlined text-white/50" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Input: Nomor Rekening -->
+<div class="flex flex-col gap-1">
+<label class="text-gold font-label-caps opacity-90 pl-1">Nomor Rekening</label>
+<div class="glass-dark rounded-[16px] px-md py-4">
+<input class="w-full bg-transparent border-none p-0 text-white font-body-lg placeholder:text-white/30 focus:ring-0 tracking-wider" placeholder="1234 5678 9012" type="text"/>
+</div>
+</div>
+<!-- Input: Nama Pemilik -->
+<div class="flex flex-col gap-1">
+<label class="text-gold font-label-caps opacity-90 pl-1">Nama Pemilik Rekening</label>
+<div class="glass-dark rounded-[16px] px-md py-4">
+<input class="w-full bg-transparent border-none p-0 text-white font-body-lg placeholder:text-white/30 focus:ring-0" placeholder="Sesuai buku tabungan" type="text"/>
+</div>
+<div class="pl-1 flex gap-1 items-start mt-1">
+<span class="text-gold/70 text-[10px] font-medium italic tracking-wide">⚠️ Harus SAMA PERSIS dengan nama di KTP</span>
+</div>
+</div>
+</section>
+<!-- Warning Box -->
+<section class="mt-sm">
+<div class="bg-gold-muted border border-gold/50 rounded-xl p-md flex gap-sm items-start shadow-[0_4px_20px_rgba(212,168,71,0.05)]">
+<span class="material-symbols-outlined text-gold mt-0.5 shrink-0" data-icon="warning">warning</span>
+<p class="font-body-sm text-white/90 text-[12px] leading-relaxed">
+                    Nama rekening akan dicocokkan otomatis dengan KTP. Jika tidak sama, akun tidak bisa diverifikasi.
+                </p>
+</div>
+</section>
+</main>
+<!-- Bottom Actions -->
+<footer class="mt-auto px-lg flex flex-col gap-md pt-lg">
+<!-- Primary CTA -->
+<button class="w-full btn-gold-gradient text-on-surface font-button-text py-4 rounded-full flex justify-center items-center gap-sm shadow-[0_8px_16px_rgba(212,168,71,0.2)] active:scale-95 transition-all duration-200">
+<span>Lanjutkan ke Upload KTP</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="badge">badge</span>
+<span class="material-symbols-outlined text-[18px] ml-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Skip Action -->
+<button class="flex items-center justify-center gap-1 text-white/40 font-body-sm active:text-white/60 transition-colors py-2">
+<span>Lewati</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_downward">arrow_downward</span>
+</button>
+</footer>
+</body></html>

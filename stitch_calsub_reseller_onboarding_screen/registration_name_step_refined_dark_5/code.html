@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Registration Step 1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#ffb3ac",
+                        "primary-fixed": "#ffdad6",
+                        "on-surface-variant": "#58413f",
+                        "on-surface": "#251817",
+                        "tertiary": "#402e00",
+                        "tertiary-container": "#5c4300",
+                        "on-background": "#251817",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "on-secondary": "#ffffff",
+                        "outline": "#8c716e",
+                        "on-secondary-fixed-variant": "#474746",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "inverse-surface": "#3b2d2c",
+                        "background": "#fff8f7",
+                        "on-primary-container": "#ff9a91",
+                        "inverse-on-surface": "#ffedeb",
+                        "surface": "#fff8f7",
+                        "surface-tint": "#ac322e",
+                        "primary-container": "#8b1a1a",
+                        "surface-bright": "#fff8f7",
+                        "surface-container-high": "#fbe3e0",
+                        "on-tertiary-container": "#dcaf4d",
+                        "secondary-container": "#e2dfde",
+                        "on-primary-fixed": "#410003",
+                        "surface-variant": "#f5dddb",
+                        "outline-variant": "#e0bfbc",
+                        "surface-dim": "#ecd5d2",
+                        "on-secondary-container": "#636262",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-tertiary-fixed": "#261a00",
+                        "secondary": "#5f5e5e",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#f5dddb",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "surface-container": "#ffe9e6",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#fff0ef",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdea0",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "primary": "#690008",
+                        "calsub-gold": "#D4A847",
+                        "calsub-gold-light": "#E5BC5C",
+                        "calsub-bg-top": "#2A0A0A",
+                        "calsub-bg-bottom": "#1A0606"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "lg": "24px",
+                        "container-margin": "20px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "button-text": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "subheadline": ["Inter"],
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "button-text": ["16px", { "lineHeight": "1", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "subheadline": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h1": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .bg-gradient-calsub {
+            background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+        }
+        .glow-top {
+            background: radial-gradient(circle at top center, rgba(212, 168, 71, 0.15) 0%, rgba(212, 168, 71, 0) 50%);
+        }
+        .glow-hero {
+            background: radial-gradient(circle at center, rgba(212, 168, 71, 0.2) 0%, rgba(212, 168, 71, 0) 60%);
+        }
+        .glass-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+        }
+        .glass-input {
+            background: #2A1515;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1.5px solid #D4A847;
+        }
+        .ios-keyboard {
+            background-color: #212121; /* Approximate dark iOS keyboard color */
+        }
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #D4A847;
+            box-shadow: 0 0 6px 2px rgba(212, 168, 71, 0.5);
+        }
+    </style>
+<style>
+        .bg-gradient-calsub {
+            background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+        }
+        .glow-top {
+            background: radial-gradient(circle at top center, rgba(212, 168, 71, 0.15) 0%, rgba(212, 168, 71, 0) 50%);
+        }
+        .glow-hero {
+            background: radial-gradient(circle at center, rgba(212, 168, 71, 0.2) 0%, rgba(212, 168, 71, 0) 60%);
+        }
+        .glass-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+        }
+        .glass-input {
+            background: #2A1515;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1.5px solid #D4A847;
+        }
+        .ios-keyboard {
+            background-color: #212121; /* Approximate dark iOS keyboard color */
+        }
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #D4A847;
+            box-shadow: 0 0 6px 2px rgba(212, 168, 71, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gradient-calsub min-h-screen text-on-secondary font-['Inter'] relative overflow-hidden flex justify-center">
+<!-- Top Glow -->
+<div class="absolute inset-0 glow-top pointer-events-none"></div>
+<!-- Floating Sparkles -->
+<div class="sparkle top-32 left-12"></div>
+<div class="sparkle top-48 right-16" style="width: 3px; height: 3px;"></div>
+<div class="sparkle top-80 left-20" style="width: 5px; height: 5px; opacity: 0.6;"></div>
+<!-- Main Mobile Container -->
+<main class="w-full max-w-md mx-auto relative h-[884px] flex flex-col pt-safe">
+<!-- TopAppBar (Customized for Context - No JSON used as context implies linear flow) -->
+<header class="flex justify-between items-center w-full px-6 py-4 z-10 shrink-0">
+<!-- Brand Badge -->
+<div class="bg-white rounded px-3 py-1 flex items-center justify-center w-[90px] h-[28px]">
+<span class="text-calsub-bg-top font-bold text-[12px] tracking-wider">CALSUB</span>
+</div>
+<!-- Progress Section -->
+<div class="flex flex-col items-end gap-1">
+<span class="text-calsub-gold font-label-caps text-label-caps">15% selesai</span>
+<div class="flex gap-1">
+<div class="w-4 h-1.5 rounded-full bg-calsub-gold"></div>
+<div class="w-4 h-1.5 rounded-full bg-white/20"></div>
+<div class="w-4 h-1.5 rounded-full bg-white/20"></div>
+<div class="w-4 h-1.5 rounded-full bg-white/20"></div>
+<div class="w-4 h-1.5 rounded-full bg-white/20"></div>
+<div class="w-4 h-1.5 rounded-full bg-white/20"></div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 flex flex-col px-6 pb-4 overflow-y-auto z-10">
+<!-- Hero Zone (Mascot) -->
+<div class="relative flex justify-center items-center mt-4 mb-6 h-48">
+<div class="absolute inset-0 glow-hero pointer-events-none"></div>
+<img alt="3D Shiba Inu mascot Calman" class="w-40 h-40 object-cover rounded-full z-10" data-alt="A 3D render of a cute Shiba Inu mascot named Calman, wearing a maroon polo shirt, khaki shorts, and white sneakers. He is in a welcoming, introductory pose, floating slightly above the ground without a pedestal. A soft drop shadow sits beneath him, and a subtle radial gold glow emanates from behind. The lighting is soft and studio-like, matching a premium dark mode UI aesthetic with maroon and burgundy tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOau-dO61_YnztAup9Vrv3AE_Idfje9eueGbJqAEbCiprGXs9NXkQDFPvMEve4sSA3GXX_Jt7C6ddwmVgB8g2U4W5T4YYEDQeEgc7kQtrKwtauG07M-TOYrEMCPwnvS03K1U44FD5mman5gPXqtiwSvQesV4XvLn381gGC8jKL29AUU_2Vr0eDux965YOfYiDj3dQqwkhsgPSHwno94ie-9nI4MR0BHOC82aagYgUGR9FHLg0gSOt5Uber5q2-pUIOnK7tglo-9g"/>
+</div>
+<!-- Chat Bubbles -->
+<div class="flex flex-col gap-4 mb-8 z-10">
+<!-- Bubble 1 -->
+<div class="flex items-end gap-3">
+<img alt="Calman Avatar" class="w-8 h-8 rounded-full border border-white/20" data-alt="A small circular avatar of a 3D Shiba Inu mascot wearing a maroon polo shirt. The mascot has a friendly expression. The background of the avatar is transparent or solid dark maroon, fitting a premium dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyR52KzismZwwxkurl_obljz6AdupUQWKOiVYTM2upBn7SIzbdfBSr8ykpAoQkvYKKKDiAdi6DC-P3QSimH2S9BVxADFnzZR_BpYrPalVSSnaUyuJ5gECxg2perM51uLp49g_ODxKxYXakeVwIwLF21OLBJO06LpwRQhruACaUUVcKbsw4VxRuY5bbx0jdbOHgSXcOCQf0HNfi8N8n8iaMVcsqdW8C80dieLjFM5MWwy_9sOdtWmkFKpnNY8wkTLArOvuEr9ak5w"/>
+<div class="glass-bubble rounded-2xl rounded-bl-sm px-4 py-3 max-w-[85%]">
+<p class="font-body-lg text-body-lg text-white">Halo! Saya Calman 👋</p>
+</div>
+</div>
+<!-- Bubble 2 -->
+<div class="flex items-end gap-3">
+<img alt="Calman Avatar" class="w-8 h-8 rounded-full border border-white/20 opacity-0" data-alt="A small circular avatar of a 3D Shiba Inu mascot wearing a maroon polo shirt. The mascot has a friendly expression. The background of the avatar is transparent or solid dark maroon, fitting a premium dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeQhFasaGbRgHyh0PSggQ3zTJ6iNUTQDfv1xNhOiMTSzLu87Fj99Qw_hUQ3_uyQJtN8epa0Z8zX5o_cZJTry6xbRTz5dDxTefaBzwcAa97IUTw1PY9wX-plP098uEFvi6sn2U3PvC6niqbP2Toq-lYJyEBbd1Sw3uCerAYQyhW7IaAsIF1TWuKQY8uGmdAqFYnL4qE2HqdsbQX4mhUcd3LxD8QHGSafU59Yt-5SMQV6aHNk-kQNANrMyfZL0NAsc9HeF3F_oCx5g"/> <!-- Hidden to keep alignment -->
+<div class="glass-bubble rounded-2xl px-4 py-3 max-w-[85%]">
+<p class="font-body-lg text-body-lg text-white">Kenalan dulu yuk! Siapa nama kamu?</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="mt-auto mb-6 z-10 relative">
+<div class="relative">
+<input class="w-full glass-input rounded-2xl h-[56px] px-4 font-body-lg text-body-lg text-white placeholder:text-[#D4A847]/40 focus:outline-none focus:ring-1 focus:ring-calsub-gold focus:border-calsub-gold transition-colors" placeholder="Ketik nama kamu..." type="text" value=""/>
+</div>
+<div class="flex justify-end mt-1">
+<span class="font-label-caps text-label-caps text-[#D4A847]/60">0/50</span>
+</div>
+</div>
+<!-- Pre-Keyboard Actions -->
+<div class="flex justify-between items-center mb-4 z-10">
+<button class="p-2 text-white/50 hover:text-white/80 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">volume_off</span>
+</button>
+<div class="flex items-center gap-4">
+<button class="font-button-text text-button-text text-calsub-gold/70 hover:text-calsub-gold transition-colors flex items-center gap-1">
+                        Lewati ↓
+                    </button>
+<!-- CTA Button right aligned above keyboard -->
+<button class="bg-gradient-to-r from-calsub-gold-light to-calsub-gold rounded-full px-6 py-3 flex items-center gap-2 text-calsub-bg-top font-button-text text-button-text shadow-lg hover:opacity-90 transition-opacity">
+                        Lanjutkan <span>→</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Mock iOS Keyboard Section -->
+<div class="w-full ios-keyboard z-20 shrink-0 pb-safe">
+<!-- Suggestion Bar -->
+<div class="flex justify-between items-center px-2 py-2 border-b border-white/10 bg-[#2A2A2A]">
+<button class="flex-1 py-2 text-center font-body-sm text-body-sm text-white/80 active:bg-white/10 rounded">Budi</button>
+<div class="w-px h-6 bg-white/10 mx-1"></div>
+<button class="flex-1 py-2 text-center font-body-sm text-body-sm text-white/80 active:bg-white/10 rounded">Andi</button>
+<div class="w-px h-6 bg-white/10 mx-1"></div>
+<button class="flex-1 py-2 text-center font-body-sm text-body-sm text-white/80 active:bg-white/10 rounded">Siti</button>
+</div>
+<!-- Mockup image for the rest of the keyboard to save space and keep it realistic -->
+<div class="w-full h-48 bg-[#212121] flex items-center justify-center p-2 relative">
+<!-- Using grid for a basic visual representation of keys -->
+<div class="w-full h-full flex flex-col gap-2">
+<div class="flex justify-center gap-1.5 w-full">
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+</div>
+<div class="flex justify-center gap-1.5 w-full px-4">
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+</div>
+<div class="flex justify-center gap-1.5 w-full">
+<div class="h-10 w-12 bg-[#333333] rounded shadow-sm flex items-center justify-center"><span class="material-symbols-outlined text-white/70 text-lg">shift</span></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-8 bg-[#4A4A4A] rounded shadow-sm"></div>
+<div class="h-10 w-12 bg-[#333333] rounded shadow-sm flex items-center justify-center"><span class="material-symbols-outlined text-white/70 text-lg">backspace</span></div>
+</div>
+<div class="flex justify-center gap-1.5 w-full">
+<div class="h-10 w-10 bg-[#333333] rounded shadow-sm flex items-center justify-center text-white/70 text-xs font-bold">123</div>
+<div class="h-10 w-10 bg-[#333333] rounded shadow-sm flex items-center justify-center"><span class="material-symbols-outlined text-white/70 text-lg">language</span></div>
+<div class="h-10 flex-1 bg-[#4A4A4A] rounded shadow-sm flex items-center justify-center font-body-sm text-body-sm text-white">spasi</div>
+<div class="h-10 w-20 bg-[#333333] rounded shadow-sm flex items-center justify-center text-white/70 text-sm font-semibold">return</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

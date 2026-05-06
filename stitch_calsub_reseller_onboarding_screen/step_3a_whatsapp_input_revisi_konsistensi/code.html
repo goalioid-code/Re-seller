@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Registration Step 3a</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            DEFAULT: '#D4A847',
+                            light: '#EED08A',
+                            dark: '#A67C24',
+                            bg: 'rgba(212, 168, 71, 0.25)'
+                        },
+                        maroon: {
+                            DEFAULT: '#2A0A0A',
+                            dark: '#1A0606',
+                            text: '#4A1C1C'
+                        },
+                        glass: {
+                            DEFAULT: 'rgba(255, 255, 255, 0.08)',
+                            border: 'rgba(255, 255, 255, 0.15)',
+                            input: 'rgba(255, 255, 255, 0.05)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        "button-text": ["Inter", "sans-serif"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "label-caps": ["Inter", "sans-serif"],
+                        "h1": ["Inter", "sans-serif"],
+                        "subheadline": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"]
+                    },
+                    fontSize: {
+                        "button-text": ["16px", {"lineHeight": "1", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h1": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "subheadline": ["15px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean app-like feel */
+        ::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        
+        body {
+            min-height: max(884px, 100dvh);
+            background: linear-gradient(to bottom, #2A0A0A, #1A0606);
+            color: white;
+        }
+        .glass-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #D4A847;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="flex flex-col relative overflow-hidden max-w-[430px] mx-auto shadow-2xl font-sans antialiased">
+<!-- Subtle gold glow at the top -->
+<div class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[90%] h-[350px] bg-gold/10 blur-[80px] rounded-full pointer-events-none z-0"></div>
+<!-- Header Section -->
+<header class="font-sans font-bold text-lg tracking-tight docked full-width top-0 shadow-none flex justify-between items-center w-full px-6 py-4 sticky z-50">
+<div class="flex items-center gap-2 text-white hover:opacity-80 transition-opacity duration-150 cursor-pointer">
+<div class="w-24 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30 backdrop-blur-sm">
+<span class="text-white text-sm tracking-widest font-bold">CALSUB</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-gold text-xs font-semibold tracking-wider uppercase">14% selesai</span>
+<div class="flex gap-1">
+<div class="h-1 w-2.5 bg-gold rounded-full"></div>
+<div class="h-1 w-2.5 bg-gold rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+<div class="h-1 w-2.5 bg-white/20 rounded-full"></div>
+</div>
+</div>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto px-6 flex flex-col items-center relative z-10 w-full pb-[320px]">
+<!-- Hero Mascot Area -->
+<div class="w-full flex justify-center mt-4 mb-8 relative">
+<div class="w-48 h-48 md:w-56 md:h-56 flex items-center justify-center overflow-visible">
+<img alt="Calman Mascot" class="w-[120%] h-[120%] object-contain drop-shadow-2xl" data-alt="A highly detailed 3D render of a stylized Shiba Inu mascot character named Calman, set against a dark, moody studio background with subtle warm lighting. The mascot has cream fur, wears a deep maroon polo shirt, tailored khaki shorts, and crisp white sneakers. He wears a futuristic metallic bluetooth earpiece. The character is posing dynamically, holding a glowing modern smartphone to his ear while gesturing confidently with one paw and smiling. The lighting is cinematic, casting a soft, warm gold rim light on the character's fur, creating a premium, dark luxe aesthetic consistent with a high-end platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYh921rSH4RwRvl1bOxetpy2kfLNpsdeuwYg4mbngNcft3_59aCi6wfAegi5cpuvc96Szy7_eLZSqIpBxV4RAzIbA2YYMU1S-pN-7OLwZa2L-Gr50NPnlgBWGupPj63KUDiyaWElCDeoh9KU-sWOXTSPt1yU4tCQocpqTokUVoVk7_MQhfoppUxk7XN38ikXemsmPn3Tg4qqNr2JoDrebeRglkov2ZDI0XbHDGxcZRN_5-9HGpHfDl_HqrJ-uSPhtDTrwAgFZHwQ"/>
+</div>
+</div>
+<!-- Chat Bubbles Area -->
+<div class="w-full flex flex-col gap-3 mb-8">
+<!-- Bubble 1 -->
+<div class="flex gap-3 items-end">
+<img class="w-10 h-10 rounded-full border border-glass-border flex-shrink-0 object-cover" data-alt="A tiny, tight circular avatar crop of a 3D Shiba Inu mascot face. The image is softly lit with warm gold tones against a dark maroon background, indicating a chat sender profile picture in a premium dark luxe user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFt1f6cFXvPo1YoSfbI3M6SkEBearOFWhkRvGRwWGMzwG8hx48Ngn1HZ_xar8j5AlAJcVk01oze3PrWo42gwB2MPKvQzmF02v6V1-grxQob1OKK0SVTfZa1eGACaAzJXIYrbqCbsElFuTAfU5PFvhrWWGjR0RqQurPx1CV_7eOf_QCRVb_tJy4pN-x8rsd9RyyBO6QHQoyrRjir9-0KrYb00tw2qTdnthVW8uZSfmK1OeaowICKi0SXSaJAYFTTs5xo0Ulw4BeAw"/>
+<div class="glass-bubble rounded-2xl rounded-bl-sm p-4 max-w-[85%]">
+<p class="font-body-lg text-white">Mantap Eko! 📱</p>
+</div>
+</div>
+<!-- Bubble 2 -->
+<div class="flex gap-3 items-end">
+<div class="w-10 h-10 flex-shrink-0"></div> <!-- Spacer -->
+<div class="glass-bubble rounded-2xl rounded-tl-sm p-4 max-w-[85%]">
+<p class="font-body-lg text-white/90">Boleh share nomor WhatsApp aktif? Buat verifikasi &amp; notifikasi PO.</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="w-full flex flex-col gap-2 mb-6">
+<!-- Phone Input Panel -->
+<div class="flex items-center glass-input rounded-2xl p-1">
+<div class="flex items-center gap-2 px-4 py-3 font-button-text text-white">
+<span class="text-[20px] leading-none">🇮🇩</span>
+<span>+62</span>
+</div>
+<div class="w-[1px] h-6 bg-gold/30 mx-2"></div>
+<input class="flex-1 bg-transparent border-none outline-none font-h1 text-gold placeholder:text-gold/50 focus:ring-0 px-3 py-2 w-full tracking-wider" placeholder="812 3456 7890" type="tel"/>
+</div>
+<!-- Info Hint -->
+<div class="flex items-center gap-1.5 px-2 text-gold/80 font-body-sm mt-1">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span>Kode OTP akan dikirim ke nomor ini</span>
+</div>
+</div>
+<!-- CTA Area -->
+<div class="w-full flex justify-end mb-8">
+<button class="bg-gradient-to-r from-[#E5BC5C] to-[#D4A847] text-[#2A0A0A] font-button-text px-6 py-3 rounded-full flex items-center gap-2 shadow-[0_8px_24px_rgba(212,168,71,0.25)] hover:opacity-90 transition-opacity font-bold">
+    Kirim Kode OTP
+    <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- Bottom Controls (Above Keyboard) -->
+<div class="px-6 pb-4 flex justify-between items-center z-40 absolute bottom-[290px] w-full">
+<button class="w-10 h-10 rounded-full bg-glass border border-glass-border flex items-center justify-center text-gold backdrop-blur-md">
+<span class="material-symbols-outlined text-[18px]">volume_off</span>
+</button>
+<button class="text-gold font-body-sm flex items-center gap-1 hover:opacity-80 transition-opacity">
+    Lewati
+    <span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+</button>
+</div>
+<!-- iOS Keyboard Mock Area -->
+<div class="absolute bottom-0 w-full bg-[#1c1b1b] border-t border-white/5 z-50 h-[290px] overflow-hidden">
+<img alt="Dark Numeric Keyboard" class="w-full h-full object-cover opacity-80 mix-blend-screen" data-alt="A close-up, high-quality photograph of a modern smartphone screen displaying a dark mode numeric keypad, typical of a high-end mobile operating system. The keys are distinct dark grey circles with crisp, illuminated white numbers and subtle secondary letters underneath. The background of the keyboard area is a solid, deep black. The lighting is perfectly even, simulating the self-illuminated OLED display of a premium device. This structural element flawlessly anchors the bottom of a dark luxe user interface screen." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmoxkZkrfx2Rq8dXsJSumXBjizZrRD3J7QTvnLhIhvRH013vUjUreDcVG42INZRvavwEqghiThG3u-ZlW3II1uYbQscPHMBlbYlNc2SbvWjQXoRUzPTCeT_i0LWNmjxFg_yJLUzp-0uk0z4WeaKwrabP3My3aCB5tcAqHlItpzLc7uuvwwOf30JEFe3Dp2Gdb-QfDWK1F1S5y-CUynCNVbYhWcxm_bW-KupCpbQNiKZ9wGedDsX6Ln8IkSN1k0b65yzomLz-s65A"/>
+</div>
+</body></html>

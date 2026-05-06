@@ -162,7 +162,7 @@ export default function ProfileScreen({ navigation }) {
           <View style={styles.avatarCircle}>
             <Text style={styles.avatarText}>{getAvatarLetter()}</Text>
           </View>
-          <View style={styles.statusBadge} style={{ backgroundColor: statusBadge.color + '20' }}>
+          <View style={[styles.statusBadge, { backgroundColor: statusBadge.color + '20' }]}>
             <Text style={[styles.statusText, { color: statusBadge.color }]}>
               {statusBadge.text}
             </Text>

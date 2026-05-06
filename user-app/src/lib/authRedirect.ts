@@ -32,9 +32,9 @@ export function getAuthRedirectHref(
   loading = false,
 ): Href | null {
   if (loading) return null;
-  if (!isLoggedIn) return '/(auth)/login';
+  if (!isLoggedIn) return '/(onboarding)';
 
-  if (!user) return '/(auth)/login';
+  if (!user) return '/(onboarding)';
 
   const status = String(user.status || '').toLowerCase();
   if (status === 'active') {

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import { stitchColors } from '../../theme/stitch';
 
 export default function AnalyzingScreen({ navigation, route }) {
   const { onboardingData } = route.params;
@@ -65,7 +66,7 @@ export default function AnalyzingScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: stitchColors.page,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 32,
@@ -75,20 +76,20 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 4,
-    borderColor: 'rgba(255, 140, 0, 0.2)',
-    borderTopColor: '#FF8C00',
+    borderColor: stitchColors.goldSoft,
+    borderTopColor: stitchColors.gold,
     marginBottom: 32,
   },
   text: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#FFF',
+    color: stitchColors.textOnDark,
     textAlign: 'center',
     marginBottom: 12,
   },
   subtext: {
     fontSize: 14,
-    color: 'rgba(255,255,255,0.5)',
+    color: stitchColors.textMutedDark,
     textAlign: 'center',
   },
 });

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Onboarding 3</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "on-surface": "#251817",
+                            "on-tertiary-fixed": "#261a00",
+                            "error": "#ba1a1a",
+                            "tertiary-fixed": "#ffdea0",
+                            "surface-container-lowest": "#ffffff",
+                            "secondary-container": "#e2dfde",
+                            "surface-dim": "#ecd5d2",
+                            "on-secondary": "#ffffff",
+                            "tertiary": "#402e00",
+                            "on-primary-fixed-variant": "#8a1a1a",
+                            "secondary-fixed": "#e5e2e1",
+                            "surface-variant": "#f5dddb",
+                            "surface-bright": "#fff8f7",
+                            "primary-fixed-dim": "#ffb3ac",
+                            "on-primary": "#ffffff",
+                            "surface-container-low": "#fff0ef",
+                            "secondary-fixed-dim": "#c8c6c5",
+                            "surface-tint": "#ac322e",
+                            "secondary": "#5f5e5e",
+                            "on-tertiary-container": "#dcaf4d",
+                            "background": "#fff8f7",
+                            "outline": "#8c716e",
+                            "on-secondary-container": "#636262",
+                            "tertiary-container": "#5c4300",
+                            "surface-container-high": "#fbe3e0",
+                            "on-error-container": "#93000a",
+                            "tertiary-fixed-dim": "#eec05c",
+                            "primary-fixed": "#ffdad6",
+                            "on-secondary-fixed": "#1c1b1b",
+                            "on-tertiary-fixed-variant": "#5c4300",
+                            "inverse-primary": "#ffb3ac",
+                            "primary-container": "#8b1a1a",
+                            "on-background": "#251817",
+                            "inverse-on-surface": "#ffedeb",
+                            "on-primary-fixed": "#410003",
+                            "on-primary-container": "#ff9a91",
+                            "primary": "#690008",
+                            "outline-variant": "#e0bfbc",
+                            "inverse-surface": "#3b2d2c",
+                            "on-tertiary": "#ffffff",
+                            "on-secondary-fixed-variant": "#474746",
+                            "surface-container": "#ffe9e6",
+                            "error-container": "#ffdad6",
+                            "on-surface-variant": "#58413f",
+                            "surface-container-highest": "#f5dddb",
+                            "surface": "#fff8f7",
+                            "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "1rem",
+                            "lg": "2rem",
+                            "xl": "3rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "xl": "32px",
+                            "sm": "8px",
+                            "unit": "4px",
+                            "lg": "24px",
+                            "xs": "4px",
+                            "gutter": "16px",
+                            "md": "16px",
+                            "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                            "subheadline": ["Inter"],
+                            "h1": ["Inter"],
+                            "button-text": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "label-caps": ["Inter"],
+                            "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                            "subheadline": ["15px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                            "h1": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                            "button-text": ["16px", {"lineHeight": "1", "fontWeight": "600"}],
+                            "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                            "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                            "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background h-screen w-full overflow-hidden flex flex-col font-body-lg text-on-background relative">
+<!-- Top AppBar (from JSON schema, acting as logo header here) -->
+<header class="docked full-width top-0 bg-transparent flex justify-between items-center w-full px-6 py-4 z-10 absolute">
+<div class="flex items-center gap-2">
+<img alt="Calsub Logo" class="h-8 w-auto object-contain" data-alt="A clean, minimalist logo for a premium reseller app named Calsub, featuring a maroon and gold color scheme on a white background. The logo design is modern, professional, and visually appealing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnUHi4RbfjrzRPcgtFXeqA8V12TcsyZbe71trlxtFNgujTRNa3nChPwbbRqXzYoEdtkER_hl2tPprfcJMxrX31a1-3IRUEzuqqajXglXx_vc2bJffIcJmlQaIDZ_UXM34VcwjluHOxYpsxiCYd2gR7Hbf_0_x6r_TUjZwOzWHi-MOk8ZsQsCr1gDeBL_duUa4J1x0i3xuzIyK-KCQhqlcfAVXSGU-aVPgEZHolp8BnJ_l1HMHQ5XGJka5wPzQ4nnuRIOeU8xO1FQ"/>
+</div>
+<button class="text-primary font-bold hover:opacity-80 transition-opacity font-button-text text-button-text bg-transparent">
+            Skip
+        </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-full w-full relative">
+<!-- Subtle Top Gradient -->
+<div class="absolute top-0 left-0 w-full h-[40%] bg-gradient-to-b from-primary-fixed to-transparent opacity-30 z-0"></div>
+<!-- Hero Area (Top 55%) -->
+<section class="h-[55%] w-full relative z-0 flex items-center justify-center p-lg">
+<div class="w-full h-full relative max-w-md mx-auto">
+<img alt="Reward Box" class="w-full h-full object-contain drop-shadow-[0_20px_20px_rgba(0,0,0,0.04)]" data-alt="A stunning 3D illustration of a premium, deep maroon and gold gift box bursting open with radiant beams of golden light. From within the box, high-end floating rewards emerge, including a shiny gold trophy, a sleek smartwatch, a stylized motorcycle silhouette, and an elegant plane ticket. The background is a soft, warm cream color, perfectly matching a modern minimalist UI aesthetic for Indonesian entrepreneurs. The lighting is bright and dynamic, creating a sense of excitement and premium reward." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR1FAalEA7i0YBSjrNzK5W1thbA71LrshVIZe_CHbluUh8iEKbHs__XpGeiMIH1V8AmJ7tHUI6ZIr4t_uJP-Csso5jd7aB47XaDoeu_6mxRTL4PGz1LcjsRPoywqcQVD4qNUtxNJb7uvNpkghtf3ZbMPNEDpp_0xl-1REXta0L5riEz5emXSSWHystl9lrCJptEs470_vOSIB5ASQLBqSAhm8NMGoAcVZgpn6y4FvYD8Ns5OvMyT7-95-84RGHpiSatoiowowY4A"/>
+</div>
+</section>
+<!-- Text Area (Middle 30%) -->
+<section class="h-[30%] w-full z-10 flex flex-col items-center justify-start px-lg text-center mt-xl">
+<h1 class="font-h1 text-h1 text-on-background mb-sm">Poin = Hadiah Nyata</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[320px]">
+                Closing PO dapat poin. Tukar jadi gadget, motor, hingga liburan.
+            </p>
+</section>
+</main>
+<!-- Bottom Navigation Area (Bottom 15% - Custom for Onboarding) -->
+<footer class="h-[15%] w-full z-50 flex justify-between items-center px-8 pb-12 fixed bottom-0 left-0 bg-transparent">
+<!-- Dot Indicators -->
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary-fixed"></div>
+<div class="w-2 h-2 rounded-full bg-secondary-fixed"></div>
+<div class="w-8 h-2 rounded-full bg-primary-container"></div>
+</div>
+<!-- FAB / Next Button -->
+<button class="w-14 h-14 rounded-full bg-primary-container text-white flex items-center justify-center shadow-[0_8px_20px_rgba(139,26,26,0.2)] hover:bg-[#7a1616] active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">arrow_forward</span>
+</button>
+</footer>
+</body></html>

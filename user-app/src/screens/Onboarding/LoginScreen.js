@@ -9,10 +9,12 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
-  ScrollView
+  ScrollView,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../context/AuthContext';
+import { stitchColors } from '../../theme/stitch';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -51,6 +53,7 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
 
           <View style={styles.header}>
+            <Image source={require('../../../assets/stitch/calman-avatar.jpg')} style={styles.hero} />
             <Text style={styles.title}>Selamat Datang</Text>
             <Text style={styles.subtitle}>Masuk dengan email pendaftaran Anda.</Text>
           </View>
@@ -105,7 +108,7 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: stitchColors.pageSoft,
   },
   scrollContent: {
     paddingHorizontal: 24,
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   backButtonText: {
-    color: '#3B82F6',
+    color: stitchColors.primary,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -127,12 +130,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: '700',
-    color: '#FFF',
+    color: stitchColors.primary,
     marginBottom: 12,
   },
   subtitle: {
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: stitchColors.textMutedLight,
     lineHeight: 24,
   },
   form: {
@@ -142,28 +145,28 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   label: {
-    color: '#FFF',
+    color: stitchColors.textMutedLight,
     fontSize: 14,
     fontWeight: '600',
     marginBottom: 8,
   },
   input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: stitchColors.borderLight,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
-    color: '#FFF',
+    color: stitchColors.textOnLight,
     fontSize: 16,
   },
   loginButton: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: stitchColors.primary,
     height: 56,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: stitchColors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -185,22 +188,29 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: stitchColors.borderLight,
   },
   dividerText: {
-    color: 'rgba(255, 255, 255, 0.3)',
+    color: stitchColors.textMutedLight,
     marginHorizontal: 16,
     fontSize: 12,
     fontWeight: '700',
   },
   registerText: {
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: stitchColors.textMutedLight,
     textAlign: 'center',
     fontSize: 15,
   },
   registerLinkText: {
-    color: '#3B82F6',
+    color: stitchColors.primary,
     fontWeight: '700',
+  },
+  hero: {
+    width: 72,
+    height: 72,
+    marginBottom: 14,
+    borderRadius: 36,
+    alignSelf: 'center',
   },
 });
 

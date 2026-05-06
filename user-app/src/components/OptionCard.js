@@ -6,6 +6,7 @@ import {
   Animated,
   View,
 } from 'react-native';
+import { stitchColors } from '../theme/stitch';
 
 /**
  * OptionCard - Tombol pilihan bergaya kotak premium
@@ -76,17 +77,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(255,255,255,0.07)',
+    backgroundColor: stitchColors.cardGlass,
     borderRadius: 16,
     padding: 16,
     marginVertical: 6,
     borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: stitchColors.borderDark,
     overflow: 'hidden',
   },
   cardSelected: {
-    backgroundColor: 'rgba(255,140,0,0.15)',
-    borderColor: '#FF8C00',
+    backgroundColor: stitchColors.goldSoft,
+    borderColor: stitchColors.gold,
   },
   glow: {
     position: 'absolute',
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'rgba(255,140,0,0.2)',
+    backgroundColor: stitchColors.goldSoft,
   },
   leftContent: {
     flexDirection: 'row',
@@ -112,14 +113,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 15,
     fontWeight: '600',
-    color: 'rgba(255,255,255,0.8)',
+    color: stitchColors.textOnDark,
   },
   labelSelected: {
     color: '#FFFFFF',
   },
   sublabel: {
     fontSize: 12,
-    color: 'rgba(255,255,255,0.45)',
+    color: stitchColors.textMutedDark,
     marginTop: 2,
   },
   checkCircle: {
@@ -127,13 +128,13 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderColor: stitchColors.borderDark,
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkCircleSelected: {
-    backgroundColor: '#FF8C00',
-    borderColor: '#FF8C00',
+    backgroundColor: stitchColors.gold,
+    borderColor: stitchColors.gold,
   },
   checkMark: {
     color: '#fff',

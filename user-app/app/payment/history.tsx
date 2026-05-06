@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
+import { stitchColors } from '../../src/theme/stitch';
 
 type PayRow = {
   id: string;
@@ -76,14 +77,14 @@ export default function PaymentHistoryScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => router.back()}>
           <Text style={styles.backText}>← Kembali</Text>
@@ -99,7 +100,7 @@ export default function PaymentHistoryScreen() {
         contentContainerStyle={styles.list}
         ListEmptyComponent={<Text style={styles.empty}>Belum ada transaksi.</Text>}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#3B82F6" />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={stitchColors.primary} />
         }
       />
     </SafeAreaView>
@@ -107,7 +108,7 @@ export default function PaymentHistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
+  container: { flex: 1, backgroundColor: stitchColors.pageSoft },
   topBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -115,23 +116,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  backText: { color: '#3B82F6', fontSize: 16, fontWeight: '600' },
-  title: { color: '#FFF', fontSize: 18, fontWeight: '700' },
-  center: { flex: 1, backgroundColor: '#0F172A', justifyContent: 'center', alignItems: 'center' },
+  backText: { color: stitchColors.primary, fontSize: 16, fontWeight: '600' },
+  title: { color: stitchColors.primary, fontSize: 18, fontWeight: '700' },
+  center: { flex: 1, backgroundColor: stitchColors.pageSoft, justifyContent: 'center', alignItems: 'center' },
   list: { padding: 20, paddingBottom: 40 },
   paymentCard: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#fff',
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.05)',
+    borderColor: stitchColors.borderLight,
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
-  paymentType: { color: '#E2E8F0', fontWeight: '700' },
+  paymentType: { color: stitchColors.textOnLight, fontWeight: '700' },
   statusPill: { color: '#FCD34D', fontSize: 12, fontWeight: '600', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 },
-  amount: { color: '#3B82F6', fontSize: 20, fontWeight: '800' },
-  poLine: { color: '#94A3B8', fontSize: 14, marginTop: 4 },
-  date: { color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 6 },
-  empty: { color: 'rgba(255,255,255,0.45)', textAlign: 'center', marginTop: 40 },
+  amount: { color: stitchColors.primary, fontSize: 20, fontWeight: '800' },
+  poLine: { color: stitchColors.textMutedLight, fontSize: 14, marginTop: 4 },
+  date: { color: stitchColors.textMutedLight, fontSize: 12, marginTop: 6 },
+  empty: { color: stitchColors.textMutedLight, textAlign: 'center', marginTop: 40 },
 });

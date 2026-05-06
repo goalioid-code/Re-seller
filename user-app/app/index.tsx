@@ -3,6 +3,7 @@ import { useAuth } from '../src/contexts/AuthContext';
 import { getAuthRedirectHref } from '../src/lib/authRedirect';
 import { View, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
+import { stitchColors } from '../src/theme/stitch';
 
 /**
  * Pintu masuk: putuskan tab/auth/onboarding/pending. Harus sejalan dengan gating lama.
@@ -13,8 +14,8 @@ export default function Index() {
 
   if (loading || !href) {
     return (
-      <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+      <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: stitchColors.pageSoft }]}>
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }

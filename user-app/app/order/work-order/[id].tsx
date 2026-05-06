@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAuth } from '../../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../../src/lib/api';
+import { stitchColors } from '../../../src/theme/stitch';
 
 export default function WorkOrderReviewScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -62,7 +63,7 @@ export default function WorkOrderReviewScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
@@ -119,8 +120,8 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  center: { flex: 1, backgroundColor: '#0F172A', justifyContent: 'center', alignItems: 'center' },
+  container: { flex: 1, backgroundColor: stitchColors.pageSoft },
+  center: { flex: 1, backgroundColor: stitchColors.pageSoft, justifyContent: 'center', alignItems: 'center' },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -128,19 +129,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  backText: { color: '#3B82F6', fontWeight: '700' },
-  headerTitle: { color: '#FFF', fontWeight: '700', fontSize: 18 },
+  backText: { color: stitchColors.primary, fontWeight: '700' },
+  headerTitle: { color: stitchColors.primary, fontWeight: '700', fontSize: 18 },
   scrollContent: { padding: 20 },
   card: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#fff',
     borderRadius: 16,
     borderWidth: 1,
     borderColor: 'rgba(148,163,184,0.18)',
     padding: 14,
   },
   row: { marginBottom: 10 },
-  label: { color: '#94A3B8', fontSize: 12 },
-  value: { color: '#FFF', marginTop: 3, fontWeight: '600' },
+  label: { color: stitchColors.textMutedLight, fontSize: 12 },
+  value: { color: stitchColors.textOnLight, marginTop: 3, fontWeight: '600' },
   approveBtn: {
     marginTop: 16,
     backgroundColor: '#10B981',

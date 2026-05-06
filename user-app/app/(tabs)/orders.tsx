@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { Package, Plus } from 'lucide-react-native';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
+import { stitchColors } from '../../src/theme/stitch';
 
 type OrderItem = {
   id: string;
@@ -77,27 +78,27 @@ export default function OrdersScreen() {
     const n = item.items?.length ?? 0;
     return (
       <TouchableOpacity
-        style={tw`bg-[#1E293B] p-4 rounded-2xl border border-gray-800 mb-3`}
+        style={[tw`p-4 rounded-2xl mb-3`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1 }]}
         onPress={() => router.push(`/order/${item.id}`)}
         activeOpacity={0.8}
       >
         <View style={tw`flex-row justify-between items-center mb-2`}>
-          <Text style={tw`text-white font-bold`}>{item.po_number}</Text>
+          <Text style={[tw`font-bold`, { color: stitchColors.textOnLight }]}>{item.po_number}</Text>
           <View style={[tw`px-2 py-1 rounded`, { backgroundColor: statusColor(item.status) + '30' }]}>
             <Text style={tw`text-white text-xs font-extrabold`}>{String(item.status).toUpperCase()}</Text>
           </View>
         </View>
-        <Text style={tw`text-gray-300`}>
+        <Text style={[tw``, { color: stitchColors.textOnLight }]}>
           {item.customer_name} — {item.brand_name}
         </Text>
-        <Text style={tw`text-gray-500 text-sm mt-1`}>
+        <Text style={[tw`text-sm mt-1`, { color: stitchColors.textMutedLight }]}>
           {item.order_type} · {n} item
         </Text>
-        <View style={tw`flex-row justify-between items-center mt-3 pt-3 border-t border-gray-800`}>
-          <Text style={tw`text-blue-500 font-bold`}>
+        <View style={[tw`flex-row justify-between items-center mt-3 pt-3 border-t`, { borderColor: stitchColors.borderLight }]}>
+          <Text style={[tw`font-bold`, { color: stitchColors.primary }]}>
             Rp {Number(item.total_amount).toLocaleString('id-ID')}
           </Text>
-          <Text style={tw`text-gray-500 text-xs`}>
+          <Text style={[tw`text-xs`, { color: stitchColors.textMutedLight }]}>
             {item.created_at ? new Date(item.created_at).toLocaleDateString('id-ID') : ''}
           </Text>
         </View>
@@ -107,18 +108,18 @@ export default function OrdersScreen() {
 
   if (loading) {
     return (
-      <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+      <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: stitchColors.pageSoft }]}>
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-[#0F172A] pt-12`}>
+    <View style={[tw`flex-1 pt-12`, { backgroundColor: stitchColors.pageSoft }]}>
       <View style={tw`px-6 mb-4 flex-row justify-between items-center`}>
-        <Text style={tw`text-white text-2xl font-bold`}>Pesanan</Text>
+        <Text style={[tw`text-2xl font-bold`, { color: stitchColors.primary }]}>Pesanan</Text>
         <TouchableOpacity
-          style={tw`bg-blue-600 px-3 py-2 rounded-xl flex-row items-center`}
+          style={[tw`px-3 py-2 rounded-xl flex-row items-center`, { backgroundColor: stitchColors.primary }]}
           onPress={() => router.push('/order/create' as any)}
         >
           <Plus size={18} color="white" />
@@ -128,13 +129,13 @@ export default function OrdersScreen() {
 
       {orders.length === 0 ? (
         <View style={tw`flex-1 items-center justify-center px-8`}>
-          <Package size={48} color="#64748B" style={tw`mb-4`} />
-          <Text style={tw`text-gray-500 text-center mb-6`}>Belum ada pesanan.</Text>
+          <Package size={48} color={stitchColors.textMutedLight} style={tw`mb-4`} />
+          <Text style={[tw`text-center mb-6`, { color: stitchColors.textMutedLight }]}>Belum ada pesanan.</Text>
           <TouchableOpacity
-            style={tw`border border-blue-500 px-6 py-3 rounded-xl`}
+            style={[tw`px-6 py-3 rounded-xl`, { borderColor: stitchColors.primary, borderWidth: 1 }]}
             onPress={() => router.push('/order/create' as any)}
           >
-            <Text style={tw`text-blue-500 font-bold`}>Buat order</Text>
+            <Text style={[tw`font-bold`, { color: stitchColors.primary }]}>Buat order</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -150,7 +151,7 @@ export default function OrdersScreen() {
                 setRefreshing(true);
                 void fetchOrders();
               }}
-              tintColor="#3B82F6"
+              tintColor={stitchColors.primary}
             />
           }
         />

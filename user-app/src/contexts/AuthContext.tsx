@@ -297,12 +297,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       const data = await response.json();
-      if (data.success) {
-        setUser(data.reseller);
-        await AsyncStorage.setItem('userData', JSON.stringify(data.reseller));
+      if (!response.ok || !data.success) {
+        throw new Error(data?.message || 'Gagal memperbarui profil');
       }
+
+      const mergedReseller = {
+        ...user,
+        ...data.reseller,
+        ...(profileData?.onboarding_data
+          ? { onboarding_data: profileData.onboarding_data }
+          : {}),
+      };
+      setUser(mergedReseller as User);
+      await AsyncStorage.setItem('userData', JSON.stringify(mergedReseller));
     } catch (err) {
       console.error('[Auth] Update profile error:', err);
+      throw err;
     } finally {
       setLoading(false);
     }

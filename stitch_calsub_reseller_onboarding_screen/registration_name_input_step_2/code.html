@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Registration Step 2</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-tertiary-fixed": "#261a00",
+                "secondary": "#5f5e5e",
+                "inverse-on-surface": "#ffedeb",
+                "error": "#ba1a1a",
+                "primary-fixed": "#ffdad6",
+                "on-tertiary-container": "#dcaf4d",
+                "surface-container": "#ffe9e6",
+                "outline": "#8c716e",
+                "surface-variant": "#f5dddb",
+                "surface-container-lowest": "#ffffff",
+                "on-primary-container": "#ff9a91",
+                "background": "#fff8f7",
+                "primary-container": "#8b1a1a",
+                "error-container": "#ffdad6",
+                "surface-container-highest": "#f5dddb",
+                "on-secondary-fixed-variant": "#474746",
+                "tertiary-fixed": "#ffdea0",
+                "on-background": "#251817",
+                "on-error": "#ffffff",
+                "tertiary-fixed-dim": "#eec05c",
+                "primary": "#690008",
+                "secondary-fixed-dim": "#c8c6c5",
+                "inverse-surface": "#3b2d2c",
+                "inverse-primary": "#ffb3ac",
+                "surface": "#fff8f7",
+                "secondary-fixed": "#e5e2e1",
+                "secondary-container": "#e2dfde",
+                "outline-variant": "#e0bfbc",
+                "on-secondary-fixed": "#1c1b1b",
+                "surface-container-high": "#fbe3e0",
+                "on-primary": "#ffffff",
+                "on-secondary-container": "#636262",
+                "on-surface": "#251817",
+                "surface-tint": "#ac322e",
+                "surface-bright": "#fff8f7",
+                "primary-fixed-dim": "#ffb3ac",
+                "tertiary": "#402e00",
+                "surface-container-low": "#fff0ef",
+                "on-secondary": "#ffffff",
+                "tertiary-container": "#5c4300",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#58413f",
+                "on-error-container": "#93000a",
+                "surface-dim": "#ecd5d2",
+                "on-tertiary-fixed-variant": "#5c4300",
+                "on-primary-fixed-variant": "#8a1a1a",
+                "on-primary-fixed": "#410003"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "container-margin": "20px",
+                "gutter": "16px",
+                "lg": "24px",
+                "xl": "32px",
+                "sm": "8px",
+                "xs": "4px",
+                "md": "16px",
+                "unit": "4px"
+        },
+        "fontFamily": {
+                "button-text": [
+                        "Inter"
+                ],
+                "body-sm": [
+                        "Inter"
+                ],
+                "subheadline": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "h1": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "button-text": [
+                        "16px",
+                        {
+                                "lineHeight": "1",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-sm": [
+                        "14px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "subheadline": [
+                        "15px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "h1": [
+                        "28px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+  body {
+    background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+  .mobile-container {
+    width: 390px;
+    height: 844px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+  .glow-top {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(212,168,71,0.15) 0%, rgba(212,168,71,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #D4A847;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #D4A847, 0 0 20px #D4A847;
+  }
+  .glass-bubble {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+  }
+  .glass-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #D4A847;
+  }
+  .gold-gradient-bg {
+    background: linear-gradient(90deg, #E5BC5C 0%, #D4A847 100%);
+  }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black">
+<div class="mobile-container flex flex-col mx-auto bg-[#1A0606]">
+<!-- Background Effects -->
+<div class="glow-top z-0"></div>
+<div class="sparkle top-32 left-10 opacity-70"></div>
+<div class="sparkle top-40 right-16 opacity-50"></div>
+<div class="sparkle top-60 left-20 opacity-80 scale-75"></div>
+<!-- Header -->
+<header class="relative z-10 flex justify-between items-start p-container-margin pt-12">
+<div class="w-[90px] h-[28px] bg-white flex items-center justify-center font-bold text-black tracking-widest text-[10px]">
+      CALSUB
+    </div>
+<div class="flex flex-col items-end gap-2">
+<span class="text-[#D4A847] font-label-caps text-label-caps">7% selesai</span>
+<div class="flex gap-1">
+<!-- Progress Segments -->
+<div class="w-[18px] h-[5px] rounded-full gold-gradient-bg"></div>
+<div class="w-[18px] h-[5px] rounded-full bg-white/10"></div>
+<div class="w-[18px] h-[5px] rounded-full bg-white/10"></div>
+<div class="w-[18px] h-[5px] rounded-full bg-white/10"></div>
+<div class="w-[18px] h-[5px] rounded-full bg-white/10"></div>
+<div class="w-[18px] h-[5px] rounded-full bg-white/10"></div>
+<div class="w-[18px] h-[5px] rounded-full bg-white/10"></div>
+<div class="w-[18px] h-[5px] rounded-full bg-white/10"></div>
+</div>
+</div>
+</header>
+<!-- Hero Zone -->
+<div class="relative z-10 flex-1 flex flex-col items-center justify-end pb-4">
+<div class="relative w-full h-[250px] flex items-center justify-center">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,168,71,0.2)_0%,transparent_60%)]"></div>
+<img alt="Calman Mascot" class="w-48 h-48 object-cover rounded-full shadow-2xl relative z-10" data-alt="A highly detailed 3D render of a friendly Shiba Inu mascot named Calman. The dog is floating slightly, wearing a maroon polo shirt with a white 'C' logo, khaki shorts, and clean white sneakers with maroon accents. A modern black bluetooth earpiece is visible. The mascot is raising one paw in a welcoming gesture with a big, warm smile. The lighting is soft and studio-quality, creating a premium 3D character aesthetic with a subtle glowing aura." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyE21AOsjf4lZbvRWRi8DQoYv72TT0uX4knRhz4wD5a1Pkp2KDzHB_5zGQ4Fbv2o0y0INahTvlEoTnFRC21CZw4rhNZvF_mhi8CvEVpTkKe0uESGwCfyPnRvIlKigH-wMx31M5hyQvZyHTTYlb9ya7QDE-x3buvfDSeNTYgSP3bMklXcp1NGgKLlv7qSQ33bVDVB3QEJUzn8lA3O1m6AmVt9GZkUfwyacWKbgiC5GE0Dn8G7O2RZTSinqxlx7-bAiKcX6EIR7xdA"/>
+</div>
+</div>
+<!-- Chat Area -->
+<div class="relative z-10 px-container-margin flex flex-col gap-4 mb-6">
+<!-- Bubble 1 -->
+<div class="flex items-end gap-3">
+<img alt="Avatar" class="w-8 h-8 rounded-full border border-white/20" data-alt="A close-up 3D render avatar of a friendly Shiba Inu mascot face, smiling warmly. The lighting is soft and professional, set against a dark premium background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZYBhtuC5kieh6Ss2OO1z8N_njHdpHTXCuq6ISrR7fGl2bvo8Ku89RpbPkQi9TP14XA6u8Nlle9-RnT1B_LrhuwXdGIJygi1sfBjsDAseIHpjDyuV8kpv1ztK9sdxQ_NL1ZAlw1MkVUVveHNBhFXtnRzlwa2MtlE6vRQzmxA_CrwmzMn_CQs3zVYMt1RM-4PpIU85Wa9lAkPRH5uzbU1p97PvFNA0OxOohZs9a0NYGPtu352FomDAtlHLZRPhNKYXBkrCySFOpFw"/>
+<div class="glass-bubble rounded-2xl rounded-bl-sm py-3 px-4 max-w-[80%]">
+<p class="font-subheadline text-subheadline text-white">Halo! Saya Calman 👋</p>
+</div>
+</div>
+<!-- Bubble 2 -->
+<div class="flex items-end gap-3">
+<img alt="Spacer Avatar" class="w-8 h-8 rounded-full border border-white/20 opacity-0" data-alt="A close-up 3D render avatar of a friendly Shiba Inu mascot face, smiling warmly. The lighting is soft and professional, set against a dark premium background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHMYYYAJz1lytHQLRAqz_sPmpIhmSWVY2CTKK_lxtZCJGeLW8YadQBj77DxID5Z6JNY9ysIXRMGxnH_Z_TzGo7ZkdnMpnxDU8iwSvvdKasBle3GAHig1O0AmWjEEFP--hwUyYKYZ2k8e8UwFxFlQx4mQKkzVP2Ujo0eAOhEbQLAIyQEtyNdUSqkJl8s35XCDi8NVBe_kp7z-wBF3Lo9yzUoKosueyP1rGek6N5q7Px_EBsnNvguL4bPKBKhby0_aOFySpeoETkvg"/>
+<div class="glass-bubble rounded-2xl py-3 px-4 max-w-[85%]">
+<p class="font-subheadline text-subheadline text-white">Kenalan dulu yuk! Siapa nama lengkap kamu? (sesuai KTP)</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="relative z-10 px-container-margin mb-8">
+<div class="relative">
+<input class="glass-input w-full h-[56px] rounded-DEFAULT px-4 text-[#D4A847] placeholder:text-[#D4A847]/50 font-body-lg text-body-lg focus:outline-none focus:ring-1 focus:ring-[#D4A847] bg-transparent" placeholder="Ketik nama lengkap..." type="text"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-label-caps text-label-caps text-[#D4A847]/50">0/100</span>
+</div>
+<p class="mt-2 text-[12px] italic text-[#D4A847]/70 font-body-sm">💡 Pastikan sama dengan nama di KTP/Kartu Pelajar</p>
+</div>
+<!-- CTA & Bottom Actions -->
+<div class="relative z-10 px-container-margin mb-10 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:bg-white/10">
+<span class="material-symbols-outlined" data-icon="volume_off">volume_off</span>
+</button>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#D4A847]/70 font-body-sm text-body-sm hover:text-[#D4A847]">Lewati ↓</button>
+<button class="gold-gradient-bg px-6 py-3 rounded-full text-[#1A0606] font-button-text text-button-text shadow-lg flex items-center gap-2">
+        Lanjutkan
+        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Keyboard Mockup -->
+<div class="relative z-20 mt-auto w-full bg-[#1A1A1A] border-t border-white/10 pt-2 pb-6 px-1 rounded-t-xl">
+<div class="flex justify-center gap-2 mb-3 px-2">
+<div class="bg-[#2C2C2C] text-white/80 text-xs py-1 px-3 rounded flex-1 text-center truncate">Budi Santoso</div>
+<div class="bg-[#2C2C2C] text-white/80 text-xs py-1 px-3 rounded flex-1 text-center truncate">Siti Aminah</div>
+<div class="bg-[#2C2C2C] text-white/80 text-xs py-1 px-3 rounded flex-1 text-center truncate">Agus P.</div>
+</div>
+<div class="grid grid-cols-10 gap-1 px-1 mb-1">
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">Q</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">W</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">E</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">R</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">T</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">Y</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">U</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">I</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">O</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">P</div>
+</div>
+<div class="grid grid-cols-9 gap-1 px-4 mb-1">
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">A</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">S</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">D</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">F</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">G</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">H</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">J</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">K</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">L</div>
+</div>
+<div class="grid grid-cols-10 gap-1 px-1">
+<div class="col-span-1 bg-[#2C2C2C] h-10 rounded shadow flex justify-center items-center"><span class="material-symbols-outlined text-sm">shift</span></div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">Z</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">X</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">C</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">V</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">B</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">N</div>
+<div class="bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center font-body-lg">M</div>
+<div class="col-span-2 bg-[#2C2C2C] h-10 rounded shadow flex justify-center items-center"><span class="material-symbols-outlined text-sm">backspace</span></div>
+</div>
+<div class="flex gap-1 px-1 mt-1">
+<div class="w-10 bg-[#2C2C2C] h-10 rounded shadow flex justify-center items-center text-xs">123</div>
+<div class="w-10 bg-[#2C2C2C] h-10 rounded shadow flex justify-center items-center"><span class="material-symbols-outlined text-sm">language</span></div>
+<div class="flex-1 bg-[#4A4A4A] h-10 rounded shadow flex justify-center items-center text-sm font-body-lg text-white/30">space</div>
+<div class="w-16 bg-[#2C2C2C] h-10 rounded shadow flex justify-center items-center text-sm font-body-sm">return</div>
+</div>
+</div>
+</div>
+</body></html>

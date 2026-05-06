@@ -10,11 +10,12 @@ import {
   Alert,
   Modal,
   Animated,
-  ScrollView
+  ScrollView,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProgressBar from '../../components/ProgressBar';
-import { supabase } from '../../config/supabase';
+import { stitchColors } from '../../theme/stitch';
 
 import { useAuth } from '../../context/AuthContext';
 
@@ -93,6 +94,7 @@ export default function SignUpScreen({ navigation, route }) {
           contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
           keyboardShouldPersistTaps="handled"
         >
+          <Image source={require('../../../assets/stitch/calman-coach.jpg')} style={styles.hero} />
           <View style={styles.headerBox}>
             <Text style={styles.badge}>Luar Biasa! 🎉</Text>
             <Text style={styles.summaryText}>
@@ -185,7 +187,7 @@ export default function SignUpScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: stitchColors.page,
   },
   content: {
     flex: 1,
@@ -193,34 +195,34 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   headerBox: {
-    backgroundColor: 'rgba(255,140,0,0.1)',
+    backgroundColor: stitchColors.goldSoft,
     padding: 20,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,140,0,0.3)',
+    borderColor: stitchColors.gold,
     marginBottom: 32,
   },
   badge: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#FF8C00',
+    color: stitchColors.gold,
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 8,
   },
   summaryText: {
     fontSize: 16,
-    color: 'rgba(255,255,255,0.9)',
+    color: stitchColors.textOnDark,
     lineHeight: 24,
   },
   highlight: {
     fontWeight: '800',
-    color: '#FF8C00',
+    color: stitchColors.gold,
   },
   formTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#FFF',
+    color: stitchColors.textOnDark,
     marginBottom: 24,
   },
   form: {
@@ -229,17 +231,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: 'rgba(255,255,255,0.7)',
+    color: stitchColors.textMutedDark,
     marginBottom: 4,
   },
   input: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: stitchColors.cardGlass,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: stitchColors.borderDark,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
-    color: '#FFF',
+    color: stitchColors.textOnDark,
     fontSize: 16,
   },
   footer: {
@@ -247,17 +249,17 @@ const styles = StyleSheet.create({
     paddingBottom: 36,
   },
   button: {
-    backgroundColor: '#FF8C00',
+    backgroundColor: stitchColors.gold,
     height: 56,
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonDisabled: {
-    backgroundColor: 'rgba(255,140,0,0.5)',
+    backgroundColor: 'rgba(212,168,71,0.5)',
   },
   buttonText: {
-    color: '#FFF',
+    color: stitchColors.page,
     fontSize: 16,
     fontWeight: '700',
   },
@@ -310,12 +312,12 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'rgba(255,140,0,0.15)',
+    backgroundColor: stitchColors.goldSoft,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
     borderWidth: 2,
-    borderColor: 'rgba(255,140,0,0.3)',
+    borderColor: stitchColors.gold,
   },
   successIcon: {
     fontSize: 40,
@@ -336,15 +338,22 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     width: '100%',
-    backgroundColor: '#FF8C00',
+    backgroundColor: stitchColors.gold,
     height: 52,
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalButtonText: {
-    color: '#FFF',
+    color: stitchColors.page,
     fontSize: 16,
     fontWeight: '700',
+  },
+  hero: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    alignSelf: 'center',
+    marginBottom: 12,
   },
 });

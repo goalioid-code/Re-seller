@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import ProgressBar from '../../components/ProgressBar';
 import OptionCard from '../../components/OptionCard';
+import { stitchColors } from '../../theme/stitch';
 
 const CATEGORIES = [
   { id: 'cat1', label: 'Jersey Tim / Club', emoji: '⚽' },
@@ -72,7 +73,7 @@ export default function CategoryScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: stitchColors.page,
   },
   content: {
     flex: 1,
@@ -82,13 +83,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '800',
-    color: '#FFF',
+    color: stitchColors.textOnDark,
     marginBottom: 12,
     lineHeight: 34,
   },
   subtitle: {
     fontSize: 15,
-    color: 'rgba(255,255,255,0.6)',
+    color: stitchColors.textMutedDark,
     marginBottom: 32,
     lineHeight: 22,
   },
@@ -100,17 +101,17 @@ const styles = StyleSheet.create({
     paddingBottom: 36,
   },
   button: {
-    backgroundColor: '#FF8C00',
+    backgroundColor: stitchColors.gold,
     height: 56,
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonDisabled: {
-    backgroundColor: 'rgba(255,140,0,0.3)',
+    backgroundColor: 'rgba(212,168,71,0.35)',
   },
   buttonText: {
-    color: '#FFF',
+    color: stitchColors.page,
     fontSize: 16,
     fontWeight: '700',
   },

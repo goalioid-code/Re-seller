@@ -5,6 +5,7 @@ import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
 import { ArrowLeft, Star, AlertTriangle } from 'lucide-react-native';
+import { stitchColors } from '../../src/theme/stitch';
 
 type PtRow = {
   id: string;
@@ -57,23 +58,23 @@ export default function PointsScreen() {
   if (loading) {
     return (
       <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={tw`flex-1 bg-[#0F172A]`}>
+    <View style={[tw`flex-1`, { backgroundColor: stitchColors.pageSoft }]}>
       <View style={tw`flex-row items-center px-5 pt-12 pb-4`}>
         <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-2`}>
-          <ArrowLeft color="#fff" size={24} />
+          <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
-        <Text style={tw`text-white text-xl font-bold`}>Poin</Text>
+        <Text style={[tw`text-xl font-bold`, { color: stitchColors.primary }]}>Poin</Text>
       </View>
 
       <ScrollView
         style={tw`flex-1 px-5`}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor="#3B82F6" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor={stitchColors.primary} />}
       >
         {expiring > 0 ? (
           <View style={tw`bg-amber-500/15 border border-amber-500/40 rounded-2xl p-4 mb-4 flex-row items-start`}>
@@ -87,12 +88,12 @@ export default function PointsScreen() {
           </View>
         ) : null}
 
-        <View style={tw`bg-[#1E293B] rounded-3xl border border-gray-800 p-5 mb-4`}>
+        <View style={[tw`rounded-3xl p-5 mb-4`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1 }]}>
           <View style={tw`flex-row items-center mb-2`}>
             <Star size={22} color="#FBBF24" />
-            <Text style={tw`text-gray-400 ml-2 text-sm`}>Saldo poin</Text>
+            <Text style={[tw`ml-2 text-sm`, { color: stitchColors.textMutedLight }]}>Saldo poin</Text>
           </View>
-          <Text style={tw`text-white text-3xl font-extrabold`}>{balance.toLocaleString('id-ID')}</Text>
+          <Text style={[tw`text-3xl font-extrabold`, { color: stitchColors.textOnLight }]}>{balance.toLocaleString('id-ID')}</Text>
           <TouchableOpacity
             style={tw`mt-4 bg-slate-700 py-3 rounded-xl items-center`}
             onPress={() => router.push('/rewards/catalog' as any)}

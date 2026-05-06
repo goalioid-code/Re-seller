@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registration - Name</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#f5dddb",
+                        "background": "#fff8f7",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "secondary-container": "#e2dfde",
+                        "on-secondary-fixed-variant": "#474746",
+                        "surface-container-highest": "#f5dddb",
+                        "on-surface": "#251817",
+                        "surface": "#fff8f7",
+                        "surface-container-low": "#fff0ef",
+                        "tertiary-container": "#5c4300",
+                        "on-tertiary-fixed": "#261a00",
+                        "on-surface-variant": "#58413f",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#fbe3e0",
+                        "on-secondary-container": "#636262",
+                        "outline": "#8c716e",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdea0",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#690008",
+                        "surface-dim": "#ecd5d2",
+                        "primary-fixed": "#ffdad6",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "surface-bright": "#fff8f7",
+                        "inverse-primary": "#ffb3ac",
+                        "inverse-surface": "#3b2d2c",
+                        "primary-container": "#8b1a1a",
+                        "on-background": "#251817",
+                        "outline-variant": "#e0bfbc",
+                        "surface-container": "#ffe9e6",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ffedeb",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#ff9a91",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-primary-fixed": "#410003",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "surface-tint": "#ac322e",
+                        "on-tertiary-container": "#dcaf4d",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#402e00",
+                        "secondary": "#5f5e5e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "unit": "4px",
+                        "md": "16px",
+                        "container-margin": "20px",
+                        "lg": "24px",
+                        "xl": "32px",
+                        "sm": "8px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "subheadline": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "button-text": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "subheadline": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "button-text": ["16px", { "lineHeight": "1", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .maroon-bg-gradient {
+            background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+        }
+        .gold-text { color: #D4A847; }
+        .gold-border { border-color: #D4A847; }
+        .gold-bg { background-color: #D4A847; }
+        .glass-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .input-bg {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .gold-gradient-btn {
+            background: linear-gradient(135deg, #E6C57A 0%, #D4A847 100%);
+            box-shadow: 0 4px 15px rgba(212, 168, 71, 0.3);
+        }
+        .keyboard-bg { background-color: #1a1a1a; }
+        .key-bg { background-color: #4a4a4a; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="maroon-bg-gradient min-h-screen text-on-primary font-body-sm relative overflow-hidden flex flex-col justify-between">
+<!-- Sparkles Background (Simulated) -->
+<div class="absolute inset-0 pointer-events-none" style="background-image: radial-gradient(circle at 50% 10%, rgba(212, 168, 71, 0.15) 0%, transparent 40%);"></div>
+<!-- Header / Progress -->
+<header class="pt-12 px-6 flex flex-col gap-4 relative z-10">
+<div class="flex justify-between items-center">
+<button class="text-on-primary/70 hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div class="gold-text font-label-caps text-label-caps">15% selesai</div>
+</div>
+<!-- Progress Bar -->
+<div class="flex gap-2 w-full mt-2">
+<div class="h-1 flex-1 rounded-full gold-bg"></div>
+<div class="h-1 flex-1 rounded-full bg-white/20"></div>
+<div class="h-1 flex-1 rounded-full bg-white/20"></div>
+<div class="h-1 flex-1 rounded-full bg-white/20"></div>
+<div class="h-1 flex-1 rounded-full bg-white/20"></div>
+<div class="h-1 flex-1 rounded-full bg-white/20"></div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col px-6 relative z-10 w-full max-w-md mx-auto">
+<!-- Hero Mascot -->
+<div class="relative h-[220px] mt-4 flex justify-center items-end">
+<img alt="Calman Mascot" class="h-full object-contain drop-shadow-2xl z-10" data-alt="A highly detailed 3D render of a friendly Shiba Inu mascot named Calman. The character is wearing a premium maroon polo shirt, khaki shorts, clean white sneakers, and a sleek bluetooth earpiece. The setting is a conceptual studio environment with a deep burgundy background and subtle gold rim lighting. The style is modern, approachable, and polished, fitting a high-end reseller app. The Shiba Inu is looking directly at the viewer with a welcoming gesture and a warm smile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA95rYmH_DrnB9-iwZg9tTAYhlI1ntlnWD_Qq6nR993qXBP5kU2cIXDFmeJethPZXE3521APxOPphVmjlGBL8scTrdEOk66IddkjrmavErgezCvQmOYqVeIJJNhDjjqwaDLc-ud3vz_dU3cEaidTA5fpHbYm0ftcZA6Hu9Ln_FJaXjLkuJiB4DjoSiL75tLx_A6NltZunB0C2NCCOY94IINlnyja0oAd3oMWiqKDCS4pjeVrYMRycDHJ20a-Yg6alkxboFxfwxWHQ"/>
+</div>
+<!-- Chat Interaction Area -->
+<div class="flex flex-col gap-4 mt-6">
+<!-- Chat Row 1 -->
+<div class="flex items-end gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/20 flex-shrink-0">
+<img alt="Calman Avatar" class="w-full h-full object-cover" data-alt="A close-up, small circular avatar of a 3D Shiba Inu mascot face wearing a maroon collar, set against a dark background with gold accents. Soft, premium studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiYZNK-snHvNdAKHE2YyYcXOICkaiH9s9fAYZR69ifteEIkZlTzoJOuiJH9JC9idc5nKubFhB4TEZoLPDS4-Ilj7BF8y0moy7iTSgvqSfHZE6Q1T3g8ewM9va8XZfJ0UDq5pt1BLqLgUu0q8LJr9QECJyOFd6NmtOZUO_9R8GUFrsze4dzwCemvxqGBhVAxsWbGrBdZi1P3vax4_CPYGSlhqLFNe6oz1oYPvSZJh2h0Da323mN9Ml1ZFkyj0Z-p2fu41bjxF1ExQ"/>
+</div>
+<div class="glass-bubble rounded-2xl rounded-bl-sm px-4 py-3 max-w-[80%]">
+<p class="font-body-lg text-body-lg text-white">Halo! Saya Calman 👋</p>
+</div>
+</div>
+<!-- Chat Row 2 -->
+<div class="flex items-end gap-3">
+<div class="w-8 h-8 rounded-full opacity-0 flex-shrink-0"></div> <!-- Spacer -->
+<div class="glass-bubble rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
+<p class="font-body-lg text-body-lg text-white">Kenalan dulu yuk! Siapa nama kamu?</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="mt-8 flex flex-col gap-4">
+<div class="relative">
+<input class="w-full input-bg border gold-border rounded-[16px] px-4 py-4 text-white font-body-lg text-body-lg placeholder:text-[#D4A847]/50 focus:outline-none focus:ring-1 focus:ring-[#D4A847]" placeholder="Ketik nama kamu..." type="text"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-white/40">0/50</div>
+</div>
+<div class="flex justify-end mt-2">
+<button class="gold-gradient-btn text-on-tertiary-fixed font-button-text text-button-text px-8 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity">
+                    Lanjutkan
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Bottom Controls -->
+<div class="px-6 pb-6 pt-4 flex justify-between items-center relative z-10 w-full max-w-md mx-auto">
+<button class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">volume_off</span>
+</button>
+<button class="text-white/60 font-body-sm text-body-sm flex items-center gap-1 hover:text-white transition-colors">
+            Lewati
+            <span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+</button>
+</div>
+<!-- Keyboard Mockup (Visual only) -->
+<div class="w-full keyboard-bg pb-8 pt-2 px-1 relative z-20 shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+<!-- Suggestion Bar -->
+<div class="flex justify-center gap-4 py-2 border-b border-white/10 mb-2">
+<div class="text-white/80 font-body-sm text-body-sm bg-white/10 px-4 py-1 rounded-md">Budi</div>
+<div class="text-white/80 font-body-sm text-body-sm bg-white/10 px-4 py-1 rounded-md">Andi</div>
+<div class="text-white/80 font-body-sm text-body-sm bg-white/10 px-4 py-1 rounded-md">Siti</div>
+</div>
+<!-- Keyboard Rows -->
+<div class="flex flex-col gap-2 px-1">
+<div class="flex justify-center gap-1.5 w-full">
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">Q</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">W</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">E</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">R</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">T</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">Y</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">U</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">I</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">O</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">P</div>
+</div>
+<div class="flex justify-center gap-1.5 w-[90%] mx-auto">
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">A</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">S</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">D</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">F</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">G</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">H</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">J</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">K</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">L</div>
+</div>
+<div class="flex justify-center gap-1.5 w-full">
+<div class="bg-[#2c2c2c] w-10 h-11 rounded-md flex items-center justify-center text-white"><span class="material-symbols-outlined text-[20px]">shift</span></div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">Z</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">X</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">C</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">V</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">B</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">N</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-medium">M</div>
+<div class="bg-[#2c2c2c] w-10 h-11 rounded-md flex items-center justify-center text-white"><span class="material-symbols-outlined text-[20px]">backspace</span></div>
+</div>
+<div class="flex justify-center gap-1.5 w-full mt-1">
+<div class="bg-[#2c2c2c] w-16 h-11 rounded-md flex items-center justify-center text-white font-body-sm text-[12px]">123</div>
+<div class="key-bg flex-1 h-11 rounded-md flex items-center justify-center text-white font-body-sm text-[14px]">spasi</div>
+<div class="bg-[#2c2c2c] w-16 h-11 rounded-md flex items-center justify-center text-white font-body-sm text-[12px]">return</div>
+</div>
+</div>
+</div>
+</body></html>

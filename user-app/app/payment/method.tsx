@@ -5,6 +5,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
+import { stitchColors } from '../../src/theme/stitch';
 
 function paramOne(v: string | string[] | undefined) {
   if (v == null) return undefined;
@@ -95,7 +96,7 @@ export default function PaymentMethodScreen() {
 
       {loading ? (
         <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#3B82F6" />
+          <ActivityIndicator size="large" color={stitchColors.primary} />
           <Text style={styles.loadingText}>Menyiapkan halaman pembayaran...</Text>
         </View>
       ) : snapUrl ? (
@@ -124,23 +125,23 @@ export default function PaymentMethodScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
+  container: { flex: 1, backgroundColor: stitchColors.pageSoft },
   header: {
-    backgroundColor: '#0F172A',
+    backgroundColor: stitchColors.pageSoft,
     paddingVertical: 16,
     alignItems: 'center',
   },
-  title: { color: '#FFF', fontSize: 16, fontWeight: '700' },
+  title: { color: stitchColors.primary, fontSize: 16, fontWeight: '700' },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 40,
   },
-  loadingText: { color: '#FFF', marginTop: 16, textAlign: 'center' },
-  errorText: { color: '#EF4444' },
-  hintText: { color: '#94A3B8', textAlign: 'center', marginBottom: 20, lineHeight: 20 },
-  openBtn: { backgroundColor: '#3B82F6', paddingVertical: 14, paddingHorizontal: 28, borderRadius: 12 },
+  loadingText: { color: stitchColors.textMutedLight, marginTop: 16, textAlign: 'center' },
+  errorText: { color: stitchColors.danger },
+  hintText: { color: stitchColors.textMutedLight, textAlign: 'center', marginBottom: 20, lineHeight: 20 },
+  openBtn: { backgroundColor: stitchColors.primary, paddingVertical: 14, paddingHorizontal: 28, borderRadius: 12 },
   openBtnText: { color: '#FFF', fontWeight: '800', fontSize: 16 },
-  link: { color: '#3B82F6', marginTop: 20, textDecorationLine: 'underline' },
+  link: { color: stitchColors.primary, marginTop: 20, textDecorationLine: 'underline' },
 });

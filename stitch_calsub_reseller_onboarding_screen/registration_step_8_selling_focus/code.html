@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Registration Step 8</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#f5dddb",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#e2dfde",
+                        "primary": "#690008",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "on-background": "#251817",
+                        "primary-container": "#8b1a1a",
+                        "surface-tint": "#ac322e",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#fff8f7",
+                        "on-primary-fixed": "#410003",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "inverse-primary": "#ffb3ac",
+                        "surface-variant": "#f5dddb",
+                        "on-tertiary-container": "#dcaf4d",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "on-secondary-container": "#636262",
+                        "tertiary": "#402e00",
+                        "surface-container-high": "#fbe3e0",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-surface-variant": "#58413f",
+                        "outline": "#8c716e",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#5c4300",
+                        "surface-container-low": "#fff0ef",
+                        "surface": "#fff8f7",
+                        "on-surface": "#251817",
+                        "on-primary-container": "#ff9a91",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "secondary": "#5f5e5e",
+                        "on-secondary-fixed-variant": "#474746",
+                        "outline-variant": "#e0bfbc",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-tertiary-fixed": "#261a00",
+                        "tertiary-fixed": "#ffdea0",
+                        "inverse-on-surface": "#ffedeb",
+                        "inverse-surface": "#3b2d2c",
+                        "background": "#fff8f7",
+                        "primary-fixed": "#ffdad6",
+                        "surface-dim": "#ecd5d2",
+                        "surface-container": "#ffe9e6",
+                        "error": "#ba1a1a"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "md": "16px",
+                        "container-margin": "20px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "gutter": "16px"
+                    },
+                    fontFamily: {
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "button-text": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "subheadline": ["Inter"]
+                    },
+                    fontSize: {
+                        "h1": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+                        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "button-text": ["16px", { lineHeight: "1", fontWeight: "600" }],
+                        "body-sm": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+                        "body-lg": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "subheadline": ["15px", { lineHeight: "1.5", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-dark {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(255, 255, 255, 0.12);
+        }
+        .glass-gold {
+            background: rgba(212, 168, 71, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #D4A847;
+        }
+        .glow-gold {
+            box-shadow: 0 0 20px rgba(212, 168, 71, 0.3);
+        }
+        .bg-gradient-dark {
+            background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gradient-dark text-on-primary antialiased flex justify-center items-center min-h-screen">
+<!-- Mobile Device Container -->
+<div class="w-[390px] h-[844px] relative overflow-hidden flex flex-col font-body-sm shadow-2xl">
+<!-- TopAppBar (Suppressed per instructions for linear/onboarding flow, replacing with custom header) -->
+<header class="flex justify-between items-center w-full px-6 h-16 pt-4 z-10 shrink-0">
+<div class="w-[90px] h-[28px] bg-white/90 rounded-sm flex items-center justify-center">
+<span class="text-[#1A0606] font-h1 text-[14px] tracking-widest uppercase">CALSUB</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-on-tertiary-container font-label-caps text-[10px]">50% selesai</span>
+<div class="flex gap-[2px]">
+<div class="w-[12px] h-[4px] bg-[#D4A847] rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-[#D4A847] rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-[#D4A847] rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-[#D4A847] rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-[#D4A847] rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-[#D4A847] rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-[#D4A847] rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-white/20 rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-white/20 rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-white/20 rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-white/20 rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-white/20 rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-white/20 rounded-full"></div>
+<div class="w-[12px] h-[4px] bg-white/20 rounded-full"></div>
+</div>
+</div>
+</header>
+<!-- Canvas / Main Content -->
+<main class="flex-1 overflow-y-auto px-6 pb-24 scrollbar-hide flex flex-col gap-lg z-10 relative mt-4">
+<!-- Hero & Chat Area -->
+<div class="relative flex flex-col gap-md">
+<!-- 3D Mascot Image -->
+<div class="absolute right-0 top-[-20px] w-32 h-40 glow-gold rounded-full opacity-60 pointer-events-none" style="filter: blur(30px);"></div>
+<img alt="Calman Mascot" class="w-32 h-auto absolute right-[-10px] top-[-30px] z-20 mix-blend-screen opacity-90 object-cover rounded-full" data-alt="A 3D rendering of a friendly Shiba Inu mascot named Calman in a helpful guide pose. The character is holding a small tablet, smiling, and gesturing gently toward the viewer. Calman is wearing a maroon polo shirt with a C logo, khaki shorts, white sneakers, and a modern bluetooth earpiece. The rendering features a soft gold glow and natural shadow, set against a premium dark, minimalist studio lighting environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDP7txG8k_UkieKVYpFUFPtadNPqOFNmD02IOc3hToDeH6tAlwW4nbCiVr6CfEs6Vj1ik4vxIIckgZ4WXdcqYppVJrdZDclZO9u_iY8T7ac_DpuwTMk2VwF_MrULcgEcH0SVZKes0jKIfbK24F9nejFfGbxd6evJ26g90LoGZMsdqBMg79TdiIooBAoLd71MYLh84Aq6-OhhRdP7WSKlWBZoPtiKt7o9Tu94t89mvKaLZMbZlDOT5xuhfRcN0IPRfnOPi2ytNxvKQ"/>
+<!-- Chat Bubbles -->
+<div class="flex flex-col gap-sm z-30 w-3/4 pt-6">
+<!-- Bubble 1 -->
+<div class="flex items-end gap-sm">
+<img alt="Avatar" class="w-8 h-8 rounded-full border border-white/20 object-cover" data-alt="A small circular 3D avatar of a friendly Shiba Inu wearing a maroon polo, set against a dark premium minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_d34mTaSlCrmo1ymI-Fd9j4ogOPXjDjT94QzjkN25CEC6QOkN3i_CVDnde9wthV89VnwbynLZRUmVG05I-mg-Qj42l3nf9hgPo56zUhUwb2lll63PmpX-CzniUr9svBsdabv2_fh9sycE_h9EYmqFBKmT2McSPQ5bspY6p9ii-YjVFXssi0xRrUrs0JW7qOPVB2nNlTDSq5CQP3vLdwTqFfLpGD1jQ7V_xZdoWEpiXPmcGh1eFKrIz9PZb6Qt1zmuj9NF8pSn0Q"/>
+<div class="glass-dark rounded-2xl rounded-bl-none px-4 py-3">
+<p class="font-body-lg text-white">Keren! 🎯</p>
+</div>
+</div>
+<!-- Bubble 2 -->
+<div class="flex items-end gap-sm">
+<img alt="Avatar" class="w-8 h-8 rounded-full border border-white/20 object-cover" data-alt="A small circular 3D avatar of a friendly Shiba Inu wearing a maroon polo, set against a dark premium minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiQBoPCHESntC5qEDZhcfdrGaz2VaCdl8RZrKYjh6ty0qybd2UPldbdVEXddEwkGnXuhHkujrEvl7ChSBiINZnrQelsdjFvYDG8JqFWfmGt8sKLTcXzIB-dQsvhpUr5-a7dLX0PdFZznEFjrJQZInl5YEoSJDSjLbBcI976zDlJbB5slnUXH6ufV8aRrIfna_qlC-iz2sO5Uk5SDx_LjBDBVGrSlzSOl29FfbZJLa1Dxmw3kJZZrcU1x-HLXoVdlvtKrH0tUkReQ"/>
+<div class="glass-dark rounded-2xl rounded-bl-none px-4 py-3">
+<p class="font-body-sm text-white leading-relaxed">Apa fokus utama kamu dalam menjual jersey? <span class="text-white/60 text-xs">(boleh pilih lebih dari satu)</span></p>
+</div>
+</div>
+</div>
+</div>
+<!-- Selection Options -->
+<div class="flex flex-col gap-[10px] mt-4 z-20">
+<!-- Option 1: Selected -->
+<button class="w-full glass-gold rounded-DEFAULT px-[18px] py-[14px] flex items-center justify-between transition-all duration-200">
+<span class="font-body-lg font-semibold text-white">⚽ Klub sepak bola lokal / komunitas bola</span>
+<span class="material-symbols-outlined text-[#D4A847] text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<!-- Option 2: Unselected -->
+<button class="w-full glass-dark rounded-DEFAULT px-[18px] py-[14px] flex items-center justify-between text-left transition-all duration-200 active:scale-[0.98]">
+<span class="font-body-lg text-white/90">🥅 Klub futsal / sekolah &amp; kampus</span>
+<div class="w-5 h-5 rounded-full border border-white/20"></div>
+</button>
+<!-- Option 3: Selected -->
+<button class="w-full glass-gold rounded-DEFAULT px-[18px] py-[14px] flex items-center justify-between transition-all duration-200">
+<span class="font-body-lg font-semibold text-white">🏍️ Komunitas non-olahraga (motor, hobi)</span>
+<span class="material-symbols-outlined text-[#D4A847] text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<!-- Option 4: Unselected -->
+<button class="w-full glass-dark rounded-DEFAULT px-[18px] py-[14px] flex items-center justify-between text-left transition-all duration-200 active:scale-[0.98]">
+<span class="font-body-lg text-white/90">🏢 Organisasi/instansi (sekolah, perusahaan)</span>
+<div class="w-5 h-5 rounded-full border border-white/20"></div>
+</button>
+<!-- Option 5: Unselected -->
+<button class="w-full glass-dark rounded-DEFAULT px-[18px] py-[14px] flex items-center justify-between text-left transition-all duration-200 active:scale-[0.98]">
+<span class="font-body-lg text-white/90">🛍️ Brand sendiri untuk online (brand owner)</span>
+<div class="w-5 h-5 rounded-full border border-white/20"></div>
+</button>
+<!-- Option 6: Unselected -->
+<button class="w-full glass-dark rounded-DEFAULT px-[18px] py-[14px] flex items-center justify-between text-left transition-all duration-200 active:scale-[0.98]">
+<span class="font-body-lg text-white/90">📦 Supplier ke toko fisik / marketplace</span>
+<div class="w-5 h-5 rounded-full border border-white/20"></div>
+</button>
+<!-- Optional Input -->
+<div class="w-full h-[44px] rounded-DEFAULT bg-white/[0.05] border border-[#D4A847] px-[18px] flex items-center mt-2">
+<input class="bg-transparent border-none w-full text-white placeholder-[#D4A847]/60 font-body-sm focus:ring-0 p-0" placeholder="Lainnya... (opsional)" type="text"/>
+</div>
+</div>
+<!-- CTA Area -->
+<div class="flex justify-end mt-4 z-20">
+<button class="bg-gradient-to-r from-[#E5BC5C] to-[#D4A847] text-[#1A0606] font-button-text text-[15px] font-semibold py-4 px-6 rounded-full flex items-center gap-2 glow-gold active:scale-[0.98] transition-transform">
+                    Lanjutkan (2 dipilih)
+                    <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'wght' 600;">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- Bottom Row (Action/Nav) -->
+<footer class="absolute bottom-0 left-0 w-full z-50 flex justify-between items-center px-10 py-6 bg-transparent">
+<!-- Mute Button -->
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:text-[#8B1A1A] dark:hover:text-[#E5BC5C] transition-colors">
+<span class="material-symbols-outlined text-2xl">volume_off</span>
+<span class="font-['Inter'] text-xs font-semibold uppercase tracking-tighter mt-1">Mute</span>
+</button>
+<!-- Skip Button -->
+<button class="flex flex-col items-center justify-center text-[#D4A847]/70 hover:text-[#D4A847] transition-colors group">
+<div class="flex items-center gap-1">
+<span class="font-button-text text-sm">Lewati</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-y-0.5 transition-transform">arrow_downward</span>
+</div>
+</button>
+</footer>
+</div>
+</body></html>

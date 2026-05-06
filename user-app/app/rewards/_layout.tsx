@@ -4,14 +4,15 @@ import { canAccessOrdersRoute, getAuthRedirectHref } from '../../src/lib/authRed
 import type { Href } from 'expo-router';
 import { View, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
+import { stitchColors } from '../../src/theme/stitch';
 
 export default function RewardsLayout() {
   const { user, isLoggedIn, loading } = useAuth();
 
   if (loading) {
     return (
-      <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+      <View style={[tw`flex-1 justify-center items-center`, { backgroundColor: stitchColors.pageSoft }]}>
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }

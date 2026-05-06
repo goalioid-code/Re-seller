@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registration Step 6</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#1c1b1b",
+                        "tertiary-fixed": "#ffdea0",
+                        "on-primary-fixed": "#410003",
+                        "surface-tint": "#ac322e",
+                        "surface-container-highest": "#f5dddb",
+                        "surface-container": "#ffe9e6",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "surface-dim": "#ecd5d2",
+                        "surface-variant": "#f5dddb",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "tertiary-container": "#5c4300",
+                        "outline": "#8c716e",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#3b2d2c",
+                        "inverse-primary": "#ffb3ac",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#402e00",
+                        "on-secondary-container": "#636262",
+                        "primary": "#690008",
+                        "on-surface": "#251817",
+                        "primary-fixed": "#ffdad6",
+                        "on-surface-variant": "#58413f",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#fff8f7",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#e5e2e1",
+                        "secondary-container": "#e2dfde",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "outline-variant": "#e0bfbc",
+                        "on-error-container": "#93000a",
+                        "surface": "#fff8f7",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#474746",
+                        "on-primary-container": "#ff9a91",
+                        "inverse-on-surface": "#ffedeb",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-tertiary-container": "#dcaf4d",
+                        "surface-container-low": "#fff0ef",
+                        "background": "#fff8f7",
+                        "on-background": "#251817",
+                        "secondary": "#5f5e5e",
+                        "primary-container": "#8b1a1a",
+                        "surface-container-high": "#fbe3e0",
+                        "on-tertiary-fixed": "#261a00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "container-margin": "20px",
+                        "xs": "4px",
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "h1": ["Inter"],
+                        "button-text": ["Inter"],
+                        "subheadline": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h1": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "button-text": ["16px", { "lineHeight": "1", "fontWeight": "600" }],
+                        "subheadline": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-sm min-h-screen flex flex-col antialiased">
+<!-- TopAppBar from JSON -->
+<header class="bg-stone-50/80 dark:bg-zinc-950/80 backdrop-blur-md font-['Inter'] font-semibold tracking-tight fixed top-0 w-full z-50 border-b border-stone-200 dark:border-zinc-800 shadow-sm dark:shadow-none flex items-center justify-between px-6 h-16 w-full max-w-screen-xl mx-auto">
+<button class="text-stone-500 dark:text-zinc-400 hover:bg-stone-100 dark:hover:bg-zinc-900 transition-colors active:scale-95 duration-150 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold text-red-900 dark:text-amber-500">Registration</h1>
+<button class="text-stone-500 dark:text-zinc-400 hover:bg-stone-100 dark:hover:bg-zinc-900 transition-colors active:scale-95 duration-150 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">help</span>
+</button>
+</header>
+<main class="flex-1 pt-20 px-container-margin pb-32 max-w-md mx-auto w-full flex flex-col gap-lg">
+<!-- Progress Bar -->
+<div class="w-full flex flex-col gap-xs">
+<div class="flex justify-between items-center px-1">
+<span class="font-label-caps text-label-caps text-primary">STEP 6 OF 6</span>
+<span class="font-label-caps text-label-caps text-tertiary-container">90%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden flex">
+<div class="h-full bg-tertiary-container w-[90%] rounded-full"></div>
+</div>
+</div>
+<!-- Hero & Chat Area -->
+<section class="flex flex-col gap-md items-center text-center mt-md">
+<div class="w-32 h-32 rounded-full bg-surface-container-highest relative flex items-center justify-center mb-sm shadow-lg overflow-hidden border-4 border-surface">
+<img class="w-full h-full object-cover" data-alt="A highly detailed 3D render of a Shiba Inu dog mascot character wearing a stylish dark maroon polo shirt and khaki shorts. The character is striking an energetic, motivational pose pointing upwards towards the sky. The background behind the character features a glowing, radial gold aura that highlights the subject. The overall aesthetic is bright, premium, and fits perfectly within a modern minimalist light-mode user interface, utilizing warm tones and clean lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC595bDav5UjVUzVe3Q2bQjCx7s-K2gQih8XoxmSB4m9ByrB-Cd8TpvRlvFpijv3nvBabtN8dVyaRqpPF8yHLoeyy7nzAX3js6LGa5pcaTRD37GJnRZajX_FmdouHJt0syOSk9l3YlCCl8X6FDkbv_ss9vn7ZbtnLgTyU4w3BHlgjfqPuKmzNEyUYbe5dIbPvvWoVKRhfeMaKFaEIi1y6jmHdfvyu0AY3cSLLCEMyhp5c_uknI7HSwG5aPvc4KoT1XObtl24OHjNg"/>
+</div>
+<div class="flex flex-col gap-sm items-center max-w-xs">
+<h2 class="font-h1 text-h1 text-primary">Hampir selesai! <span class="text-tertiary-container">🏁</span></h2>
+<p class="font-subheadline text-subheadline text-on-surface-variant bg-surface-container py-3 px-5 rounded-lg shadow-sm border border-surface-variant">
+                    Berapa target PO yang kamu mau capai per bulan?
+                </p>
+</div>
+</section>
+<!-- Selection Grid -->
+<section class="grid grid-cols-2 gap-md mt-sm">
+<!-- Selected Card -->
+<button class="flex flex-col gap-sm p-4 bg-surface rounded-DEFAULT border-2 border-tertiary-container shadow-[0_4px_20px_rgba(212,168,71,0.15)] text-left active:scale-95 transition-transform relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2 text-tertiary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h3 class="font-button-text text-button-text text-primary">1-50 pcs</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Sambil belajar, mulai pelan</p>
+<div class="mt-auto pt-sm border-t border-surface-variant">
+<span class="font-label-caps text-label-caps text-secondary">EST. RP 250RB-1.5JT/BLN</span>
+</div>
+</button>
+<!-- Unselected Card 2 -->
+<button class="flex flex-col gap-sm p-4 bg-surface-container-lowest rounded-DEFAULT border border-outline-variant hover:border-outline hover:bg-surface transition-colors text-left active:scale-95">
+<h3 class="font-button-text text-button-text text-on-surface">51-200 pcs</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Sudah cukup serius</p>
+<div class="mt-auto pt-sm border-t border-surface-variant">
+<span class="font-label-caps text-label-caps text-secondary">EST. RP 1.5JT-6JT/BLN</span>
+</div>
+</button>
+<!-- Unselected Card 3 -->
+<button class="flex flex-col gap-sm p-4 bg-surface-container-lowest rounded-DEFAULT border border-outline-variant hover:border-outline hover:bg-surface transition-colors text-left active:scale-95">
+<h3 class="font-button-text text-button-text text-on-surface">201-500 pcs</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Power reseller mode</p>
+<div class="mt-auto pt-sm border-t border-surface-variant">
+<span class="font-label-caps text-label-caps text-secondary">EST. RP 6JT-15JT/BLN</span>
+</div>
+</button>
+<!-- Unselected Card 4 -->
+<button class="flex flex-col gap-sm p-4 bg-surface-container-lowest rounded-DEFAULT border border-outline-variant hover:border-outline hover:bg-surface transition-colors text-left active:scale-95">
+<h3 class="font-button-text text-button-text text-on-surface">500+ pcs</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Top tier reseller</p>
+<div class="mt-auto pt-sm border-t border-surface-variant">
+<span class="font-label-caps text-label-caps text-secondary">EST. RP 15JT+/BLN</span>
+</div>
+</button>
+</section>
+</main>
+<!-- Fixed Bottom Actions -->
+<div class="fixed bottom-0 left-0 w-full p-container-margin bg-gradient-to-t from-background via-background to-transparent pb-safe">
+<div class="max-w-md mx-auto flex flex-col gap-md items-center">
+<button class="w-full bg-primary text-on-primary font-button-text text-button-text py-4 rounded-lg shadow-lg flex items-center justify-center gap-xs active:scale-95 transition-transform hover:bg-surface-tint">
+                Selesaikan Profil
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="flex items-center gap-xs font-label-caps text-label-caps text-tertiary-container hover:text-on-tertiary-container transition-colors py-2">
+<span class="material-symbols-outlined text-[16px]">volume_off</span>
+                Lewati
+                <span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+</button>
+</div>
+</div>
+</body></html>

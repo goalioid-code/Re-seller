@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAuth } from '../../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../../src/lib/api';
+import { stitchColors } from '../../../src/theme/stitch';
 
 type TimelineRow = {
   id: string;
@@ -87,7 +88,7 @@ export default function ProductionTrackingScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color={stitchColors.primary} />
       </View>
     );
   }
@@ -104,7 +105,7 @@ export default function ProductionTrackingScreen() {
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void fetchProduction(true); }} tintColor="#3B82F6" />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void fetchProduction(true); }} tintColor={stitchColors.primary} />}
       >
         {currentBanner && (
           <View style={[styles.banner, { borderColor: `${currentBanner.color}66` }]}>
@@ -143,8 +144,8 @@ export default function ProductionTrackingScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  center: { flex: 1, backgroundColor: '#0F172A', justifyContent: 'center', alignItems: 'center' },
+  container: { flex: 1, backgroundColor: stitchColors.pageSoft },
+  center: { flex: 1, backgroundColor: stitchColors.pageSoft, justifyContent: 'center', alignItems: 'center' },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -152,32 +153,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  backText: { color: '#3B82F6', fontWeight: '700' },
-  headerTitle: { color: '#FFF', fontSize: 18, fontWeight: '700' },
+  backText: { color: stitchColors.primary, fontWeight: '700' },
+  headerTitle: { color: stitchColors.primary, fontSize: 18, fontWeight: '700' },
   scrollContent: { padding: 20, paddingBottom: 40 },
   banner: {
-    backgroundColor: '#111827',
+    backgroundColor: '#fff',
     borderWidth: 1,
     borderRadius: 14,
     padding: 14,
     marginBottom: 14,
   },
-  bannerLabel: { color: '#94A3B8', fontSize: 12, marginBottom: 6 },
-  bannerTitle: { color: '#FFF', fontSize: 20, fontWeight: '800' },
+  bannerLabel: { color: stitchColors.textMutedLight, fontSize: 12, marginBottom: 6 },
+  bannerTitle: { color: stitchColors.textOnLight, fontSize: 20, fontWeight: '800' },
   bannerStatus: { marginTop: 4, fontWeight: '700' },
   timeline: { gap: 10 },
   stageCard: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#fff',
     borderRadius: 14,
     borderWidth: 1,
     borderColor: 'rgba(148,163,184,0.18)',
     padding: 14,
   },
   stageHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  stageName: { color: '#FFF', fontWeight: '700', fontSize: 16 },
+  stageName: { color: stitchColors.textOnLight, fontWeight: '700', fontSize: 16 },
   badge: { borderWidth: 1, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999 },
   badgeText: { fontSize: 12, fontWeight: '700' },
-  stageDesc: { color: '#94A3B8', marginTop: 6, marginBottom: 10 },
-  metaLine: { color: '#CBD5E1', fontSize: 12, marginBottom: 2 },
-  lastUpdated: { color: '#94A3B8', textAlign: 'center', marginTop: 18, fontSize: 12 },
+  stageDesc: { color: stitchColors.textMutedLight, marginTop: 6, marginBottom: 10 },
+  metaLine: { color: stitchColors.textMutedLight, fontSize: 12, marginBottom: 2 },
+  lastUpdated: { color: stitchColors.textMutedLight, textAlign: 'center', marginTop: 18, fontSize: 12 },
 });

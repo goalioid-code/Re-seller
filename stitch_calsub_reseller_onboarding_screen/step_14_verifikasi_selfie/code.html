@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Anti-Fraud Verification</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#fbe3e0",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed": "#410003",
+                      "surface": "#fff8f7",
+                      "surface-container": "#ffe9e6",
+                      "secondary-fixed": "#e5e2e1",
+                      "on-background": "#251817",
+                      "surface-tint": "#ac322e",
+                      "primary-fixed-dim": "#ffb3ac",
+                      "surface-container-low": "#fff0ef",
+                      "secondary-container": "#e2dfde",
+                      "primary": "#690008",
+                      "on-secondary-fixed-variant": "#474746",
+                      "inverse-surface": "#3b2d2c",
+                      "on-surface": "#251817",
+                      "on-error-container": "#93000a",
+                      "tertiary-container": "#5c4300",
+                      "tertiary": "#402e00",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#ffedeb",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-container": "#ff9a91",
+                      "secondary-fixed-dim": "#c8c6c5",
+                      "on-primary": "#ffffff",
+                      "inverse-primary": "#ffb3ac",
+                      "secondary": "#5f5e5e",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#636262",
+                      "primary-container": "#8b1a1a",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "tertiary-fixed": "#ffdea0",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#eec05c",
+                      "surface-container-highest": "#f5dddb",
+                      "primary-fixed": "#ffdad6",
+                      "surface-variant": "#f5dddb",
+                      "surface-bright": "#fff8f7",
+                      "on-tertiary-fixed": "#261a00",
+                      "outline": "#8c716e",
+                      "on-tertiary-fixed-variant": "#5c4300",
+                      "on-surface-variant": "#58413f",
+                      "background": "#fff8f7",
+                      "on-primary-fixed-variant": "#8a1a1a",
+                      "on-tertiary-container": "#dcaf4d",
+                      "surface-dim": "#ecd5d2",
+                      "outline-variant": "#e0bfbc"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "gutter": "16px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "container-margin": "20px",
+                      "unit": "4px",
+                      "md": "16px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "subheadline": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "button-text": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "h1": ["Inter"]
+              },
+              "fontSize": {
+                      "subheadline": ["15px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "button-text": ["16px", {"lineHeight": "1", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "h1": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-sm text-on-background min-h-screen flex flex-col relative overflow-hidden max-w-[390px] mx-auto shadow-2xl">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 bg-red-950/80 dark:bg-red-950/90 backdrop-blur-md shadow-2xl shadow-black/20 flex justify-between items-center w-full px-6 py-4 border-b border-white/10 z-50 absolute">
+<div class="flex items-center gap-3 cursor-pointer hover:bg-white/5 transition-colors p-2 rounded-full Active: opacity-80 scale-95 transition-all">
+<span class="material-symbols-outlined text-amber-500 dark:text-amber-400">arrow_back</span>
+</div>
+<h1 class="text-amber-500 font-black uppercase tracking-widest font-sans tracking-tight font-semibold text-body-lg">Verification</h1>
+<div class="font-button-text text-amber-500 font-bold">92%</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto px-gutter pt-[80px] pb-xl flex flex-col items-center relative z-10 bg-surface">
+<!-- Hero Mascot & Chat -->
+<div class="w-full flex flex-col items-center mt-md relative">
+<div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.04)] mb-sm overflow-hidden border border-outline-variant">
+<img alt="Shiba Inu mascot pointing to camera" class="w-full h-full object-cover" data-alt="A small, friendly 3D-style Shiba Inu mascot dog pointing eagerly towards the viewer's camera, smiling. The background is a clean, bright cream surface. Soft, high-key lighting creates a cheerful and welcoming atmosphere. The dog's fur is detailed, warm orange and white, standing out clearly against the minimal background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7HJ7rh_udC75V0QBwZW09EUGQBXcDdkxs4ZQa8WLBsm9uz4tM1wqs0M8t9kjcFZ-UEu0Pa0cZxzClIGLecVrwniJjSgIXs3NlaOHCBSN5dlWEHtbB2SfT1MyOzDkg_m_ItqeXC91JiqGDfkTM2_7OgYRY5mSUXgnODYe8-oyhi_bb-R9dcrZxxV-ov4kLs-wr1ehgXziKF6ye8DHxeBtFCgA_Wf0n-Ekk90lKW4X5V_1Fq692xJZAKBQYVD9k8BwrK5p1wHVmaw"/>
+</div>
+<div class="w-full max-w-[320px] bg-white rounded-[24px] p-md shadow-[0_8px_20px_rgba(0,0,0,0.04)] border border-outline-variant relative">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-outline-variant rotate-45"></div>
+<p class="font-body-sm text-on-surface mb-2 font-semibold">Last step! <span class="text-xl">🤳</span></p>
+<p class="font-body-sm text-on-surface-variant">Selfie sambil pegang KTP kamu, untuk verifikasi anti-fraud.</p>
+</div>
+</div>
+<!-- Camera Frame -->
+<div class="w-full aspect-[3/4] max-h-[400px] mt-xl relative bg-secondary-container rounded-lg overflow-hidden border-2 border-dashed border-outline shadow-[0_12px_30px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center group">
+<!-- Corner accents -->
+<div class="absolute top-4 left-4 w-6 h-6 border-t-4 border-l-4 border-tertiary-container rounded-tl-md"></div>
+<div class="absolute top-4 right-4 w-6 h-6 border-t-4 border-r-4 border-tertiary-container rounded-tr-md"></div>
+<div class="absolute bottom-4 left-4 w-6 h-6 border-b-4 border-l-4 border-tertiary-container rounded-bl-md"></div>
+<div class="absolute bottom-4 right-4 w-6 h-6 border-b-4 border-r-4 border-tertiary-container rounded-br-md"></div>
+<!-- Face Guide -->
+<div class="w-3/5 aspect-[3/4] border-2 border-dashed border-on-secondary-container rounded-[100px] absolute top-[15%] opacity-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-on-secondary-container opacity-30">face</span>
+</div>
+<!-- Card Guide -->
+<div class="w-1/3 aspect-[1.6/1] border-2 border-dashed border-on-secondary-container rounded-sm absolute bottom-[15%] right-[15%] opacity-50 bg-secondary-fixed/20 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">id_card</span>
+</div>
+<!-- Overlay Tips -->
+<div class="absolute top-6 flex gap-sm bg-surface-container-high/80 backdrop-blur-md px-md py-xs rounded-full border border-outline-variant shadow-sm">
+<span class="font-label-caps text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span> Wajah dalam frame</span>
+</div>
+</div>
+<!-- Instruction Icons -->
+<div class="flex justify-between w-full mt-lg px-xs">
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">person_check</span>
+</div>
+<span class="font-label-caps text-on-surface-variant text-center leading-tight">Wajah dalam<br/>frame</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+<span class="font-label-caps text-on-surface-variant text-center leading-tight">KTP di samping<br/>wajah</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+</div>
+<span class="font-label-caps text-on-surface-variant text-center leading-tight">Pencahayaan<br/>cukup</span>
+</div>
+</div>
+<!-- CTA Button -->
+<button class="w-full bg-primary-container text-on-primary mt-xl py-4 rounded-full font-button-text shadow-[0_8px_20px_rgba(139,26,26,0.2)] hover:shadow-[0_12px_24px_rgba(139,26,26,0.3)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 border border-primary">
+            Mulai Selfie <span class="material-symbols-outlined text-[20px]">photo_camera</span>
+</button>
+<!-- Skip Action -->
+<div class="mt-md flex items-center justify-center gap-1 text-on-surface-variant opacity-50">
+<span class="material-symbols-outlined text-[16px]">volume_off</span>
+<span class="font-label-caps">Lewati <span class="material-symbols-outlined text-[12px]">arrow_downward</span></span>
+</div>
+</main>
+</body></html>

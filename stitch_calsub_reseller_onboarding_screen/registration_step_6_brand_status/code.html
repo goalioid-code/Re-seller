@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calsub Reseller - Registration Step 6</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#fff0ef",
+                        "surface": "#fff8f7",
+                        "on-surface": "#251817",
+                        "on-primary-container": "#ff9a91",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#5c4300",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#58413f",
+                        "outline": "#8c716e",
+                        "secondary": "#5f5e5e",
+                        "on-secondary-fixed-variant": "#474746",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#3b2d2c",
+                        "background": "#fff8f7",
+                        "on-tertiary-fixed": "#261a00",
+                        "tertiary-fixed": "#ffdea0",
+                        "inverse-on-surface": "#ffedeb",
+                        "outline-variant": "#e0bfbc",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "surface-dim": "#ecd5d2",
+                        "surface-container": "#ffe9e6",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#f5dddb",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#8a1a1a",
+                        "on-background": "#251817",
+                        "primary": "#690008",
+                        "secondary-container": "#e2dfde",
+                        "surface-bright": "#fff8f7",
+                        "on-primary-fixed": "#410003",
+                        "surface-tint": "#ac322e",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#8b1a1a",
+                        "tertiary": "#402e00",
+                        "surface-container-high": "#fbe3e0",
+                        "secondary-fixed": "#e5e2e1",
+                        "tertiary-fixed-dim": "#eec05c",
+                        "on-secondary-container": "#636262",
+                        "surface-variant": "#f5dddb",
+                        "on-tertiary-container": "#dcaf4d",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "inverse-primary": "#ffb3ac"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "xl": "32px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "md": "16px",
+                        "container-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "subheadline": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "button-text": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "subheadline": ["15px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "button-text": ["16px", {"lineHeight": "1", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h1": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        .glow-top {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212,168,71,0.15) 0%, rgba(26,6,6,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+        }
+        .gold-gradient {
+            background: linear-gradient(90deg, #D4A847 0%, #F3D382 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="relative flex flex-col items-center justify-center sm:bg-stone-900 overflow-x-hidden">
+<!-- Mobile Device Container (iPhone 14 Pro aspect ratio approx) -->
+<main class="relative w-full max-w-[393px] h-[852px] flex flex-col shadow-2xl overflow-hidden" style="background: linear-gradient(180deg, #2A0A0A 0%, #1A0606 100%);">
+<!-- Top Glow -->
+<div class="glow-top"></div>
+<!-- Header Content -->
+<header class="relative z-10 w-full px-lg pt-12 pb-4 flex justify-between items-center">
+<!-- Logo Placeholder -->
+<div class="w-20 h-8 bg-white/10 rounded flex items-center justify-center border border-white/20">
+<span class="text-white text-xs font-bold tracking-widest">CALSUB</span>
+</div>
+<!-- Progress Section -->
+<div class="flex flex-col items-end gap-1">
+<span class="text-[#D4A847] font-label-caps text-label-caps">35% selesai</span>
+<div class="flex gap-[2px]">
+<!-- Segments (14 total, 5 filled) -->
+<div class="h-1 w-2 rounded-full bg-[#D4A847]"></div>
+<div class="h-1 w-2 rounded-full bg-[#D4A847]"></div>
+<div class="h-1 w-2 rounded-full bg-[#D4A847]"></div>
+<div class="h-1 w-2 rounded-full bg-[#D4A847]"></div>
+<div class="h-1 w-2 rounded-full bg-[#D4A847]"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+<div class="h-1 w-2 rounded-full bg-white/20"></div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<div class="relative z-10 flex-1 px-lg flex flex-col gap-6 pt-4 overflow-y-auto pb-32 no-scrollbar">
+<!-- Hero & Chat Section -->
+<div class="flex flex-col gap-4">
+<!-- Mascot Image -->
+<div class="w-full flex justify-center -mb-8 relative z-20">
+<div class="w-48 h-48 relative">
+<img alt="Shiba Inu" class="w-full h-full object-contain drop-shadow-2xl opacity-90 rounded-full" data-alt="A highly detailed 3D rendering of a Shiba Inu mascot character named Calman. He has creamy light fur and is wearing a stylish deep maroon polo shirt, tailored khaki shorts, and clean white sneakers. He wears a subtle earpiece. The character is striking an inquisitive pose with a slight head tilt and one paw raised playfully, as if asking a question. The lighting is cinematic, casting a premium, warm glow that perfectly matches a luxurious dark mode interface aesthetic dominated by deep burgundies and gold accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjleERh-njCFbMkVqUQ3scidouFZV18_DMzqzMOA-JZq3POdPcB6Vasjhusdj_IlXGKTcOTNTThQADo6-B610FzORI9347sJhEMgRS-LKwOnUPaAA1KK6nVPyb5FaDXNelmc31y74mEGOcH40Lh4CQoHdtlMuEzGnG2HqbNGx6ieMKw5idpjqrt0tlNGE4QuZ-F-yAhjAZyGWSR8KO78wCqlZqeX3UnNZ_wJKrv2ZCVvBp-1e85aDN70-y0tQJs4YliAt1bkt4xQ"/>
+</div>
+</div>
+<!-- Chat Bubbles -->
+<div class="flex gap-3 items-start relative z-10 pt-4">
+<!-- Avatar -->
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/20 mt-1">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A close up 3D rendered avatar face of a Shiba Inu character named Calman against a dark background. The lighting is soft and premium, highlighting the cream fur. This serves as a small profile picture in a sleek, dark mode chat interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG9VpTNXcS7jgOAYZOgEAvMhSZOHVjmKjpk-4jd1zrei8pIHTC4Lq3kFu7pq3P0DYYrULE_0HElfVm1OwlXMiiCKRN-IqZqGfMZby374uAtAYQotzGytFB7ekk0A-pGa3gqz1yOQk__QwCCOXkpdYW6lpe1VsPt7rRlYpqPeRYKWvtghzsYh-fGPtEE5-zgVANWmAzDh3renD7avtnzO1pML_0jI40k7tVjL64zye7WnUoI1lXe7ISIyGP913CLGiJJcMonDOsIg"/>
+</div>
+<div class="flex flex-col gap-2">
+<!-- Bubble 1 -->
+<div class="glass-bubble rounded-2xl rounded-tl-sm px-4 py-3 inline-block self-start">
+<p class="font-body-lg text-body-lg text-white">Mantap! 🔥</p>
+</div>
+<!-- Bubble 2 -->
+<div class="glass-bubble rounded-2xl rounded-tl-sm px-4 py-3 max-w-[260px]">
+<p class="font-body-lg text-body-lg text-white leading-relaxed">Boleh tahu, kamu sudah punya brand jersey sendiri?</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Selection Options -->
+<div class="flex flex-col gap-3 mt-4">
+<!-- Option 1: Selected -->
+<button class="w-full text-left p-4 rounded-xl flex items-center justify-between transition-all duration-200" style="background: rgba(212,168,71,0.25); border: 1px solid #D4A847;">
+<span class="font-button-text text-button-text text-white">Ya, sudah punya brand &amp; sedang berjalan</span>
+<span class="material-symbols-outlined text-[#D4A847]" data-icon="check_circle" data-weight="fill">check_circle</span>
+</button>
+<!-- Option 2: Unselected -->
+<button class="w-full text-left p-4 rounded-xl flex items-center justify-between transition-all duration-200 bg-white/5 border border-white/10 hover:bg-white/10">
+<span class="font-subheadline text-[15px] text-white/90">Ya, punya nama brand tapi belum berjalan</span>
+</button>
+<!-- Option 3: Unselected -->
+<button class="w-full text-left p-4 rounded-xl flex items-center justify-between transition-all duration-200 bg-white/5 border border-white/10 hover:bg-white/10">
+<span class="font-subheadline text-[15px] text-white/90">Belum, tapi berencana bikin brand sendiri</span>
+</button>
+<!-- Option 4: Unselected -->
+<button class="w-full text-left p-4 rounded-xl flex items-center justify-between transition-all duration-200 bg-white/5 border border-white/10 hover:bg-white/10">
+<span class="font-subheadline text-[15px] text-white/90">Tidak, hanya ingin jualan sebagai reseller</span>
+</button>
+</div>
+</div>
+<!-- Bottom Action Bar Fixed -->
+<div class="absolute bottom-0 left-0 w-full p-lg pb-10 flex items-center justify-between z-30" style="background: linear-gradient(180deg, rgba(26,6,6,0) 0%, #1A0606 40%);">
+<button class="w-12 h-12 rounded-full glass-bubble flex items-center justify-center text-white/70 hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="volume_off">volume_off</span>
+</button>
+<div class="flex items-center gap-6">
+<button class="font-label-caps text-label-caps text-[#D4A847]/70 hover:text-[#D4A847] flex items-center gap-1 transition-colors">
+                    Lewati <span class="material-symbols-outlined text-sm" data-icon="arrow_downward">arrow_downward</span>
+</button>
+<button class="gold-gradient px-6 py-3.5 rounded-full flex items-center gap-2 text-[#1A0606] font-button-text text-button-text shadow-[0_4px_20px_rgba(212,168,71,0.3)] active:scale-95 transition-all">
+                    Lanjutkan <span class="material-symbols-outlined text-xl" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+</body></html>

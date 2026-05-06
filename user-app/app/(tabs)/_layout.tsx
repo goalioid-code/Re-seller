@@ -1,15 +1,16 @@
 import { Tabs } from 'expo-router';
 import { Home, Package, User, CreditCard } from 'lucide-react-native';
 import tw from 'twrnc';
+import { stitchColors } from '../../src/theme/stitch';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: tw`bg-[#1E293B] border-t-0 h-16 pb-2`,
-        tabBarActiveTintColor: '#3B82F6',
-        tabBarInactiveTintColor: '#64748B',
+        tabBarStyle: [tw`h-16 pb-2`, { backgroundColor: '#fff', borderTopColor: stitchColors.borderLight, borderTopWidth: 1 }],
+        tabBarActiveTintColor: stitchColors.primary,
+        tabBarInactiveTintColor: stitchColors.textMutedLight,
       }}
     >
       <Tabs.Screen
