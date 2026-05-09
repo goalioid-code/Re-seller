@@ -32,7 +32,7 @@ interface AuthContextType {
     profileData?: { full_name: string; phone?: string } | null
   ) => Promise<any>;
   logout: () => Promise<void>;
-  devLogin: (email: string) => Promise<any>;
+  devLogin: (email: string, password?: string) => Promise<any>;
   devRegister: (userData: any) => Promise<any>;
   updateProfile: (profileData: any) => Promise<void>;
   getMe: () => Promise<void>;
@@ -203,7 +203,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const devLogin = async (email: string) => {
+  const devLogin = async (email: string, password?: string) => {
     try {
       setLoading(true);
       setError(null);
@@ -212,7 +212,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await fetchWithTimeout(`${apiUrl}/dev-auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(password ? { email, password } : { email }),
       });
 
       const data = await response.json();

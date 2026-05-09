@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
+    paddingTop: 24,
+    paddingBottom: 16,
   },
   glow: {
     position: 'absolute',

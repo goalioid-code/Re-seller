@@ -4,6 +4,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { stitchColors } from '../../src/theme/stitch';
 import ProgressHeader from '../../src/components/onboarding/ProgressHeader';
 import CalmanChat from '../../src/components/onboarding/CalmanChat';
+import BankSelectModal from '../../src/components/onboarding/BankSelectModal';
 
 export default function BankSetupScreen() {
   const router = useRouter();
@@ -11,6 +12,9 @@ export default function BankSetupScreen() {
   const [bank, setBank] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [accountName, setAccountName] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const isFormValid = bank.trim() !== '' && accountNumber.trim() !== '' && accountName.trim() !== '';
 
   return (
     <View style={styles.screen}>
@@ -44,7 +48,7 @@ export default function BankSetupScreen() {
         <View style={styles.formArea}>
           {/* Bank Select */}
           <Text style={styles.fieldLabel}>Pilih Bank</Text>
-          <TouchableOpacity style={styles.selectField}>
+          <TouchableOpacity style={styles.selectField} onPress={() => setModalVisible(true)}>
             <Text style={styles.bankIcon}>🏦</Text>
             <Text style={bank ? styles.selectValue : styles.selectPlaceholder}>
               {bank || 'Pilih bank'}
@@ -97,24 +101,33 @@ export default function BankSetupScreen() {
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.continueBtn}
+          style={[styles.continueBtn, !isFormValid && styles.continueBtnDisabled]}
           onPress={() =>
             router.push({
               pathname: '/(onboarding)/ktp-upload',
               params: { ...params, bank, accountNumber, accountName },
             })
           }
+          disabled={!isFormValid}
         >
-          <Text style={styles.continueBtnText}>Lanjutkan ke Upload KTP 🪪  →</Text>
+          <Text style={[styles.continueBtnText, !isFormValid && styles.continueBtnTextDisabled]}>
+            Lanjutkan ke Upload KTP 🪪
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/(onboarding)/ktp-upload', params })}
           style={styles.skipBtn}
         >
-          <Text style={styles.skipText}>Lewati ↓</Text>
+          <Text style={styles.skipText}>Lewati</Text>
         </TouchableOpacity>
       </View>
+
+      <BankSelectModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSelect={setBank}
+      />
     </View>
   );
 }
@@ -276,10 +289,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   },
+  continueBtnDisabled: {
+    backgroundColor: 'rgba(212,168,71,0.3)',
+  },
   continueBtnText: {
     color: '#1A0606',
     fontSize: 15,
     fontWeight: '700',
+  },
+  continueBtnTextDisabled: {
+    color: 'rgba(26,6,6,0.5)',
   },
   skipBtn: {
     paddingVertical: 6,

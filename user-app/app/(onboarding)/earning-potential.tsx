@@ -104,15 +104,15 @@ export default function EarningPotentialScreen() {
           }
           disabled={selected === null}
         >
-          <Text style={styles.submitText}>Selesaikan Profil  →</Text>
+          <Text style={styles.submitText}>Selesaikan Profil</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.skipRow}
           onPress={() => router.push({ pathname: '/(onboarding)/id-type', params })}
         >
-          <Text style={styles.skipIcon}>🔇</Text>
-          <Text style={styles.skipText}>Lewati ↓</Text>
+          <Text style={styles.skipIcon}></Text>
+          <Text style={styles.skipText}>Lewati</Text>
         </TouchableOpacity>
       </View>
     </View>

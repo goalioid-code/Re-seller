@@ -187,7 +187,7 @@ export default function CreateOrderScreen() {
             />
 
             <TouchableOpacity style={styles.nextButton} onPress={() => setStep(2)}>
-              <Text style={styles.nextButtonText}>Lanjut ke Rincian Produk →</Text>
+              <Text style={styles.nextButtonText}>Lanjut ke Rincian Produk</Text>
             </TouchableOpacity>
           </View>
         )}

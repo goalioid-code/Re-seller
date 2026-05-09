@@ -95,7 +95,7 @@ export default function WhatsAppScreen() {
               disabled={!phone.trim()}
             >
               <Text style={[styles.otpButtonText, !phone.trim() && styles.otpButtonTextDisabled]}>
-                Kirim Kode OTP  →
+                Kirim Kode OTP
               </Text>
             </TouchableOpacity>
           </View>
@@ -114,7 +114,7 @@ export default function WhatsAppScreen() {
               })
             }
           >
-            <Text style={styles.skipText}>Lewati ↓</Text>
+            <Text style={styles.skipText}>Lewati</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

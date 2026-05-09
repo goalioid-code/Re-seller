@@ -1,28 +1,52 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { stitchColors } from '../../src/theme/stitch';
 import ProgressHeader from '../../src/components/onboarding/ProgressHeader';
 
-// Mock KTP data for UI demonstration
-const MOCK_KTP = {
-  nik: '3174123456789012',
-  nama: 'Budi Santoso',
-  tempatTglLahir: 'Jakarta, 17-08-1990',
-  jenisKelamin: 'Laki-laki',
-  alamat: 'Jl. Sudirman Kav. 52-53, Senayan, Kebayoran Baru, Jakarta Selatan',
-};
-
 export default function KtpReviewScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  
+  const [ktpData, setKtpData] = useState({
+    nik: '',
+    nama: '',
+    tempatTglLahir: '',
+    jenisKelamin: '',
+    alamat: '',
+  });
+
+  const [editingField, setEditingField] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (params.ocrData) {
+      try {
+        const parsed = JSON.parse(params.ocrData as string);
+        setKtpData({
+          nik: parsed.nik || '',
+          nama: parsed.nama || '',
+          tempatTglLahir: parsed.tempatTglLahir || '',
+          jenisKelamin: parsed.jenisKelamin || '',
+          alamat: parsed.alamat || '',
+        });
+      } catch (e) {}
+    }
+  }, [params.ocrData]);
+
+  const updateField = (key: keyof typeof ktpData, value: string) => {
+    setKtpData(prev => ({ ...prev, [key]: value }));
+  };
+
+  const isNameMatched = 
+    params.accountName && 
+    ktpData.nama.trim().toLowerCase() === (params.accountName as string).trim().toLowerCase();
 
   const fields = [
-    { label: 'NIK', value: MOCK_KTP.nik },
-    { label: 'NAMA LENGKAP', value: MOCK_KTP.nama, match: true },
-    { label: 'TEMPAT / TGL LAHIR', value: MOCK_KTP.tempatTglLahir },
-    { label: 'JENIS KELAMIN', value: MOCK_KTP.jenisKelamin },
-    { label: 'ALAMAT', value: MOCK_KTP.alamat },
+    { key: 'nik' as const, label: 'NIK', value: ktpData.nik },
+    { key: 'nama' as const, label: 'NAMA LENGKAP', value: ktpData.nama, match: isNameMatched },
+    { key: 'tempatTglLahir' as const, label: 'TEMPAT / TGL LAHIR', value: ktpData.tempatTglLahir },
+    { key: 'jenisKelamin' as const, label: 'JENIS KELAMIN', value: ktpData.jenisKelamin },
+    { key: 'alamat' as const, label: 'ALAMAT', value: ktpData.alamat },
   ];
 
   return (
@@ -51,52 +75,89 @@ export default function KtpReviewScreen() {
         {/* KTP Photo preview */}
         <View style={styles.ktpRow}>
           <View style={styles.ktpThumb}>
-            <Text style={styles.ktpPlaceholder}>🪪</Text>
+            {params.imageUri ? (
+              <Image source={{ uri: params.imageUri as string }} style={styles.ktpThumbImage} />
+            ) : (
+              <Text style={styles.ktpPlaceholder}>🪪</Text>
+            )}
           </View>
           <Text style={styles.ktpLabel}>FOTO KTP</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.back()}>
             <Text style={styles.retakeBtn}>🔄 Foto Ulang</Text>
           </TouchableOpacity>
         </View>
 
         {/* Data fields */}
         <View style={styles.fieldsArea}>
-          {fields.map((field, i) => (
-            <View key={i} style={styles.fieldCard}>
-              <Text style={styles.fieldLabel}>{field.label}</Text>
-              <View style={styles.fieldValueRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.fieldValue}>{field.value}</Text>
-                  {field.match && (
-                    <Text style={styles.matchBadge}>✓ COCOK DENGAN REKENING</Text>
-                  )}
-                </View>
-                <View style={styles.fieldActions}>
-                  <TouchableOpacity style={styles.actionBtn}>
-                    <Text style={styles.actionIcon}>✅</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.actionBtn}>
-                    <Text style={styles.actionIcon}>✏️</Text>
-                  </TouchableOpacity>
+          {fields.map((field) => {
+            const isEditing = editingField === field.key;
+
+            return (
+              <View key={field.key} style={[styles.fieldCard, isEditing && styles.fieldCardActive]}>
+                <Text style={styles.fieldLabel}>{field.label}</Text>
+                <View style={styles.fieldValueRow}>
+                  <View style={{ flex: 1 }}>
+                    {isEditing ? (
+                      <TextInput
+                        style={styles.editInput}
+                        value={field.value}
+                        onChangeText={(val) => updateField(field.key, val)}
+                        autoFocus
+                      />
+                    ) : (
+                      <>
+                        <Text style={styles.fieldValue}>{field.value || '-'}</Text>
+                        {field.key === 'nama' && field.match && (
+                          <Text style={styles.matchBadge}>✓ COCOK DENGAN REKENING</Text>
+                        )}
+                        {field.key === 'nama' && !field.match && ktpData.nama && (
+                          <Text style={styles.mismatchBadge}>⚠️ TIDAK COCOK DENGAN REKENING</Text>
+                        )}
+                      </>
+                    )}
+                  </View>
+                  <View style={styles.fieldActions}>
+                    {isEditing ? (
+                      <TouchableOpacity 
+                        style={[styles.actionBtn, { backgroundColor: stitchColors.gold }]}
+                        onPress={() => setEditingField(null)}
+                      >
+                        <Text style={styles.actionIcon}>✅</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity 
+                        style={styles.actionBtn}
+                        onPress={() => setEditingField(field.key)}
+                      >
+                        <Text style={styles.actionIcon}>✏️</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
       </ScrollView>
 
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.confirmBtn}
-          onPress={() =>
-            router.push({
-              pathname: '/(onboarding)/selfie',
-              params,
-            })
-          }
+          style={[styles.confirmBtn, editingField !== null && styles.confirmBtnDisabled]}
+          onPress={() => {
+            if (editingField) {
+              setEditingField(null);
+            } else {
+              router.push({
+                pathname: '/(onboarding)/selfie',
+                params: { ...params, finalKtpData: JSON.stringify(ktpData) },
+              });
+            }
+          }}
         >
-          <Text style={styles.confirmBtnText}>Konfirmasi & Lanjut  →</Text>
+          <Text style={styles.confirmBtnText}>
+            {editingField ? 'Simpan Edit Dulu' : 'Konfirmasi & Lanjut'}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.muteRow}>
           <Text style={{ fontSize: 16 }}>🔇</Text>
@@ -163,6 +224,12 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  ktpThumbImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   ktpPlaceholder: {
     fontSize: 24,
@@ -190,6 +257,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.05)',
     padding: 14,
   },
+  fieldCardActive: {
+    borderColor: stitchColors.gold,
+    backgroundColor: 'rgba(212,168,71,0.05)',
+  },
   fieldLabel: {
     color: stitchColors.gold,
     fontSize: 10,
@@ -199,7 +270,7 @@ const styles = StyleSheet.create({
   },
   fieldValueRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   fieldValue: {
     color: '#FFFFFF',
@@ -207,8 +278,24 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 22,
   },
+  editInput: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    borderBottomWidth: 1,
+    borderBottomColor: stitchColors.gold,
+    paddingVertical: 4,
+    paddingHorizontal: 0,
+  },
   matchBadge: {
     color: stitchColors.success,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    marginTop: 4,
+  },
+  mismatchBadge: {
+    color: stitchColors.warning,
     fontSize: 10,
     fontWeight: '700',
     letterSpacing: 0.5,
@@ -220,10 +307,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   actionBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: 'rgba(255,255,255,0.08)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -244,6 +331,9 @@ const styles = StyleSheet.create({
     borderRadius: 27,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  confirmBtnDisabled: {
+    backgroundColor: 'rgba(212,168,71,0.4)',
   },
   confirmBtnText: {
     color: '#1A0606',

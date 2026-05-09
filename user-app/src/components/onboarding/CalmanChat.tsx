@@ -31,6 +31,7 @@ export default function CalmanChat({ messages, avatarSize = 40 }: CalmanChatProp
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
+    marginTop: 24,
     gap: 8,
   },
   row: {

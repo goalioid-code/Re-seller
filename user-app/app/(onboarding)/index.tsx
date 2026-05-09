@@ -40,7 +40,7 @@ export default function OnboardingIndex() {
 
         <TouchableOpacity
           style={styles.primaryButton}
-          onPress={() => router.push('/(onboarding)/name')}
+          onPress={() => router.push('/(onboarding)/welcome-registration')}
           activeOpacity={0.85}
         >
           <Text style={styles.primaryButtonText}>Daftar Sebagai Reseller</Text>

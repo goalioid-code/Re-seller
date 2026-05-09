@@ -6,21 +6,82 @@ import ProgressHeader from '../../src/components/onboarding/ProgressHeader';
 import CalmanHero from '../../src/components/onboarding/CalmanHero';
 import CalmanChat from '../../src/components/onboarding/CalmanChat';
 import OnboardingFooter from '../../src/components/onboarding/OnboardingFooter';
+import AddressSelectModal from '../../src/components/onboarding/AddressSelectModal';
 
 export default function AddressScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  
   const [form, setForm] = useState({
-    provinsi: '',
-    kota: '',
-    kecamatan: '',
-    kelurahan: '',
+    provinsi: { id: '', nama: '' },
+    kota: { id: '', nama: '' },
+    kecamatan: { id: '', nama: '' },
+    kelurahan: { id: '', nama: '' },
     kodePos: '',
     detail: '',
   });
 
+  const [modalConfig, setModalConfig] = useState<{
+    visible: boolean;
+    type: 'provinsi' | 'kota' | 'kecamatan' | 'kelurahan';
+    title: string;
+    parentId?: string;
+  }>({
+    visible: false,
+    type: 'provinsi',
+    title: '',
+  });
+
   const update = (key: string, value: string) => setForm((prev) => ({ ...prev, [key]: value }));
-  const isValid = form.provinsi && form.kota && form.kecamatan && form.kelurahan;
+
+  const handleSelect = (item: { id: string; nama: string }) => {
+    if (modalConfig.type === 'provinsi') {
+      setForm((prev) => ({
+        ...prev,
+        provinsi: item,
+        kota: { id: '', nama: '' },
+        kecamatan: { id: '', nama: '' },
+        kelurahan: { id: '', nama: '' },
+      }));
+    } else if (modalConfig.type === 'kota') {
+      setForm((prev) => ({
+        ...prev,
+        kota: item,
+        kecamatan: { id: '', nama: '' },
+        kelurahan: { id: '', nama: '' },
+      }));
+    } else if (modalConfig.type === 'kecamatan') {
+      setForm((prev) => ({
+        ...prev,
+        kecamatan: item,
+        kelurahan: { id: '', nama: '' },
+      }));
+    } else if (modalConfig.type === 'kelurahan') {
+      setForm((prev) => ({ ...prev, kelurahan: item }));
+    }
+  };
+
+  const openModal = (type: 'provinsi' | 'kota' | 'kecamatan' | 'kelurahan') => {
+    let title = '';
+    let parentId = '';
+
+    if (type === 'provinsi') {
+      title = 'Pilih Provinsi';
+    } else if (type === 'kota') {
+      title = 'Pilih Kota / Kabupaten';
+      parentId = form.provinsi.id;
+    } else if (type === 'kecamatan') {
+      title = 'Pilih Kecamatan';
+      parentId = form.kota.id;
+    } else if (type === 'kelurahan') {
+      title = 'Pilih Kelurahan / Desa';
+      parentId = form.kecamatan.id;
+    }
+
+    setModalConfig({ visible: true, type, title, parentId });
+  };
+
+  const isValid = form.provinsi.id && form.kota.id && form.kecamatan.id && form.kelurahan.id && form.detail.trim();
 
   return (
     <View style={styles.screen}>
@@ -39,9 +100,9 @@ export default function AddressScreen() {
           {/* Provinsi */}
           <View style={styles.fieldGroup}>
             <Text style={styles.fieldLabel}>PROVINSI</Text>
-            <TouchableOpacity style={styles.selectField}>
-              <Text style={form.provinsi ? styles.selectValue : styles.selectPlaceholder}>
-                {form.provinsi || 'Pilih provinsi'}
+            <TouchableOpacity style={styles.selectField} onPress={() => openModal('provinsi')}>
+              <Text style={form.provinsi.nama ? styles.selectValue : styles.selectPlaceholder}>
+                {form.provinsi.nama || 'Pilih provinsi'}
               </Text>
               <Text style={styles.chevron}>▾</Text>
             </TouchableOpacity>
@@ -50,9 +111,13 @@ export default function AddressScreen() {
           {/* Kota */}
           <View style={styles.fieldGroup}>
             <Text style={styles.fieldLabel}>KOTA / KABUPATEN</Text>
-            <TouchableOpacity style={styles.selectField}>
-              <Text style={form.kota ? styles.selectValue : styles.selectPlaceholder}>
-                {form.kota || 'Pilih kota'}
+            <TouchableOpacity 
+              style={[styles.selectField, !form.provinsi.id && styles.selectFieldDisabled]} 
+              onPress={() => form.provinsi.id && openModal('kota')}
+              activeOpacity={form.provinsi.id ? 0.2 : 1}
+            >
+              <Text style={form.kota.nama ? styles.selectValue : styles.selectPlaceholder}>
+                {form.kota.nama || 'Pilih kota'}
               </Text>
               <Text style={styles.chevron}>▾</Text>
             </TouchableOpacity>
@@ -61,9 +126,13 @@ export default function AddressScreen() {
           {/* Kecamatan */}
           <View style={styles.fieldGroup}>
             <Text style={styles.fieldLabel}>KECAMATAN</Text>
-            <TouchableOpacity style={styles.selectField}>
-              <Text style={form.kecamatan ? styles.selectValue : styles.selectPlaceholder}>
-                {form.kecamatan || 'Pilih kecamatan'}
+            <TouchableOpacity 
+              style={[styles.selectField, !form.kota.id && styles.selectFieldDisabled]} 
+              onPress={() => form.kota.id && openModal('kecamatan')}
+              activeOpacity={form.kota.id ? 0.2 : 1}
+            >
+              <Text style={form.kecamatan.nama ? styles.selectValue : styles.selectPlaceholder}>
+                {form.kecamatan.nama || 'Pilih kecamatan'}
               </Text>
               <Text style={styles.chevron}>▾</Text>
             </TouchableOpacity>
@@ -72,9 +141,13 @@ export default function AddressScreen() {
           {/* Kelurahan */}
           <View style={styles.fieldGroup}>
             <Text style={styles.fieldLabel}>KELURAHAN / DESA</Text>
-            <TouchableOpacity style={styles.selectField}>
-              <Text style={form.kelurahan ? styles.selectValue : styles.selectPlaceholder}>
-                {form.kelurahan || 'Pilih kelurahan'}
+            <TouchableOpacity 
+              style={[styles.selectField, !form.kecamatan.id && styles.selectFieldDisabled]} 
+              onPress={() => form.kecamatan.id && openModal('kelurahan')}
+              activeOpacity={form.kecamatan.id ? 0.2 : 1}
+            >
+              <Text style={form.kelurahan.nama ? styles.selectValue : styles.selectPlaceholder}>
+                {form.kelurahan.nama || 'Pilih kelurahan'}
               </Text>
               <Text style={styles.chevron}>▾</Text>
             </TouchableOpacity>
@@ -93,7 +166,6 @@ export default function AddressScreen() {
                 keyboardType="number-pad"
                 maxLength={5}
               />
-              <Text style={styles.lockIcon}>🔒</Text>
             </View>
           </View>
 
@@ -118,7 +190,17 @@ export default function AddressScreen() {
         onContinue={() =>
           router.push({
             pathname: '/(onboarding)/brand-status',
-            params: { ...params, address: JSON.stringify(form) },
+            params: { 
+              ...params, 
+              address: JSON.stringify({
+                provinsi: form.provinsi.nama,
+                kota: form.kota.nama,
+                kecamatan: form.kecamatan.nama,
+                kelurahan: form.kelurahan.nama,
+                kodePos: form.kodePos,
+                detail: form.detail
+              }) 
+            },
           })
         }
         onSkip={() =>
@@ -128,7 +210,16 @@ export default function AddressScreen() {
           })
         }
         continueLabel="Lanjutkan"
-        continueDisabled={false}
+        continueDisabled={!isValid}
+      />
+
+      <AddressSelectModal
+        visible={modalConfig.visible}
+        onClose={() => setModalConfig((prev) => ({ ...prev, visible: false }))}
+        onSelect={handleSelect}
+        title={modalConfig.title}
+        type={modalConfig.type}
+        parentId={modalConfig.parentId}
       />
     </View>
   );
@@ -170,6 +261,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 15,
   },
+  selectFieldDisabled: {
+    opacity: 0.5,
+    backgroundColor: 'rgba(255,255,255,0.02)',
+  },
   selectValue: {
     color: '#FFFFFF',
     fontSize: 15,
@@ -201,9 +296,5 @@ const styles = StyleSheet.create({
   textArea: {
     minHeight: 70,
     textAlignVertical: 'top',
-  },
-  lockIcon: {
-    fontSize: 16,
-    marginLeft: 8,
   },
 });

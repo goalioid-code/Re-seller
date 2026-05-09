@@ -4,30 +4,56 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { stitchColors } from '../../src/theme/stitch';
 import ProgressHeader from '../../src/components/onboarding/ProgressHeader';
 
-const REVIEW_DATA = {
-  dataDiri: {
-    nama: 'Eko Fadly',
-    wa: '+62 812-3456-7890',
-    email: 'eko@email.com',
-  },
-  alamat: 'Jl. Mawar No. 12, RT 03/RW 05, Kel. Kranji, Kec. Bekasi Barat, Kota Bekasi, Jawa Barat 17135',
-  profilBisnis: {
-    brand: 'Sudah punya & berjalan',
-    fokus: 'Klub bola, Komunitas hobi',
-    target: '1-50 pcs/bulan',
-  },
-  verifikasi: {
-    ktp: 'Verified',
-    rekening: 'BCA 1234...',
-    nama: 'Eko Fadly',
-    match: true,
-  },
-};
-
 export default function ReviewScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const [agreed, setAgreed] = useState(false);
+
+  // Parse dynamic data safely
+  let addressObj: any = {};
+  try { if (params.address) addressObj = JSON.parse(params.address as string); } catch (e) {}
+
+  let ktpObj: any = {};
+  try { if (params.finalKtpData) ktpObj = JSON.parse(params.finalKtpData as string); } catch (e) {}
+
+  // Param keys harus cocok dengan yang dipakai di selling-focus.tsx, target.tsx, earning-potential.tsx
+  let focusArr: string[] = [];
+  try { if (params.sellingFocus) focusArr = JSON.parse(params.sellingFocus as string); } catch (e) {}
+
+  let targetArr: string[] = [];
+  try { if (params.targets) targetArr = JSON.parse(params.targets as string); } catch (e) {}
+
+  const dynamicData = {
+    dataDiri: {
+      nama: (params.name as string) || '-',
+      wa: (params.phone as string) || '-',
+      email: (params.email as string) || '-',
+    },
+    alamat: addressObj.detail 
+      ? `${addressObj.detail}, ${addressObj.kelurahan}, ${addressObj.kecamatan}, ${addressObj.kota}, ${addressObj.provinsi} ${addressObj.kodePos}`
+      : '-',
+    profilBisnis: {
+      brand: (params.brandStatus as string) || '-',
+      fokus: focusArr.join(', ') || '-',
+      target: targetArr.join(', ') || '-',
+      targetPO: (params.targetPO as string) || '-',
+    },
+    verifikasi: {
+      ktp: ktpObj.nik ? 'Verified' : 'Belum',
+      rekening: params.bank ? `${params.bank} ${params.accountNumber}` : '-',
+      nama: (params.accountName as string) || '-',
+      match: params.accountName && ktpObj.nama && (params.accountName as string).toLowerCase() === ktpObj.nama.toLowerCase(),
+    },
+  };
+
+  // Tidak submit langsung dari sini. User harus buat password dulu di screen
+  // berikutnya, baru di sana payload dikirim ke backend (POST /dev-auth/register).
+  const goToCreatePassword = () => {
+    router.push({
+      pathname: '/(onboarding)/create-password',
+      params,
+    });
+  };
 
   return (
     <View style={styles.screen}>
@@ -56,18 +82,18 @@ export default function ReviewScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Data Diri</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/(onboarding)/name')}>
               <Text style={styles.editIcon}>✏️</Text>
             </TouchableOpacity>
           </View>
           <Text style={styles.fieldRow}>
-            Nama: <Text style={styles.fieldBold}>{REVIEW_DATA.dataDiri.nama}</Text>
+            Nama: <Text style={styles.fieldBold}>{dynamicData.dataDiri.nama}</Text>
           </Text>
           <Text style={styles.fieldRow}>
-            WA: <Text style={styles.fieldBold}>{REVIEW_DATA.dataDiri.wa}</Text>
+            WA: <Text style={styles.fieldBold}>{dynamicData.dataDiri.wa}</Text>
           </Text>
           <Text style={styles.fieldRow}>
-            Email: <Text style={styles.fieldBold}>{REVIEW_DATA.dataDiri.email}</Text>
+            Email: <Text style={styles.fieldBold}>{dynamicData.dataDiri.email}</Text>
           </Text>
         </View>
 
@@ -75,29 +101,32 @@ export default function ReviewScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Alamat</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/(onboarding)/address')}>
               <Text style={styles.editIcon}>✏️</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.fieldRow}>{REVIEW_DATA.alamat}</Text>
+          <Text style={styles.fieldRow}>{dynamicData.alamat}</Text>
         </View>
 
         {/* Profil Bisnis */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Profil Bisnis</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/(onboarding)/brand-status')}>
               <Text style={styles.editIcon}>✏️</Text>
             </TouchableOpacity>
           </View>
           <Text style={styles.fieldRow}>
-            Brand: <Text style={styles.fieldBold}>{REVIEW_DATA.profilBisnis.brand}</Text>
+            Brand: <Text style={styles.fieldBold}>{dynamicData.profilBisnis.brand}</Text>
           </Text>
           <Text style={styles.fieldRow}>
-            Fokus: <Text style={styles.fieldBold}>{REVIEW_DATA.profilBisnis.fokus}</Text>
+            Fokus: <Text style={styles.fieldBold}>{dynamicData.profilBisnis.fokus}</Text>
           </Text>
           <Text style={styles.fieldRow}>
-            Target: <Text style={styles.fieldBold}>{REVIEW_DATA.profilBisnis.target}</Text>
+            Target Pasar: <Text style={styles.fieldBold}>{dynamicData.profilBisnis.target}</Text>
+          </Text>
+          <Text style={styles.fieldRow}>
+            Target PO: <Text style={styles.fieldBold}>{dynamicData.profilBisnis.targetPO}</Text>
           </Text>
         </View>
 
@@ -105,26 +134,31 @@ export default function ReviewScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Verifikasi</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/(onboarding)/ktp-upload')}>
               <Text style={styles.editIcon}>✏️</Text>
             </TouchableOpacity>
           </View>
           <Text style={styles.fieldRow}>
-            KTP: <Text style={styles.fieldBold}>✅ {REVIEW_DATA.verifikasi.ktp}</Text>
+            KTP: <Text style={styles.fieldBold}>✅ {dynamicData.verifikasi.ktp}</Text>
           </Text>
           <Text style={styles.fieldRow}>
-            Rekening: <Text style={styles.fieldBold}>{REVIEW_DATA.verifikasi.rekening}</Text>
+            Rekening: <Text style={styles.fieldBold}>{dynamicData.verifikasi.rekening}</Text>
           </Text>
           <Text style={styles.fieldRow}>
-            Nama: <Text style={styles.fieldBold}>{REVIEW_DATA.verifikasi.nama}</Text>
-            {REVIEW_DATA.verifikasi.match && (
+            Nama: <Text style={styles.fieldBold}>{dynamicData.verifikasi.nama}</Text>
+            {dynamicData.verifikasi.match ? (
               <Text style={styles.matchText}>  (Match)</Text>
+            ) : (
+              <Text style={styles.mismatchText}>  (Not Match)</Text>
             )}
           </Text>
         </View>
 
         {/* Terms */}
-        <TouchableOpacity style={styles.termsRow} onPress={() => setAgreed(!agreed)}>
+        <TouchableOpacity
+          style={styles.termsRow}
+          onPress={() => setAgreed(!agreed)}
+        >
           <View style={[styles.checkbox, agreed && styles.checkboxChecked]}>
             {agreed && <Text style={styles.checkMark}>✓</Text>}
           </View>
@@ -140,10 +174,10 @@ export default function ReviewScreen() {
       <View style={styles.footer}>
         <TouchableOpacity
           style={[styles.submitBtn, !agreed && styles.submitBtnDisabled]}
-          onPress={() => router.push({ pathname: '/(onboarding)/success', params })}
+          onPress={goToCreatePassword}
           disabled={!agreed}
         >
-          <Text style={styles.submitText}>Submit Pendaftaran  →</Text>
+          <Text style={styles.submitText}>Lanjut Buat Kata Sandi</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.back()}>
@@ -229,6 +263,11 @@ const styles = StyleSheet.create({
   },
   matchText: {
     color: stitchColors.success,
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  mismatchText: {
+    color: stitchColors.warning,
     fontWeight: '600',
     fontSize: 12,
   },

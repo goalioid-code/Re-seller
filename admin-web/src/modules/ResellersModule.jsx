@@ -34,9 +34,28 @@ export default function ResellersModule() {
     loadResellers()
   }, [loadResellers])
 
+  // Mapping action -> status baru, dipakai untuk optimistic update agar
+  // badge & disabled tombol langsung berubah tanpa harus tunggu reload.
+  const actionToStatus = {
+    approve: 'active',
+    reject: 'inactive',
+    deactivate: 'inactive',
+    reactivate: 'active',
+  }
+
   const updateStatus = async (resellerId, action) => {
     setActionLoadingId(resellerId)
     setError('')
+
+    // Optimistic update: ubah status di state lokal dulu supaya UI langsung berubah.
+    const newStatus = actionToStatus[action]
+    if (newStatus) {
+      setResellers((prev) => prev.map((r) => (r.id === resellerId ? { ...r, status: newStatus } : r)))
+    }
+    if (action === 'delete') {
+      setResellers((prev) => prev.filter((r) => r.id !== resellerId))
+    }
+
     try {
       if (action === 'approve') {
         await adminResellerAPI.approveReseller(resellerId)
@@ -52,6 +71,8 @@ export default function ResellersModule() {
       await loadResellers()
     } catch (err) {
       setError(err.message || 'Gagal memperbarui status reseller.')
+      // Roll back optimistic update jika gagal.
+      await loadResellers()
     } finally {
       setActionLoadingId('')
     }

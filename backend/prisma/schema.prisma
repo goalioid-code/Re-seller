@@ -18,6 +18,7 @@ model Reseller {
   status             String                 @default("pending")
   tier_id            String?
   onboarding_data    String?
+  password_hash      String?
   fcm_token          String?
   created_at         DateTime               @default(now())
   updated_at         DateTime               @updatedAt

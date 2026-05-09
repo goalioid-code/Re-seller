@@ -1,11 +1,96 @@
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const prisma = require('../lib/prisma');
 const redis = require('../lib/redis');
 const { sendWhatsApp } = require('../lib/foonte');
 const { sendEmailOTP } = require('../lib/resend');
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// Schema Prisma untuk `onboarding_data` masih bertipe String (TEXT).
+// Helper ini memastikan kalau client kirim object/array, di-stringify dulu
+// supaya kompatibel dengan kolom STRING di DB.
+const serializeOnboardingData = (data) => {
+  if (data === null || data === undefined) return null;
+  if (typeof data === 'string') return data;
+  try {
+    return JSON.stringify(data);
+  } catch (e) {
+    return null;
+  }
+};
+
+const { parseImageBase64Field, uploadBufferToR2 } = require('../lib/r2UploadBuffer');
+
+/** Ganti URI file:// di onboarding_data.media dengan URL publik R2 jika client kirim base64. */
+async function attachCloudImageUrls(onboardingData, body) {
+  let ob = onboardingData;
+  if (ob == null) return onboardingData;
+  if (typeof ob === 'string') {
+    try {
+      ob = JSON.parse(ob);
+    } catch {
+      return onboardingData;
+    }
+  }
+  if (typeof ob !== 'object' || ob === null) return onboardingData;
+
+  const prevMedia = ob.media && typeof ob.media === 'object' ? ob.media : {};
+  const out = { ...ob, media: { ...prevMedia } };
+
+  const uploadOne = async (bodyKey, mediaKey) => {
+    const raw = body[bodyKey];
+    if (!raw || typeof raw !== 'string') return;
+    const parsed = parseImageBase64Field(raw);
+    if (!parsed?.buffer?.length) return;
+    try {
+      const folder = bodyKey === 'ktp_image_base64' ? 'onboarding/ktp' : 'onboarding/selfie';
+      const url = await uploadBufferToR2(parsed.buffer, parsed.mime, folder);
+      out.media[mediaKey] = url;
+    } catch (e) {
+      if (e.code === 'R2_NOT_CONFIGURED') {
+        console.warn('[Dev Auth] R2 belum dikonfigurasi (R2_* + R2_PUBLIC_URL), foto tidak di-upload.');
+      } else {
+        console.error('[Dev Auth] Upload gambar gagal:', bodyKey, e.message);
+      }
+    }
+  };
+
+  await uploadOne('ktp_image_base64', 'ktpUri');
+  await uploadOne('selfie_image_base64', 'selfieUri');
+
+  return out;
+}
+
+// =============================================================================
+// Password hashing pakai PBKDF2 dari node:crypto (builtin, zero dependency).
+// Format: pbkdf2$<iterations>$<saltHex>$<hashHex>
+// Lebih aman dari sha256 polos (salted + iterated 100k kali).
+// =============================================================================
+const PBKDF2_ITERATIONS = 100_000;
+const PBKDF2_KEYLEN = 32;
+const PBKDF2_DIGEST = 'sha256';
+
+const hashPassword = (plain) => {
+  if (!plain || typeof plain !== 'string') {
+    throw new Error('Password tidak valid.');
+  }
+  const salt = crypto.randomBytes(16);
+  const hash = crypto.pbkdf2Sync(plain, salt, PBKDF2_ITERATIONS, PBKDF2_KEYLEN, PBKDF2_DIGEST);
+  return `pbkdf2$${PBKDF2_ITERATIONS}$${salt.toString('hex')}$${hash.toString('hex')}`;
+};
+
+const verifyPassword = (plain, stored) => {
+  if (!plain || !stored || typeof stored !== 'string') return false;
+  const parts = stored.split('$');
+  if (parts.length !== 4 || parts[0] !== 'pbkdf2') return false;
+  const iterations = parseInt(parts[1], 10);
+  const salt = Buffer.from(parts[2], 'hex');
+  const expected = Buffer.from(parts[3], 'hex');
+  const actual = crypto.pbkdf2Sync(plain, salt, iterations, expected.length, PBKDF2_DIGEST);
+  return crypto.timingSafeEqual(actual, expected);
+};
 
 /**
  * POST /auth/google
@@ -68,7 +153,7 @@ const googleAuth = async (req, res) => {
           name,
           photo_url,
           status,
-          onboarding_data: onboarding_data || null,
+          onboarding_data: serializeOnboardingData(onboarding_data),
         },
         include: { tier: true },
       });
@@ -83,7 +168,7 @@ const googleAuth = async (req, res) => {
       // Update onboarding data jika ada
       reseller = await prisma.reseller.update({
         where: { id: reseller.id },
-        data: { onboarding_data },
+        data: { onboarding_data: serializeOnboardingData(onboarding_data) },
         include: { tier: true },
       });
     }
@@ -182,7 +267,7 @@ const devLogin = async (req, res) => {
       });
     }
 
-    const { email, name = 'Dev User', onboarding_data = null } = req.body;
+    const { email, name = 'Dev User', onboarding_data = null, password = null } = req.body;
 
     if (!email) {
       return res.status(400).json({
@@ -197,6 +282,24 @@ const devLogin = async (req, res) => {
       include: { tier: true },
     });
 
+    // Kalau user sudah punya password_hash di DB, password wajib & harus cocok.
+    // Kalau belum (akun lama tanpa password), izinkan login tanpa password
+    // supaya tidak break flow lama. Setelah set-password dijalankan, password jadi wajib.
+    if (reseller && reseller.password_hash) {
+      if (!password) {
+        return res.status(400).json({
+          success: false,
+          message: 'Kata sandi wajib diisi.',
+        });
+      }
+      if (!verifyPassword(password, reseller.password_hash)) {
+        return res.status(401).json({
+          success: false,
+          message: 'Email atau kata sandi salah.',
+        });
+      }
+    }
+
     const isNewUser = !reseller;
 
     if (!reseller) {
@@ -205,8 +308,9 @@ const devLogin = async (req, res) => {
           google_id: `dev_${email}`,
           email,
           name,
-          status: 'active', // Dev: langsung active
-          onboarding_data: onboarding_data || null,
+          status: 'pending', // Tetap pending; admin yang approve.
+          onboarding_data: serializeOnboardingData(onboarding_data),
+          ...(password ? { password_hash: hashPassword(password) } : {}),
         },
         include: { tier: true },
       });
@@ -214,7 +318,7 @@ const devLogin = async (req, res) => {
       // Update onboarding data jika ada
       reseller = await prisma.reseller.update({
         where: { id: reseller.id },
-        data: { onboarding_data },
+        data: { onboarding_data: serializeOnboardingData(onboarding_data) },
         include: { tier: true },
       });
     }
@@ -270,13 +374,30 @@ const devRegister = async (req, res) => {
       });
     }
 
-    const { email, name, phone = null, address = null, onboarding_data = null } = req.body;
+    const {
+      email,
+      name,
+      phone = null,
+      address = null,
+      onboarding_data = null,
+      password = null,
+    } = req.body;
 
     if (!email || !name) {
       return res.status(400).json({
         success: false,
         message: 'Email dan nama harus diisi.',
       });
+    }
+
+    // Validasi password (minimal 6 karakter, opsional untuk backward compatibility).
+    if (password !== null && password !== undefined && password !== '') {
+      if (typeof password !== 'string' || password.length < 6) {
+        return res.status(400).json({
+          success: false,
+          message: 'Kata sandi minimal 6 karakter.',
+        });
+      }
     }
 
     // Check if email sudah ada
@@ -291,7 +412,14 @@ const devRegister = async (req, res) => {
       });
     }
 
-    // Buat reseller baru
+    // Buat reseller baru dengan status 'pending'.
+    // Reseller harus menunggu admin meng-approve dulu (cek admin-web) sebelum
+    // bisa masuk ke (tabs) home. Pending screen di user-app polling /auth/me
+    // tiap 10 detik dan auto-redirect saat status sudah jadi 'active'.
+    const passwordHash = password ? hashPassword(password) : null;
+
+    let onboardingFinal = await attachCloudImageUrls(onboarding_data, req.body);
+
     const reseller = await prisma.reseller.create({
       data: {
         google_id: `dev_${email}`,
@@ -299,8 +427,9 @@ const devRegister = async (req, res) => {
         name,
         phone,
         address,
-        status: 'active', // Dev: langsung active
-        onboarding_data: onboarding_data || null,
+        status: 'pending',
+        onboarding_data: serializeOnboardingData(onboardingFinal),
+        ...(passwordHash ? { password_hash: passwordHash } : {}),
       },
       include: { tier: true },
     });
@@ -335,9 +464,21 @@ const devRegister = async (req, res) => {
     });
   } catch (error) {
     console.error('[Dev Auth] Register error:', error);
+    const isDev = process.env.NODE_ENV === 'development';
+    const pgMsg = String(error?.message || '');
+    let userMessage = 'Terjadi kesalahan saat registrasi development.';
+    if (isDev && pgMsg) {
+      if (pgMsg.includes('permission denied for table resellers')) {
+        userMessage =
+          'Database menolak simpan data (tidak ada hak INSERT ke tabel resellers). Hubungkan ke Postgres sebagai superuser, lalu jalankan isi file backend/scripts/grant-resellers-write.sql — ganti nama user postgres sesuai user di DATABASE_URL backend.';
+      } else {
+        const firstLine = pgMsg.split('\n').find((l) => l.trim()) || pgMsg;
+        userMessage = `Terjadi kesalahan saat registrasi development: ${firstLine}`;
+      }
+    }
     return res.status(500).json({
       success: false,
-      message: 'Terjadi kesalahan saat registrasi development.',
+      message: userMessage,
     });
   }
 };

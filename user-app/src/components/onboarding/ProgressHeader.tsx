@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { stitchColors } from '../../theme/stitch';
 
 interface ProgressHeaderProps {
@@ -14,7 +14,11 @@ export default function ProgressHeader({ percentage, totalSteps = 14, currentSte
   return (
     <View style={styles.container}>
       <View style={styles.badge}>
-        <Text style={styles.badgeText}>CALSUB</Text>
+        <Image 
+          source={require('../../../assets/calsub-logo.png')} 
+          style={styles.logoImage} 
+          resizeMode="contain" 
+        />
       </View>
       <View style={styles.right}>
         <Text style={styles.percentText}>{percentage}% selesai</Text>
@@ -44,18 +48,12 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   badge: {
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
   },
-  badgeText: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '800',
-    letterSpacing: 1.5,
+  logoImage: {
+    width: 85,
+    height: 28,
   },
   right: {
     alignItems: 'flex-end',

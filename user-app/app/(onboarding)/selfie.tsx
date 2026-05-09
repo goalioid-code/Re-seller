@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import { stitchColors } from '../../src/theme/stitch';
 import ProgressHeader from '../../src/components/onboarding/ProgressHeader';
 import CalmanHero from '../../src/components/onboarding/CalmanHero';
@@ -9,6 +10,30 @@ import CalmanChat from '../../src/components/onboarding/CalmanChat';
 export default function SelfieScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const [selfieUri, setSelfieUri] = useState<string | null>(null);
+
+  const takeSelfie = async () => {
+    try {
+      const permission = await ImagePicker.requestCameraPermissionsAsync();
+      if (permission.status !== 'granted') {
+        alert('Maaf, kami butuh izin akses kamera untuk mengambil foto selfie.');
+        return;
+      }
+      
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 0.8,
+        cameraType: ImagePicker.CameraType.front,
+      });
+
+      if (!result.canceled) {
+        setSelfieUri(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.log('Error taking selfie:', error);
+    }
+  };
 
   return (
     <View style={styles.screen}>
@@ -24,28 +49,38 @@ export default function SelfieScreen() {
           ]}
         />
 
-        {/* Camera frame */}
-        <View style={styles.frameContainer}>
-          {/* Corner brackets */}
-          <View style={[styles.corner, styles.cornerTL]} />
-          <View style={[styles.corner, styles.cornerTR]} />
-          <View style={[styles.corner, styles.cornerBL]} />
-          <View style={[styles.corner, styles.cornerBR]} />
+        {/* Camera frame / Preview */}
+        <TouchableOpacity 
+          style={styles.frameContainer} 
+          onPress={takeSelfie}
+          activeOpacity={0.8}
+        >
+          {selfieUri ? (
+            <Image source={{ uri: selfieUri }} style={styles.previewImage} />
+          ) : (
+            <>
+              {/* Corner brackets */}
+              <View style={[styles.corner, styles.cornerTL]} />
+              <View style={[styles.corner, styles.cornerTR]} />
+              <View style={[styles.corner, styles.cornerBL]} />
+              <View style={[styles.corner, styles.cornerBR]} />
 
-          {/* Status badge */}
-          <View style={styles.statusBadge}>
-            <Text style={styles.statusIcon}>✅</Text>
-            <Text style={styles.statusText}>Wajah dalam frame</Text>
-          </View>
+              {/* Status badge */}
+              <View style={styles.statusBadge}>
+                <Text style={styles.statusIcon}>✅</Text>
+                <Text style={styles.statusText}>Wajah dalam frame</Text>
+              </View>
 
-          {/* Face oval */}
-          <View style={styles.faceOval} />
+              {/* Face oval */}
+              <View style={styles.faceOval} />
 
-          {/* KTP placeholder */}
-          <View style={styles.ktpHolder}>
-            <Text style={styles.ktpHolderIcon}>🪪</Text>
-          </View>
-        </View>
+              {/* KTP placeholder */}
+              <View style={styles.ktpHolder}>
+                <Text style={styles.ktpHolderIcon}>🪪</Text>
+              </View>
+            </>
+          )}
+        </TouchableOpacity>
 
         {/* Instructions */}
         <View style={styles.instructions}>
@@ -68,14 +103,20 @@ export default function SelfieScreen() {
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.selfieBtn}
-          onPress={() =>
-            router.push({
-              pathname: '/(onboarding)/review',
-              params,
-            })
-          }
+          onPress={() => {
+            if (selfieUri) {
+              router.push({
+                pathname: '/(onboarding)/review',
+                params: { ...params, selfieUri },
+              });
+            } else {
+              takeSelfie();
+            }
+          }}
         >
-          <Text style={styles.selfieBtnText}>Mulai Selfie  📷</Text>
+          <Text style={styles.selfieBtnText}>
+            {selfieUri ? 'Lanjutkan  ➔' : 'Mulai Selfie  📷'}
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.skipRow}>
@@ -85,7 +126,7 @@ export default function SelfieScreen() {
           <TouchableOpacity
             onPress={() => router.push({ pathname: '/(onboarding)/review', params })}
           >
-            <Text style={styles.skipText}>Lewati ↓</Text>
+            <Text style={styles.skipText}>Lewati</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -111,6 +152,12 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  previewImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   corner: {
     position: 'absolute',

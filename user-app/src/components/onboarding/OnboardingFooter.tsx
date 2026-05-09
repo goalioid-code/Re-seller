@@ -29,7 +29,7 @@ export default function OnboardingFooter({
 
       {showSkip && onSkip && (
         <TouchableOpacity onPress={onSkip} style={styles.skipButton}>
-          <Text style={styles.skipText}>Lewati ↓</Text>
+          <Text style={styles.skipText}>Lewati</Text>
         </TouchableOpacity>
       )}
 
@@ -42,7 +42,7 @@ export default function OnboardingFooter({
         disabled={continueDisabled}
       >
         <Text style={[styles.continueText, continueDisabled && styles.continueTextDisabled]}>
-          {continueLabel}  →
+          {continueLabel}  
         </Text>
       </TouchableOpacity>
     </View>

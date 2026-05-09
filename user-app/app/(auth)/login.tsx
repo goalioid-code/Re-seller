@@ -10,25 +10,27 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn, user, loading: authLoading } = useAuth();
+  const { isLoggedIn, user, loading: authLoading, devLogin } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (authLoading) return;
     if (isLoggedIn && user) {
-      router.replace('/(tabs)' as Href);
+      // Setelah login berhasil, arahkan sesuai status (active -> tabs, pending -> /pending).
+      const status = String((user as any).status || '').toLowerCase();
+      router.replace((status === 'active' ? '/(tabs)' : '/pending') as Href);
     }
-  }, [isLoggedIn, user, authLoading]);
+  }, [isLoggedIn, user, authLoading, router]);
 
   const handleLogin = async () => {
-    if (!identifier.trim()) return Alert.alert('Error', 'Masukkan email atau nomor WA');
+    if (!identifier.trim()) return Alert.alert('Error', 'Masukkan email');
     if (!password.trim()) return Alert.alert('Error', 'Masukkan kata sandi');
     setLoading(true);
     try {
-      // Placeholder login logic
-      Alert.alert('Info', 'Login functionality will be connected to backend');
+      await devLogin(identifier.trim().toLowerCase(), password);
+      // Redirect ditangani di useEffect di atas berdasarkan status reseller.
     } catch (err: any) {
-      Alert.alert('Login Gagal', err?.message || 'Silakan coba lagi.');
+      Alert.alert('Login Gagal', err?.message || 'Email atau kata sandi salah.');
     } finally {
       setLoading(false);
     }
@@ -49,12 +51,12 @@ export default function LoginScreen() {
 
       {/* Form */}
       <View style={styles.form}>
-        {/* Email/WA field */}
-        <Text style={styles.label}>EMAIL ATAU NOMOR WHATSAPP</Text>
+        {/* Email field */}
+        <Text style={styles.label}>EMAIL</Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Masukkan email atau nomor WA"
+            placeholder="Masukkan email kamu"
             placeholderTextColor="#B8A8A6"
             value={identifier}
             onChangeText={setIdentifier}

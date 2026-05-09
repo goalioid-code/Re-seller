@@ -83,7 +83,7 @@ export default function OtpScreen() {
           disabled={!isComplete}
         >
           <Text style={[styles.verifyText, !isComplete && styles.verifyTextDisabled]}>
-            Verifikasi  →
+            Verifikasi
           </Text>
         </TouchableOpacity>
       </View>

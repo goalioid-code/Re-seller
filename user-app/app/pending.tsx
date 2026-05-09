@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
+import { useRouter, type Href } from 'expo-router';
 import { useAuth } from '../src/contexts/AuthContext';
 import tw from 'twrnc';
 import { Clock } from 'lucide-react-native';
 import { stitchColors } from '../src/theme/stitch';
 
 export default function PendingScreen() {
-  const { getMe } = useAuth();
+  const { getMe, user } = useAuth();
+  const router = useRouter();
 
+  // Polling status reseller dari server tiap 10 detik.
+  // Saat admin approve di admin-web, /auth/me akan balikin status 'active'
+  // dan effect berikutnya akan auto-redirect ke (tabs).
   useEffect(() => {
     void getMe();
     const timer = setInterval(() => {
@@ -15,6 +20,14 @@ export default function PendingScreen() {
     }, 10000);
     return () => clearInterval(timer);
   }, [getMe]);
+
+  // Auto pindah ke home begitu admin sudah approve (status = 'active').
+  useEffect(() => {
+    const status = String(user?.status || '').toLowerCase();
+    if (status === 'active') {
+      router.replace('/(tabs)' as Href);
+    }
+  }, [user?.status, router]);
 
   return (
     <View style={[tw`flex-1 p-6 justify-center items-center`, { backgroundColor: stitchColors.pageSoft }]}>
@@ -29,7 +42,7 @@ export default function PendingScreen() {
           Silakan cek kembali secara berkala.
         </Text>
         <Text style={[tw`text-xs text-center`, { color: '#8C716E' }]}>
-          Status dicek otomatis setiap beberapa detik.
+          Status dicek otomatis setiap 10 detik.
         </Text>
       </View>
     </View>

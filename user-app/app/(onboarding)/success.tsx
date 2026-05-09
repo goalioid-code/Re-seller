@@ -83,7 +83,7 @@ export default function SuccessScreen() {
           style={styles.ctaBtn}
           onPress={() => router.replace('/pending')}
         >
-          <Text style={styles.ctaBtnText}>🪪  Upload KTP & Verifikasi  →</Text>
+          <Text style={styles.ctaBtnText}>🪪  Upload KTP & Verifikasi</Text>
         </TouchableOpacity>
       </View>
     </View>
