@@ -11,16 +11,12 @@ const {
 // Semua route production butuh JWT
 router.use(authMiddleware);
 
-// GET /production/:order_id — Status produksi lengkap
-router.get('/:order_id', getProductionStatus);
-
-// GET /work-orders/:order_id — Lembar kerja
+// Path statis dulu (jangan setelah `/:order_id` agar tidak tertelan sebagai id order)
 router.get('/work-orders/:order_id', getWorkOrder);
-
-// PUT /work-orders/:order_id/approve — Approve lembar kerja
 router.put('/work-orders/:order_id/approve', approveWorkOrder);
-
-// GET /orders/:order_id/latest-production — Update produksi terbaru
 router.get('/orders/:order_id/latest-production', getLatestProductionUpdate);
+
+// GET /production/:order_id — Status produksi lengkap (satu segmen = order id)
+router.get('/:order_id', getProductionStatus);
 
 module.exports = router;

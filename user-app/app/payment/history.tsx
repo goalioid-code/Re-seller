@@ -1,10 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, RefreshControl, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import { stitchColors } from '../../src/theme/stitch';
+import tw from 'twrnc';
+import { ArrowLeft } from 'lucide-react-native';
 
 type PayRow = {
   id: string;
@@ -86,11 +89,11 @@ export default function PaymentHistoryScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backText}>← Kembali</Text>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(tabs)/profile' as Href)} style={tw`mr-3 p-2`}>
+          <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
         <Text style={styles.title}>Riwayat Pembayaran</Text>
-        <View style={{ width: 72 }} />
+        <View style={{ width: 40 }} />
       </View>
 
       <FlatList
@@ -116,7 +119,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  backText: { color: stitchColors.primary, fontSize: 16, fontWeight: '600' },
   title: { color: stitchColors.primary, fontSize: 18, fontWeight: '700' },
   center: { flex: 1, backgroundColor: stitchColors.pageSoft, justifyContent: 'center', alignItems: 'center' },
   list: { padding: 20, paddingBottom: 40 },

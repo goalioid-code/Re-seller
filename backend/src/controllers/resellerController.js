@@ -52,7 +52,14 @@ const getDashboard = async (req, res) => {
   try {
     const resellerId = req.reseller.id;
 
-    const [confirmedAgg, withdrawalAgg] = await Promise.all([
+    const [
+      confirmedAgg,
+      withdrawalAgg,
+      totalPoints,
+      expiring,
+      activeOrdersCount,
+      productionSum,
+    ] = await Promise.all([
       prisma.commission.aggregate({
         where: { reseller_id: resellerId, status: 'confirmed' },
         _sum: { amount: true },
@@ -64,14 +71,30 @@ const getDashboard = async (req, res) => {
         },
         _sum: { amount: true },
       }),
+      pointsService.getPointBalance(resellerId),
+      pointsService.getExpiringPointsSummary(resellerId, 30),
+      prisma.order.count({
+        where: {
+          reseller_id: resellerId,
+          status: { notIn: ['completed', 'cancelled'] },
+        },
+      }),
+      prisma.orderItem.aggregate({
+        where: {
+          order: {
+            reseller_id: resellerId,
+            status: 'completed',
+          },
+        },
+        _sum: { quantity: true },
+      }),
     ]);
     const commissionGross = confirmedAgg._sum.amount ?? 0;
     const commissionLocked = withdrawalAgg._sum.amount ?? 0;
     const availableCommission = Math.max(0, Math.round((commissionGross - commissionLocked) * 100) / 100);
 
-    const totalPoints = await pointsService.getPointBalance(resellerId);
-    const expiring = await pointsService.getExpiringPointsSummary(resellerId, 30);
     const expiringPointsTotal = expiring.total;
+    const totalProductionPcs = productionSum._sum.quantity ?? 0;
 
     return res.status(200).json({
       success: true,
@@ -81,6 +104,8 @@ const getDashboard = async (req, res) => {
         total_points: totalPoints,
         expiring_points: expiringPointsTotal,
         has_expiring_points: expiringPointsTotal > 0,
+        active_orders: activeOrdersCount,
+        total_production_pcs: totalProductionPcs,
       },
     });
   } catch (error) {

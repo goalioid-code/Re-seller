@@ -398,7 +398,7 @@ const reactivateReseller = async (req, res) => {
 
 /**
  * DELETE /admin/resellers/:id
- * Hapus reseller jika tidak punya data transaksi terkait
+ * Hapus reseller beserta data turunannya (hard delete admin)
  */
 const deleteReseller = async (req, res) => {
   try {
@@ -412,25 +412,20 @@ const deleteReseller = async (req, res) => {
       });
     }
 
-    const [orderCount, commissionCount, pointCount] = await Promise.all([
-      prisma.order.count({ where: { reseller_id: id } }),
-      prisma.commission.count({ where: { reseller_id: id } }),
-      prisma.point.count({ where: { reseller_id: id } }),
-    ]);
-
-    if (orderCount > 0 || commissionCount > 0 || pointCount > 0) {
-      return res.status(400).json({
-        success: false,
-        message:
-          'Reseller tidak bisa dihapus karena sudah memiliki data transaksi. Gunakan deactivate untuk menonaktifkan akun.',
-      });
-    }
-
-    await prisma.reseller.delete({ where: { id } });
+    await prisma.$transaction(async (tx) => {
+      // Urutkan hapus data yang memiliki FK langsung ke reseller dulu.
+      await tx.notification.deleteMany({ where: { reseller_id: id } });
+      await tx.point.deleteMany({ where: { reseller_id: id } });
+      await tx.commission.deleteMany({ where: { reseller_id: id } });
+      await tx.commissionWithdrawal.deleteMany({ where: { reseller_id: id } });
+      await tx.rewardRedemption.deleteMany({ where: { reseller_id: id } });
+      await tx.order.deleteMany({ where: { reseller_id: id } }); // child order (items, payments, work order, production) auto-cascade.
+      await tx.reseller.delete({ where: { id } });
+    });
 
     return res.status(200).json({
       success: true,
-      message: `Reseller ${reseller.name} berhasil dihapus.`,
+      message: `Reseller ${reseller.name} beserta data terkait berhasil dihapus.`,
     });
   } catch (error) {
     console.error('[Admin] Delete reseller error:', error);

@@ -4,6 +4,8 @@ import { useAuth } from '../../src/contexts/AuthContext';
 import { useRouter } from 'expo-router';
 import type { Href } from 'expo-router';
 import { stitchColors } from '../../src/theme/stitch';
+import tw from 'twrnc';
+import { ArrowLeft } from 'lucide-react-native';
 
 export default function LoginScreen() {
   const [identifier, setIdentifier] = useState('');
@@ -36,12 +38,21 @@ export default function LoginScreen() {
     }
   };
 
+  const goBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(onboarding)' as Href);
+    }
+  };
+
   return (
     <View style={styles.screen}>
-      {/* Back button */}
-      <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-        <Text style={styles.backIcon}>←</Text>
-      </TouchableOpacity>
+      <View style={styles.backRow}>
+        <TouchableOpacity onPress={goBack} style={tw`p-2 -ml-2`} accessibilityRole="button" accessibilityLabel="Kembali">
+          <ArrowLeft color={stitchColors.primary} size={24} />
+        </TouchableOpacity>
+      </View>
 
       {/* Header */}
       <View style={styles.header}>
@@ -137,20 +148,14 @@ const styles = StyleSheet.create({
     backgroundColor: stitchColors.pageSoft,
     paddingHorizontal: 24,
   },
-  backBtn: {
-    marginTop: 52,
-    width: 40,
-    height: 40,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  backIcon: {
-    color: stitchColors.primary,
-    fontSize: 28,
-    fontWeight: '300',
+  backRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 52,
+    marginBottom: 8,
   },
   header: {
-    marginTop: 20,
+    marginTop: 0,
     marginBottom: 32,
   },
   heading: {

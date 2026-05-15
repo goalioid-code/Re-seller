@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { ensureDefaultProductionStages } = require('../src/lib/productionStagesDefaults');
 
 const prisma = new PrismaClient();
 
@@ -25,28 +26,11 @@ async function main() {
   console.log('✅ Commission tiers created');
 
   // ============================================================
-  // Seed Production Stages
+  // Seed Production Stages (satu sumber dengan migrasi + bootstrap API)
   // ============================================================
   console.log('🏭 Seeding production stages...');
-  const stages = [
-    { name: 'Desain', order_index: 1, description: 'Proses desain jersey' },
-    { name: 'Layout', order_index: 2, description: 'Persiapan layout untuk printing' },
-    { name: 'Print', order_index: 3, description: 'Proses printing' },
-    { name: 'Roll Press', order_index: 4, description: 'Pressing kain setelah print' },
-    { name: 'Potong Pola', order_index: 5, description: 'Memotong pola sesuai ukuran' },
-    { name: 'Konveksi', order_index: 6, description: 'Proses jahit/konveksi' },
-    { name: 'QC', order_index: 7, description: 'Quality control dan finishing' },
-    { name: 'Selesai', order_index: 8, description: 'Produk siap dikirim' },
-  ];
-
-  for (const stage of stages) {
-    await prisma.productionStage.upsert({
-      where: { name: stage.name },
-      update: {},
-      create: stage,
-    });
-  }
-  console.log('✅ Production stages created');
+  await ensureDefaultProductionStages(prisma);
+  console.log('✅ Production stages ready (8 tahap, selaras order.calsub.id)');
 
   // ============================================================
   // Seed Rewards (Hadiah)

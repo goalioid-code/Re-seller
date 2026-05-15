@@ -1,4 +1,6 @@
 const prisma = require('../lib/prisma');
+const { orderBaseScalarSelect } = require('./orderController');
+const { ensureDefaultProductionStages } = require('../lib/productionStagesDefaults');
 
 /**
  * GET /production/:order_id
@@ -9,12 +11,12 @@ const getProductionStatus = async (req, res) => {
     const { order_id } = req.params;
     const resellerId = req.reseller.id;
 
-    // Verify order belongs to reseller
-    const order = await prisma.order.findUnique({
-      where: { id: order_id },
+    const order = await prisma.order.findFirst({
+      where: { id: order_id, reseller_id: resellerId },
+      select: orderBaseScalarSelect,
     });
 
-    if (!order || order.reseller_id !== resellerId) {
+    if (!order) {
       return res.status(403).json({
         success: false,
         message: 'Akses ditolak.',
@@ -30,9 +32,21 @@ const getProductionStatus = async (req, res) => {
 
     // Jika belum ada status sama sekali, buat timeline default dari master stage.
     if (productionStatuses.length === 0) {
-      const stages = await prisma.productionStage.findMany({
+      let stages = await prisma.productionStage.findMany({
         orderBy: { order_index: 'asc' },
       });
+      if (stages.length === 0) {
+        await ensureDefaultProductionStages(prisma);
+        stages = await prisma.productionStage.findMany({
+          orderBy: { order_index: 'asc' },
+        });
+      }
+      if (stages.length === 0) {
+        return res.status(500).json({
+          success: false,
+          message: 'Gagal menginisialisasi master tahapan produksi.',
+        });
+      }
       const created = await Promise.all(
         stages.map((stage) =>
           prisma.productionStatus.create({
@@ -102,12 +116,12 @@ const getWorkOrder = async (req, res) => {
     const { order_id } = req.params;
     const resellerId = req.reseller.id;
 
-    // Verify order belongs to reseller
-    const order = await prisma.order.findUnique({
-      where: { id: order_id },
+    const order = await prisma.order.findFirst({
+      where: { id: order_id, reseller_id: resellerId },
+      select: { id: true },
     });
 
-    if (!order || order.reseller_id !== resellerId) {
+    if (!order) {
       return res.status(403).json({
         success: false,
         message: 'Akses ditolak.',
@@ -147,12 +161,12 @@ const approveWorkOrder = async (req, res) => {
     const { order_id } = req.params;
     const resellerId = req.reseller.id;
 
-    // Verify order belongs to reseller
-    const order = await prisma.order.findUnique({
-      where: { id: order_id },
+    const order = await prisma.order.findFirst({
+      where: { id: order_id, reseller_id: resellerId },
+      select: { id: true },
     });
 
-    if (!order || order.reseller_id !== resellerId) {
+    if (!order) {
       return res.status(403).json({
         success: false,
         message: 'Akses ditolak.',
@@ -170,6 +184,14 @@ const approveWorkOrder = async (req, res) => {
       });
     }
 
+    if (workOrder.approved_by_reseller && workOrder.status === 'approved') {
+      return res.status(200).json({
+        success: true,
+        message: 'Lembar kerja sudah di-approve sebelumnya.',
+        work_order: workOrder,
+      });
+    }
+
     // Update work order status
     const updatedWorkOrder = await prisma.workOrder.update({
       where: { order_id },
@@ -184,6 +206,7 @@ const approveWorkOrder = async (req, res) => {
     await prisma.order.update({
       where: { id: order_id },
       data: { lk_approved: true, status: 'production' },
+      select: { id: true },
     });
 
     return res.status(200).json({
@@ -209,12 +232,12 @@ const getLatestProductionUpdate = async (req, res) => {
     const { order_id } = req.params;
     const resellerId = req.reseller.id;
 
-    // Verify order belongs to reseller
-    const order = await prisma.order.findUnique({
-      where: { id: order_id },
+    const order = await prisma.order.findFirst({
+      where: { id: order_id, reseller_id: resellerId },
+      select: { id: true },
     });
 
-    if (!order || order.reseller_id !== resellerId) {
+    if (!order) {
       return res.status(403).json({
         success: false,
         message: 'Akses ditolak.',

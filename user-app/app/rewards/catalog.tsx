@@ -10,7 +10,8 @@ import {
   Alert,
   RefreshControl,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
@@ -94,29 +95,28 @@ export default function RewardsCatalogScreen() {
     }
   };
 
-  if (loading) {
-    return (
-      <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color={stitchColors.primary} />
-      </View>
-    );
-  }
-
   return (
     <View style={[tw`flex-1`, { backgroundColor: stitchColors.pageSoft }]}>
       <View style={tw`flex-row items-center px-5 pt-12 pb-4`}>
-        <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-2`}>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(tabs)/profile' as Href)} style={tw`mr-3 p-2`}>
           <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
         <View style={tw`flex-1`}>
           <Text style={[tw`text-xl font-bold`, { color: stitchColors.primary }]}>Katalog hadiah</Text>
-          <Text style={[tw`text-xs`, { color: stitchColors.textMutedLight }]}>Saldo poin: {balance.toLocaleString('id-ID')}</Text>
+          <Text style={[tw`text-xs`, { color: stitchColors.textMutedLight }]}>
+            {loading ? 'Memuat…' : `Saldo poin: ${balance.toLocaleString('id-ID')}`}
+          </Text>
         </View>
-        <TouchableOpacity onPress={() => router.push('/rewards/redemptions' as any)} style={tw`px-3 py-2`}>
-          <Text style={[tw`text-sm font-semibold`, { color: stitchColors.primary }]}>Riwayat</Text>
+        <TouchableOpacity onPress={() => router.push('/rewards/redemptions' as any)} style={tw`px-3 py-2`} disabled={loading}>
+          <Text style={[tw`text-sm font-semibold`, { color: stitchColors.primary, opacity: loading ? 0.4 : 1 }]}>Riwayat</Text>
         </TouchableOpacity>
       </View>
 
+      {loading ? (
+        <View style={tw`flex-1 justify-center items-center`}>
+          <ActivityIndicator size="large" color={stitchColors.primary} />
+        </View>
+      ) : (
       <FlatList
         data={rewards}
         keyExtractor={(item) => item.id}
@@ -144,6 +144,7 @@ export default function RewardsCatalogScreen() {
           </TouchableOpacity>
         )}
       />
+      )}
 
       <Modal visible={!!pick} transparent animationType="slide">
         <View style={tw`flex-1 bg-black/70 justify-end`}>

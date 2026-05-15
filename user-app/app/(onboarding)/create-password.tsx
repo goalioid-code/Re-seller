@@ -10,7 +10,8 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { stitchColors } from '../../src/theme/stitch';
 import ProgressHeader from '../../src/components/onboarding/ProgressHeader';
 import { localFileUriToDataUrl } from '../../src/lib/localImageToBase64';
@@ -214,7 +215,7 @@ export default function CreatePasswordScreen() {
           )}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.back()} disabled={isSubmitting}>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(onboarding)' as Href)} disabled={isSubmitting}>
           <Text style={[styles.backText, isSubmitting && { opacity: 0.5 }]}>Kembali</Text>
         </TouchableOpacity>
       </View>

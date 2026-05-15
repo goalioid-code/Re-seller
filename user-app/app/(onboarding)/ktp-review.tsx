@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { stitchColors } from '../../src/theme/stitch';
 import ProgressHeader from '../../src/components/onboarding/ProgressHeader';
 
@@ -82,7 +83,7 @@ export default function KtpReviewScreen() {
             )}
           </View>
           <Text style={styles.ktpLabel}>FOTO KTP</Text>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => safeRouterBack(router, '/(onboarding)' as Href)}>
             <Text style={styles.retakeBtn}>🔄 Foto Ulang</Text>
           </TouchableOpacity>
         </View>

@@ -1,5 +1,128 @@
 const prisma = require('../lib/prisma');
-const { v4: uuidv4 } = require('uuid');
+
+/** Kolom order yang ada di migrasi awal (tanpa `internal_notes`). */
+const orderBaseScalarSelect = {
+  id: true,
+  reseller_id: true,
+  po_number: true,
+  order_type: true,
+  customer_name: true,
+  brand_name: true,
+  order_date: true,
+  due_date: true,
+  description: true,
+  notes: true,
+  subtotal: true,
+  discount: true,
+  total_amount: true,
+  status: true,
+  lk_approved: true,
+  design_file_url: true,
+  mockup_file_url: true,
+  created_at: true,
+  updated_at: true,
+};
+
+const orderItemSelect = {
+  id: true,
+  order_id: true,
+  product_name: true,
+  quantity: true,
+  unit_price: true,
+  collar_type: true,
+  pattern: true,
+  fabric_type: true,
+  additional_attrs: true,
+  subtotal: true,
+  created_at: true,
+};
+
+/** Tanpa `admin_notes` bila kolom belum ada di DB. */
+const orderPaymentSelect = {
+  id: true,
+  order_id: true,
+  payment_type: true,
+  amount: true,
+  required_amount: true,
+  midtrans_order_id: true,
+  midtrans_transaction_id: true,
+  payment_method: true,
+  status: true,
+  proof_url: true,
+  created_at: true,
+  completed_at: true,
+};
+
+const workOrderSelect = {
+  id: true,
+  order_id: true,
+  lk_number: true,
+  size_run: true,
+  back_name: true,
+  back_number: true,
+  additional_details: true,
+  status: true,
+  approved_at: true,
+  approved_by_reseller: true,
+  created_at: true,
+  updated_at: true,
+};
+
+const productionStatusSelect = {
+  id: true,
+  order_id: true,
+  stage_id: true,
+  status: true,
+  started_at: true,
+  completed_at: true,
+  duration_minutes: true,
+  notes: true,
+  created_at: true,
+  updated_at: true,
+  stage: {
+    select: {
+      id: true,
+      name: true,
+      order_index: true,
+      description: true,
+      created_at: true,
+    },
+  },
+};
+
+const orderCreateSelect = {
+  ...orderBaseScalarSelect,
+  items: { select: orderItemSelect },
+  payments: { select: orderPaymentSelect },
+};
+
+const orderListSelect = {
+  ...orderBaseScalarSelect,
+  items: { select: orderItemSelect },
+  payments: { select: orderPaymentSelect },
+  work_order: { select: workOrderSelect },
+};
+
+const orderDetailSelect = {
+  ...orderListSelect,
+  production_statuses: {
+    orderBy: { stage: { order_index: 'asc' } },
+    select: productionStatusSelect,
+  },
+};
+
+/** Untuk POST /payments/initiate — butuh total, PO, payments, reseller (Midtrans). */
+const orderInitiatePaymentSelect = {
+  ...orderBaseScalarSelect,
+  payments: { select: orderPaymentSelect },
+  reseller: {
+    select: {
+      name: true,
+      phone: true,
+      email: true,
+    },
+  },
+};
 
 /**
  * POST /orders
@@ -27,27 +150,50 @@ const createOrder = async (req, res) => {
     }
 
     // Generate PO number
-    const poNumber = `PO-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    const poNumber = `PO-${Date.now()}-${Math.random().toString(36).substring(2, 11).toUpperCase()}`;
 
-    // Hitung total
+    // Hitung total — pastikan angka valid (hindari NaN ke Prisma)
     let subtotal = 0;
-    const orderItems = items.map((item) => {
-      const itemTotal = item.quantity * item.unit_price;
+    const orderItems = [];
+    for (let i = 0; i < items.length; i += 1) {
+      const item = items[i];
+      const qty = Number.parseInt(String(item.quantity), 10);
+      const unitPrice = Number.parseFloat(String(item.unit_price));
+      if (!Number.isFinite(qty) || qty <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Item #${i + 1}: quantity harus berupa angka bulat positif.`,
+        });
+      }
+      if (!Number.isFinite(unitPrice) || unitPrice < 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Item #${i + 1}: harga satuan tidak valid.`,
+        });
+      }
+      const productName = String(item.product_name || '').trim();
+      if (!productName) {
+        return res.status(400).json({
+          success: false,
+          message: `Item #${i + 1}: nama produk wajib diisi.`,
+        });
+      }
+      const itemTotal = Math.round(qty * unitPrice * 100) / 100;
       subtotal += itemTotal;
-      return {
-        product_name: item.product_name,
-        quantity: item.quantity,
-        unit_price: item.unit_price,
+      orderItems.push({
+        product_name: productName,
+        quantity: qty,
+        unit_price: unitPrice,
         collar_type: item.collar_type || null,
         pattern: item.pattern || null,
         fabric_type: item.fabric_type || null,
         additional_attrs: item.additional_attrs || null,
         subtotal: itemTotal,
-      };
-    });
+      });
+    }
 
-    const discount = req.body.discount || 0;
-    const totalAmount = subtotal - discount;
+    const discount = Number(req.body.discount) || 0;
+    const totalAmount = Math.max(0, Math.round((subtotal - discount) * 100) / 100);
 
     // Buat order
     const order = await prisma.order.create({
@@ -69,10 +215,7 @@ const createOrder = async (req, res) => {
           create: orderItems,
         },
       },
-      include: {
-        items: true,
-        payments: true,
-      },
+      select: orderCreateSelect,
     });
 
     return res.status(201).json({
@@ -82,9 +225,13 @@ const createOrder = async (req, res) => {
     });
   } catch (error) {
     console.error('[Order] Create error:', error);
+    const devHint =
+      process.env.NODE_ENV === 'development' && error?.message
+        ? ` (${error.message})`
+        : '';
     return res.status(500).json({
       success: false,
-      message: 'Terjadi kesalahan saat membuat order.',
+      message: `Terjadi kesalahan saat membuat order.${devHint}`,
     });
   }
 };
@@ -105,11 +252,7 @@ const getOrders = async (req, res) => {
 
     const orders = await prisma.order.findMany({
       where,
-      include: {
-        items: true,
-        payments: true,
-        work_order: true,
-      },
+      select: orderListSelect,
       orderBy: { created_at: 'desc' },
       skip: (page - 1) * limit,
       take: parseInt(limit),
@@ -145,31 +288,15 @@ const getOrderDetail = async (req, res) => {
     const resellerId = req.reseller.id;
     const { id } = req.params;
 
-    const order = await prisma.order.findUnique({
-      where: { id },
-      include: {
-        items: true,
-        payments: true,
-        work_order: true,
-        production_statuses: {
-          include: { stage: true },
-          orderBy: { stage: { order_index: 'asc' } },
-        },
-      },
+    const order = await prisma.order.findFirst({
+      where: { id, reseller_id: resellerId },
+      select: orderDetailSelect,
     });
 
     if (!order) {
       return res.status(404).json({
         success: false,
         message: 'Order tidak ditemukan.',
-      });
-    }
-
-    // Validasi akses
-    if (order.reseller_id !== resellerId) {
-      return res.status(403).json({
-        success: false,
-        message: 'Akses ditolak.',
       });
     }
 
@@ -201,22 +328,15 @@ const updateOrder = async (req, res) => {
       status,
     } = req.body;
 
-    const order = await prisma.order.findUnique({
-      where: { id },
-      include: { items: true, payments: true },
+    const order = await prisma.order.findFirst({
+      where: { id, reseller_id: resellerId },
+      select: { id: true, reseller_id: true, lk_approved: true },
     });
 
     if (!order) {
       return res.status(404).json({
         success: false,
         message: 'Order tidak ditemukan.',
-      });
-    }
-
-    if (order.reseller_id !== resellerId) {
-      return res.status(403).json({
-        success: false,
-        message: 'Akses ditolak.',
       });
     }
 
@@ -236,11 +356,7 @@ const updateOrder = async (req, res) => {
     const updatedOrder = await prisma.order.update({
       where: { id },
       data: updateData,
-      include: {
-        items: true,
-        payments: true,
-        work_order: true,
-      },
+      select: orderListSelect,
     });
 
     return res.status(200).json({
@@ -267,22 +383,15 @@ const cancelOrder = async (req, res) => {
     const { id } = req.params;
     const { reason } = req.body;
 
-    const order = await prisma.order.findUnique({
-      where: { id },
-      include: { work_order: true },
+    const order = await prisma.order.findFirst({
+      where: { id, reseller_id: resellerId },
+      select: { id: true, lk_approved: true },
     });
 
     if (!order) {
       return res.status(404).json({
         success: false,
         message: 'Order tidak ditemukan.',
-      });
-    }
-
-    if (order.reseller_id !== resellerId) {
-      return res.status(403).json({
-        success: false,
-        message: 'Akses ditolak.',
       });
     }
 
@@ -299,6 +408,7 @@ const cancelOrder = async (req, res) => {
       data: {
         status: 'cancelled',
       },
+      select: orderBaseScalarSelect,
     });
 
     return res.status(200).json({
@@ -321,4 +431,8 @@ module.exports = {
   getOrderDetail,
   updateOrder,
   cancelOrder,
+  orderBaseScalarSelect,
+  orderPaymentSelect,
+  orderDetailSelect,
+  orderInitiatePaymentSelect,
 };

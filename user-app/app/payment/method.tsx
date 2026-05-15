@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert, Linking, TouchableOpacity, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as WebBrowser from 'expo-web-browser';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import { stitchColors } from '../../src/theme/stitch';
@@ -28,7 +29,10 @@ export default function PaymentMethodScreen() {
     if (!orderId || !type) {
       setLoading(false);
       Alert.alert('Gagal', 'Parameter order tidak valid.', [
-        { text: 'OK', onPress: () => router.back() },
+        {
+          text: 'OK',
+          onPress: () => safeRouterBack(router, '/(tabs)/orders' as Href),
+        },
       ]);
       return;
     }
@@ -63,7 +67,7 @@ export default function PaymentMethodScreen() {
       } catch (error: unknown) {
         const err = error as { message?: string };
         Alert.alert('Gagal', err?.message || 'Terjadi kesalahan saat inisiasi pembayaran.');
-        router.back();
+        safeRouterBack(router, (orderId ? (`/order/${orderId}` as Href) : ('/(tabs)/orders' as Href)));
       } finally {
         if (mounted) setLoading(false);
       }

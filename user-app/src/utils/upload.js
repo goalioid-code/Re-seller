@@ -1,18 +1,45 @@
+import { Platform } from 'react-native';
 import { getApiBaseUrl, fetchWithTimeout } from '../lib/api';
+
+function deriveFileName(uri, fallbackName) {
+  const t = fallbackName && String(fallbackName).trim();
+  if (t) return t;
+  try {
+    const raw = String(uri || '').split('/').pop() || 'upload';
+    const clean = raw.split('?')[0];
+    if (clean && clean.length > 0 && clean.length < 200) return clean;
+  } catch {
+    /* ignore */
+  }
+  return 'upload.bin';
+}
 
 /**
  * Helper untuk upload file ke Cloudflare R2 melalui Backend API
  * Jangan set Content-Type sendiri: RN harus set boundary untuk multipart; kalau di-set
  * manual, multer di server sering tidak dapat req.file.
+ *
+ * @param {string} mimeType - dari DocumentPicker (asset.mimeType); penting di Android bila nama file kosong
  */
-export const uploadToR2 = async (fileUri, fileName, folder = 'designs', token) => {
+export const uploadToR2 = async (fileUri, fileName, folder = 'designs', token, mimeType) => {
   const apiUrl = getApiBaseUrl();
+  const resolvedName = deriveFileName(fileUri, fileName);
+  const type =
+    (mimeType && String(mimeType).trim()) || getMimeTypeFromName(resolvedName);
+
   const formData = new FormData();
-  formData.append('file', {
-    uri: fileUri,
-    name: fileName || 'upload.bin',
-    type: getMimeType(fileName),
-  });
+
+  if (Platform.OS === 'web') {
+    const resBlob = await fetch(fileUri);
+    const blob = await resBlob.blob();
+    formData.append('file', blob, resolvedName);
+  } else {
+    formData.append('file', {
+      uri: fileUri,
+      name: resolvedName,
+      type,
+    });
+  }
   formData.append('folder', folder);
 
   const response = await fetchWithTimeout(
@@ -43,15 +70,20 @@ export const uploadToR2 = async (fileUri, fileName, folder = 'designs', token) =
   throw new Error(data.message || 'Gagal mengunggah file.');
 };
 
-const getMimeType = (fileName) => {
+function getMimeTypeFromName(fileName) {
   if (!fileName || typeof fileName !== 'string') return 'application/octet-stream';
   const ext = fileName.split('.').pop().toLowerCase();
   switch (ext) {
     case 'jpg':
-    case 'jpeg': return 'image/jpeg';
-    case 'png': return 'image/png';
-    case 'pdf': return 'application/pdf';
-    case 'zip': return 'application/zip';
-    default: return 'application/octet-stream';
+    case 'jpeg':
+      return 'image/jpeg';
+    case 'png':
+      return 'image/png';
+    case 'pdf':
+      return 'application/pdf';
+    case 'zip':
+      return 'application/zip';
+    default:
+      return 'application/octet-stream';
   }
-};
+}

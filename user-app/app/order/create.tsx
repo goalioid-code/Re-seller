@@ -12,7 +12,8 @@ import {
   Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import { stitchColors } from '../../src/theme/stitch';
@@ -27,6 +28,9 @@ const COLLAR_OPTIONS = ['Kerah O-Neck', 'Kerah V-Neck', 'Kerah Berdiri', 'Kerah 
 const PATTERN_OPTIONS = ['Polos', 'Striped', 'Gradient', 'Custom Print', 'Full Design'];
 const FABRIC_OPTIONS = ['Dry-fit', 'Polyester', 'Cotton Combed', 'Mesh Breathable', 'Hyget'];
 const ATTRIBUTE_OPTIONS = ['Lengan Pendek', 'Lengan Panjang', 'Tanpa Nama', 'Dengan Nama & Nomor'];
+
+/** Placeholder di atas surface putih (bukan rgba putih — itu untuk input gelap). */
+const placeholderOnLight = 'rgba(37, 24, 23, 0.42)';
 
 const emptyItem = () => ({
   product_name: '',
@@ -111,7 +115,7 @@ export default function CreateOrderScreen() {
           const row: Record<string, unknown> = {
             product_name: item.product_name,
             quantity: parseInt(String(item.quantity), 10),
-            unit_price: parseInt(String(item.unit_price), 10),
+            unit_price: parseFloat(String(item.unit_price).replace(/\./g, '').replace(',', '.')) || 0,
           };
           if (item.collar_type?.trim()) row.collar_type = item.collar_type.trim();
           if (item.pattern?.trim()) row.pattern = item.pattern.trim();
@@ -129,10 +133,13 @@ export default function CreateOrderScreen() {
         body: JSON.stringify(body),
       });
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.message || `Server error (${response.status})`);
+      }
       if (data.success) {
         router.replace(`/order/${data.order.id}`);
       } else {
-        throw new Error(data.message);
+        throw new Error(data.message || 'Order ditolak server.');
       }
     } catch (error: unknown) {
       const err = error as { message?: string };
@@ -145,7 +152,7 @@ export default function CreateOrderScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(tabs)/orders' as Href)} style={styles.backButton}>
           <Text style={styles.backButtonText}>Batal</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Buat Order Baru</Text>
@@ -172,7 +179,7 @@ export default function CreateOrderScreen() {
             <TextInput
               style={styles.input}
               placeholder="Contoh: Tim Futsal Jaya"
-              placeholderTextColor="rgba(255,255,255,0.3)"
+              placeholderTextColor={placeholderOnLight}
               value={customerName}
               onChangeText={setCustomerName}
             />
@@ -181,7 +188,7 @@ export default function CreateOrderScreen() {
             <TextInput
               style={styles.input}
               placeholder="Contoh: CALSUB"
-              placeholderTextColor="rgba(255,255,255,0.3)"
+              placeholderTextColor={placeholderOnLight}
               value={brandName}
               onChangeText={setBrandName}
             />
@@ -201,7 +208,7 @@ export default function CreateOrderScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Nama Produk (Misal: Jersey Home)"
-                  placeholderTextColor="rgba(255,255,255,0.3)"
+                  placeholderTextColor={placeholderOnLight}
                   value={item.product_name}
                   editable={false}
                   pointerEvents="none"
@@ -226,7 +233,7 @@ export default function CreateOrderScreen() {
                     <TextInput
                       style={styles.input}
                       placeholder="Qty"
-                      placeholderTextColor="rgba(255,255,255,0.3)"
+                      placeholderTextColor={placeholderOnLight}
                       keyboardType="numeric"
                       value={item.quantity}
                       onChangeText={(val) => handleUpdateItem(index, 'quantity', val)}
@@ -236,7 +243,7 @@ export default function CreateOrderScreen() {
                     <TextInput
                       style={styles.input}
                       placeholder="Harga Satuan"
-                      placeholderTextColor="rgba(255,255,255,0.3)"
+                      placeholderTextColor={placeholderOnLight}
                       keyboardType="numeric"
                       value={item.unit_price}
                       onChangeText={(val) => handleUpdateItem(index, 'unit_price', val)}
@@ -297,7 +304,7 @@ export default function CreateOrderScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.backStepButton} onPress={() => setStep(1)}>
-              <Text style={styles.backStepButtonText}>← Kembali</Text>
+              <Text style={styles.backStepButtonText}>Kembali</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -330,7 +337,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: { color: stitchColors.primary, fontSize: 18, fontWeight: '700' },
   backButton: { padding: 8 },
-  backButtonText: { color: stitchColors.textMutedLight, fontSize: 14 },
+  backButtonText: { color: stitchColors.primary, fontSize: 14, fontWeight: '600' },
   scrollContent: { padding: 24 },
   stepTitle: { color: stitchColors.primary, fontSize: 24, fontWeight: '700', marginBottom: 24 },
   typeContainer: { flexDirection: 'row', gap: 12, marginBottom: 24 },
@@ -341,13 +348,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: stitchColors.borderLight,
   },
   typeCardActive: { borderColor: stitchColors.primary, backgroundColor: 'rgba(139, 26, 26, 0.08)' },
   typeText: { color: stitchColors.textMutedLight, fontWeight: '700' },
   typeTextActive: { color: stitchColors.primary },
-  label: { color: stitchColors.textMutedLight, fontSize: 14, marginBottom: 8 },
-  optionalLabel: { color: stitchColors.textMutedLight, fontSize: 12, marginTop: 4, marginBottom: 6 },
+  label: { color: stitchColors.textOnLight, fontSize: 14, fontWeight: '600', marginBottom: 8 },
+  optionalLabel: {
+    color: stitchColors.textMutedLight,
+    fontSize: 12,
+    fontWeight: '700',
+    marginTop: 4,
+    marginBottom: 6,
+  },
   dropdownBtn: {
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -370,6 +383,8 @@ const styles = StyleSheet.create({
     color: stitchColors.textOnLight,
     fontSize: 16,
     marginBottom: 16,
+    borderWidth: 1,
+    borderColor: stitchColors.borderLight,
   },
   row: { flexDirection: 'row' },
   nextButton: {
@@ -390,8 +405,16 @@ const styles = StyleSheet.create({
     borderColor: stitchColors.borderLight,
   },
   itemIndex: { color: stitchColors.primary, fontSize: 12, fontWeight: '800', marginBottom: 12 },
-  addItemButton: { paddingVertical: 12, alignItems: 'center' },
-  addItemButtonText: { color: stitchColors.primary, fontWeight: '700' },
+  addItemButton: {
+    paddingVertical: 14,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: stitchColors.borderLight,
+    marginBottom: 8,
+  },
+  addItemButtonText: { color: stitchColors.primary, fontWeight: '700', fontSize: 15 },
   summaryCard: {
     backgroundColor: '#fff',
     padding: 20,
@@ -399,6 +422,8 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 24,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: stitchColors.borderLight,
   },
   summaryLabel: { color: stitchColors.textMutedLight, fontSize: 14, marginBottom: 4 },
   summaryValue: { color: stitchColors.textOnLight, fontSize: 28, fontWeight: '800' },
@@ -412,7 +437,7 @@ const styles = StyleSheet.create({
   submitButtonText: { color: '#FFF', fontSize: 16, fontWeight: '700' },
   buttonDisabled: { opacity: 0.7 },
   backStepButton: { paddingVertical: 20, alignItems: 'center' },
-  backStepButtonText: { color: stitchColors.textMutedLight },
+  backStepButtonText: { color: stitchColors.primary, fontSize: 15, fontWeight: '600' },
   modalBackdrop: {
     flex: 1,
     backgroundColor: 'rgba(37, 24, 23, 0.42)',

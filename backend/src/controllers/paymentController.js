@@ -1,6 +1,33 @@
 const prisma = require('../lib/prisma');
 const { v4: uuidv4 } = require('uuid');
 const { snap } = require('../lib/midtrans');
+const { orderInitiatePaymentSelect } = require('./orderController');
+
+/** Midtrans menolak email tidak valid; `.invalid` / kosong sering gagal Snap. */
+function emailForMidtrans(rawEmail, resellerId) {
+  const s = rawEmail && String(rawEmail).trim();
+  if (s && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) {
+    return s.slice(0, 80);
+  }
+  const id = String(resellerId || 'user').replace(/[^a-zA-Z0-9]/g, '').slice(0, 24) || 'user';
+  return `reseller.${id}@example.com`;
+}
+
+function formatMidtransInitError(error) {
+  const api = error && error.ApiResponse;
+  if (api && typeof api === 'object') {
+    const parts = [api.status_message, api.validation_messages, api.error_messages]
+      .filter(Boolean)
+      .flat();
+    if (parts.length) return parts.join(' — ');
+    try {
+      return JSON.stringify(api);
+    } catch {
+      /* ignore */
+    }
+  }
+  return (error && error.message) || String(error);
+}
 
 /**
  * POST /payments/initiate
@@ -21,25 +48,15 @@ const initiatePayment = async (req, res) => {
       });
     }
 
-    const order = await prisma.order.findUnique({
-      where: { id: order_id },
-      include: { 
-        payments: true,
-        reseller: true 
-      },
+    const order = await prisma.order.findFirst({
+      where: { id: order_id, reseller_id: resellerId },
+      select: orderInitiatePaymentSelect,
     });
 
     if (!order) {
       return res.status(404).json({
         success: false,
         message: 'Order tidak ditemukan.',
-      });
-    }
-
-    if (order.reseller_id !== resellerId) {
-      return res.status(403).json({
-        success: false,
-        message: 'Akses ditolak.',
       });
     }
 
@@ -70,10 +87,23 @@ const initiatePayment = async (req, res) => {
       });
     }
 
-    // Buat transaction ID unik untuk Midtrans
+    if (!process.env.MIDTRANS_SERVER_KEY || !process.env.MIDTRANS_CLIENT_KEY) {
+      return res.status(503).json({
+        success: false,
+        message: 'Pembayaran belum dikonfigurasi: isi MIDTRANS_SERVER_KEY & MIDTRANS_CLIENT_KEY di .env',
+      });
+    }
+
+    const gross = Math.round(Number(requiredAmount)) || 0;
+    if (gross < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Nilai pembayaran tidak valid.',
+      });
+    }
+
     const midtransOrderId = `PAY-${Date.now()}-${uuidv4().substring(0, 8)}`;
 
-    // Buat payment record
     const payment = await prisma.orderPayment.create({
       data: {
         order_id,
@@ -85,26 +115,10 @@ const initiatePayment = async (req, res) => {
       },
     });
 
-    if (!process.env.MIDTRANS_SERVER_KEY || !process.env.MIDTRANS_CLIENT_KEY) {
-      return res.status(503).json({
-        success: false,
-        message: 'Pembayaran belum dikonfigurasi: isi MIDTRANS_SERVER_KEY & MIDTRANS_CLIENT_KEY di .env',
-      });
-    }
-
-    // Midtrans minta jumlah bulat; phone tidak boleh null untuk beberapa metode
-    const gross = Math.round(Number(requiredAmount)) || 0;
-    if (gross < 1) {
-      return res.status(400).json({
-        success: false,
-        message: 'Nilai pembayaran tidak valid.',
-      });
-    }
-
     const firstName = (order.reseller.name && String(order.reseller.name).trim().slice(0, 50)) || 'Reseller';
     const phone = String(order.reseller.phone || '08100000000').replace(/\D/g, '').slice(0, 15) || '08100000000';
+    const customerEmail = emailForMidtrans(order.reseller.email, resellerId);
 
-    // Generate Midtrans Snap Token
     const transactionDetails = {
       transaction_details: {
         order_id: midtransOrderId,
@@ -112,12 +126,12 @@ const initiatePayment = async (req, res) => {
       },
       customer_details: {
         first_name: firstName,
-        email: order.reseller.email || 'noreply@local.invalid',
+        email: customerEmail,
         phone,
       },
       item_details: [
         {
-          id: payment_type,
+          id: String(payment_type).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 20) || 'PAY',
           price: gross,
           quantity: 1,
           name: `Pembayaran ${payment_type.replace('_', ' ').toUpperCase()} - ${order.po_number}`.slice(0, 50),
@@ -125,7 +139,22 @@ const initiatePayment = async (req, res) => {
       ],
     };
 
-    const snapResponse = await snap.createTransaction(transactionDetails);
+    let snapResponse;
+    try {
+      snapResponse = await snap.createTransaction(transactionDetails);
+    } catch (mtErr) {
+      await prisma.orderPayment.delete({ where: { id: payment.id } }).catch(() => {});
+      const detail = formatMidtransInitError(mtErr);
+      console.error('[Payment] Midtrans createTransaction:', detail, mtErr);
+      return res.status(502).json({
+        success: false,
+        message:
+          process.env.NODE_ENV === 'development'
+            ? `Midtrans: ${detail}`
+            : 'Gagal menghubungi payment gateway. Periksa kunci sandbox/production dan coba lagi.',
+      });
+    }
+
     const tokenSnap = snapResponse?.token;
     const isProd = process.env.MIDTRANS_IS_PRODUCTION === 'true';
     const snapBase = isProd
@@ -136,6 +165,7 @@ const initiatePayment = async (req, res) => {
       snapResponse?.redirectUrl ||
       (tokenSnap ? `${snapBase}/${tokenSnap}` : null);
     if (!redirect) {
+      await prisma.orderPayment.delete({ where: { id: payment.id } }).catch(() => {});
       return res.status(502).json({
         success: false,
         message: 'Respons Midtrans tidak berisi token/URL redirect.',
@@ -152,17 +182,14 @@ const initiatePayment = async (req, res) => {
       },
     });
   } catch (error) {
-    const msg =
-      (error && error.message) ||
-      (error && error.ApiResponse) ||
-      String(error);
     console.error('[Payment] Initiate error:', error);
+    const msg = (error && error.message) || String(error);
     return res.status(500).json({
       success: false,
       message:
         process.env.NODE_ENV === 'development'
-          ? `Midtrans: ${msg}`
-          : 'Terjadi kesalahan saat membuat pembayaran. Periksa kunci Midtrans dan jaringan.',
+          ? msg
+          : 'Terjadi kesalahan saat membuat pembayaran.',
     });
   }
 };
@@ -225,11 +252,13 @@ const handleMidtransWebhook = async (req, res) => {
         await prisma.order.update({
           where: { id: payment.order_id },
           data: { status: 'design' },
+          select: { id: true },
         });
       } else if (payment.payment_type === 'dp_production') {
         await prisma.order.update({
           where: { id: payment.order_id },
           data: { status: 'production' },
+          select: { id: true },
         });
       }
     }
@@ -382,21 +411,15 @@ const getPaymentsByOrder = async (req, res) => {
     const resellerId = req.reseller.id;
     const { order_id } = req.params;
 
-    const order = await prisma.order.findUnique({
-      where: { id: order_id },
+    const order = await prisma.order.findFirst({
+      where: { id: order_id, reseller_id: resellerId },
+      select: { id: true },
     });
 
     if (!order) {
       return res.status(404).json({
         success: false,
         message: 'Order tidak ditemukan.',
-      });
-    }
-
-    if (order.reseller_id !== resellerId) {
-      return res.status(403).json({
-        success: false,
-        message: 'Akses ditolak.',
       });
     }
 

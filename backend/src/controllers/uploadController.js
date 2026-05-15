@@ -49,9 +49,13 @@ const uploadFile = async (req, res) => {
     });
   } catch (error) {
     console.error('[Upload] Error:', error);
+    const hint =
+      process.env.NODE_ENV === 'development' && error && error.message
+        ? ` (${error.message})`
+        : '';
     return res.status(500).json({
       success: false,
-      message: 'Gagal mengunggah file.',
+      message: `Gagal mengunggah file ke storage.${hint}`,
     });
   }
 };

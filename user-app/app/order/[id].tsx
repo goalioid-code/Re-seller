@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as DocumentPicker from 'expo-document-picker';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { uploadToR2 } from '../../src/utils/upload';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
@@ -33,8 +34,10 @@ export default function OrderDetailScreen() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
-      if (data.success) {
+      if (data.success && data.order) {
         setOrder(data.order);
+      } else if (!response.ok) {
+        console.warn('[OrderDetail]', response.status, data?.message);
       }
     } catch (e) {
       console.error('[OrderDetail] Fetch error:', e);
@@ -80,7 +83,13 @@ export default function OrderDetailScreen() {
       const file = result.assets[0];
       setUploading(true);
 
-      const fileUrl = await uploadToR2(file.uri, file.name, 'mockups', token as string);
+      const fileUrl = await uploadToR2(
+        file.uri,
+        file.name,
+        'mockups',
+        token as string,
+        (file as { mimeType?: string }).mimeType,
+      );
       const data = await putOrder({ mockup_file_url: fileUrl });
       if (data.success) {
         Alert.alert('Sukses', 'Mockup berhasil diunggah.');
@@ -107,7 +116,13 @@ export default function OrderDetailScreen() {
       const file = result.assets[0];
       setUploading(true);
 
-      const fileUrl = await uploadToR2(file.uri, file.name, 'designs', token as string);
+      const fileUrl = await uploadToR2(
+        file.uri,
+        file.name,
+        'designs',
+        token as string,
+        (file as { mimeType?: string }).mimeType,
+      );
       const data = await putOrder({ design_file_url: fileUrl });
       if (data.success) {
         Alert.alert('Sukses', 'File desain berhasil diunggah.');
@@ -145,8 +160,8 @@ export default function OrderDetailScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>← Kembali</Text>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(tabs)/orders' as Href)} style={styles.backButton}>
+          <Text style={styles.backButtonText}>Kembali</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Detail Order</Text>
         <View style={{ width: 60 }} />
@@ -234,8 +249,9 @@ export default function OrderDetailScreen() {
             <TouchableOpacity
               style={styles.payButton}
               onPress={() =>
+                // Query string: params object ke layar statis sering tidak sampai ke useLocalSearchParams (tombol “gak jalan”).
                 router.push(
-                  `/payment/method?orderId=${encodeURIComponent(String(order.id))}&type=dp_design` as any,
+                  `/payment/method?orderId=${encodeURIComponent(String(order.id))}&type=dp_design` as Href,
                 )
               }
             >
@@ -248,7 +264,7 @@ export default function OrderDetailScreen() {
               style={styles.payButtonSecondary}
               onPress={() =>
                 router.push(
-                  `/payment/method?orderId=${encodeURIComponent(String(order.id))}&type=dp_production` as any,
+                  `/payment/method?orderId=${encodeURIComponent(String(order.id))}&type=dp_production` as Href,
                 )
               }
             >

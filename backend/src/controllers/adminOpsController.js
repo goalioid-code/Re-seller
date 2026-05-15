@@ -1,4 +1,38 @@
 const prisma = require('../lib/prisma');
+const {
+  orderBaseScalarSelect,
+  orderDetailSelect,
+} = require('./orderController');
+
+/** Detail order admin: select aman + reseller & tier tanpa password_hash. (internal_notes hanya bila kolom sudah di-ALTER oleh owner DB.) */
+const adminOrderDetailSelect = {
+  ...orderDetailSelect,
+  reseller: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      status: true,
+      tier: {
+        select: {
+          id: true,
+          name: true,
+          percentage: true,
+          min_orders: true,
+          is_active: true,
+        },
+      },
+    },
+  },
+};
+
+const adminOrderListSelect = {
+  ...orderBaseScalarSelect,
+  reseller: {
+    select: { id: true, name: true, email: true },
+  },
+};
 
 // --- Dashboard ---
 
@@ -71,9 +105,7 @@ const listAdminOrders = async (req, res) => {
     const [orders, total] = await Promise.all([
       prisma.order.findMany({
         where,
-        include: {
-          reseller: { select: { id: true, name: true, email: true } },
-        },
+        select: adminOrderListSelect,
         orderBy: { created_at: 'desc' },
         skip: (parseInt(page, 10) - 1) * parseInt(limit, 10),
         take: parseInt(limit, 10),
@@ -102,16 +134,7 @@ const getAdminOrderDetail = async (req, res) => {
     const { id } = req.params;
     const order = await prisma.order.findUnique({
       where: { id },
-      include: {
-        reseller: { include: { tier: true } },
-        items: true,
-        payments: { orderBy: { created_at: 'desc' } },
-        work_order: true,
-        production_statuses: {
-          include: { stage: true },
-          orderBy: { stage: { order_index: 'asc' } },
-        },
-      },
+      select: adminOrderDetailSelect,
     });
     if (!order) {
       return res.status(404).json({ success: false, message: 'Order tidak ditemukan.' });
@@ -133,11 +156,20 @@ const patchOrderInternalNotes = async (req, res) => {
     const order = await prisma.order.update({
       where: { id },
       data: { internal_notes: internal_notes === null ? null : String(internal_notes) },
+      select: adminOrderDetailSelect,
     });
     return res.status(200).json({ success: true, order });
   } catch (e) {
     if (e.code === 'P2025') {
       return res.status(404).json({ success: false, message: 'Order tidak ditemukan.' });
+    }
+    const msg = String(e.message || '');
+    if (/internal_notes|does not exist|42703|column/i.test(msg)) {
+      return res.status(503).json({
+        success: false,
+        message:
+          'Kolom internal_notes belum ada di database. Jalankan sebagai owner tabel: ALTER TABLE orders ADD COLUMN IF NOT EXISTS internal_notes TEXT;',
+      });
     }
     console.error('[Admin] Patch internal notes error:', e);
     return res.status(500).json({ success: false, message: 'Gagal menyimpan catatan.' });

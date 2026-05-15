@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
@@ -72,23 +73,20 @@ export default function CommissionScreen() {
 
   const pct = summary?.tier_progress?.percent ?? 0;
 
-  if (loading) {
-    return (
-      <View style={tw`flex-1 bg-[#0F172A] justify-center items-center`}>
-        <ActivityIndicator size="large" color={stitchColors.primary} />
-      </View>
-    );
-  }
-
   return (
     <View style={[tw`flex-1`, { backgroundColor: stitchColors.pageSoft }]}>
       <View style={tw`flex-row items-center px-5 pt-12 pb-4`}>
-        <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-2`}>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(tabs)/profile' as Href)} style={tw`mr-3 p-2`}>
           <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
         <Text style={[tw`text-xl font-bold`, { color: stitchColors.primary }]}>Komisi</Text>
       </View>
 
+      {loading ? (
+        <View style={tw`flex-1 justify-center items-center`}>
+          <ActivityIndicator size="large" color={stitchColors.primary} />
+        </View>
+      ) : (
       <ScrollView
         style={tw`flex-1 px-5`}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} tintColor={stitchColors.primary} />}
@@ -158,6 +156,7 @@ export default function CommissionScreen() {
         )}
         <View style={tw`h-16`} />
       </ScrollView>
+      )}
     </View>
   );
 }

@@ -10,7 +10,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { useAuth } from '../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
@@ -60,7 +61,7 @@ export default function CommissionWithdrawScreen() {
         return;
       }
       Alert.alert('Berhasil', data.message || 'Pengajuan dikirim.', [
-        { text: 'OK', onPress: () => router.back() },
+        { text: 'OK', onPress: () => safeRouterBack(router, '/(tabs)/profile' as Href) },
       ]);
     } catch (e) {
       Alert.alert('Error', 'Tidak terhubung ke server.');
@@ -75,7 +76,7 @@ export default function CommissionWithdrawScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={tw`flex-row items-center px-5 pt-12 pb-4`}>
-        <TouchableOpacity onPress={() => router.back()} style={tw`mr-3 p-2`}>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(tabs)/profile' as Href)} style={tw`mr-3 p-2`}>
           <ArrowLeft color={stitchColors.primary} size={24} />
         </TouchableOpacity>
         <Text style={[tw`text-xl font-bold`, { color: stitchColors.primary }]}>Pencairan komisi</Text>

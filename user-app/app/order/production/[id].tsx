@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, type Href } from 'expo-router';
+import { safeRouterBack } from '../../../src/lib/safeRouterBack';
 import { useAuth } from '../../../src/contexts/AuthContext';
 import { fetchWithTimeout, getApiBaseUrl } from '../../../src/lib/api';
 import { stitchColors } from '../../../src/theme/stitch';
@@ -21,9 +22,10 @@ type TimelineRow = {
   };
 };
 
+/** Modul 4 — label status per tahapan (badge) */
 const STATUS_META = {
   completed: { label: 'Selesai', color: '#10B981', dot: '●' },
-  in_progress: { label: 'Berlangsung', color: '#3B82F6', dot: '●' },
+  in_progress: { label: 'Sedang Berlangsung', color: '#3B82F6', dot: '●' },
   pending: { label: 'Menunggu', color: '#64748B', dot: '●' },
 } as const;
 
@@ -48,6 +50,7 @@ export default function ProductionTrackingScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [production, setProduction] = useState<any>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const fetchProduction = async (silent = false) => {
     if (!orderId) return;
@@ -60,6 +63,11 @@ export default function ProductionTrackingScreen() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.message || 'Gagal mengambil status produksi');
       setProduction(data.production);
+      setLoadError(null);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Gagal memuat tracking';
+      setLoadError(msg);
+      setProduction(null);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -96,8 +104,8 @@ export default function ProductionTrackingScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backText}>← Kembali</Text>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(tabs)/orders' as Href)}>
+          <Text style={styles.backText}>Kembali</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Tracking Produksi</Text>
         <View style={{ width: 72 }} />
@@ -107,15 +115,28 @@ export default function ProductionTrackingScreen() {
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void fetchProduction(true); }} tintColor={stitchColors.primary} />}
       >
+        {loadError ? (
+          <View style={styles.errorBanner}>
+            <Text style={styles.errorTitle}>Tracking tidak bisa dimuat</Text>
+            <Text style={styles.errorBody}>{loadError}</Text>
+            <Text style={styles.errorHint}>Tarik ke bawah untuk coba lagi.</Text>
+          </View>
+        ) : null}
         {currentBanner && (
           <View style={[styles.banner, { borderColor: `${currentBanner.color}66` }]}>
-            <Text style={styles.bannerLabel}>Status Saat Ini</Text>
+            <Text style={styles.bannerLabel}>Status saat ini</Text>
             <Text style={styles.bannerTitle}>{currentBanner.title}</Text>
             <Text style={[styles.bannerStatus, { color: currentBanner.color }]}>{currentBanner.status}</Text>
+            {production?.order_status ? (
+              <Text style={styles.bannerSub}>Order: {String(production.order_status).toUpperCase()}</Text>
+            ) : null}
           </View>
         )}
 
         <View style={styles.timeline}>
+          {!loadError && (production?.timeline || []).length === 0 ? (
+            <Text style={styles.emptyHint}>Belum ada data tahapan. Tarik untuk refresh.</Text>
+          ) : null}
           {(production?.timeline || []).map((row: TimelineRow) => {
             const meta = STATUS_META[row.status as keyof typeof STATUS_META] || STATUS_META.pending;
             return (
@@ -166,6 +187,7 @@ const styles = StyleSheet.create({
   bannerLabel: { color: stitchColors.textMutedLight, fontSize: 12, marginBottom: 6 },
   bannerTitle: { color: stitchColors.textOnLight, fontSize: 20, fontWeight: '800' },
   bannerStatus: { marginTop: 4, fontWeight: '700' },
+  bannerSub: { color: stitchColors.textMutedLight, fontSize: 12, marginTop: 8 },
   timeline: { gap: 10 },
   stageCard: {
     backgroundColor: '#fff',
@@ -181,4 +203,16 @@ const styles = StyleSheet.create({
   stageDesc: { color: stitchColors.textMutedLight, marginTop: 6, marginBottom: 10 },
   metaLine: { color: stitchColors.textMutedLight, fontSize: 12, marginBottom: 2 },
   lastUpdated: { color: stitchColors.textMutedLight, textAlign: 'center', marginTop: 18, fontSize: 12 },
+  errorBanner: {
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: 'rgba(186,26,26,0.35)',
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 14,
+  },
+  errorTitle: { color: stitchColors.danger, fontWeight: '800', marginBottom: 6 },
+  errorBody: { color: stitchColors.textOnLight, fontSize: 14 },
+  errorHint: { color: stitchColors.textMutedLight, fontSize: 12, marginTop: 8 },
+  emptyHint: { color: stitchColors.textMutedLight, textAlign: 'center', paddingVertical: 12 },
 });

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { stitchColors } from '../../src/theme/stitch';
 import CalmanHero from '../../src/components/onboarding/CalmanHero';
 
@@ -36,7 +37,7 @@ export default function EarningPotentialScreen() {
     <View style={styles.screen}>
       {/* Light theme header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(onboarding)' as Href)} style={styles.backBtn}>
           <Text style={styles.backIcon}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Registration</Text>

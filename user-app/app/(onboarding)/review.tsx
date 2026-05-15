@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, type Href } from 'expo-router';
+import { safeRouterBack } from '../../src/lib/safeRouterBack';
 import { stitchColors } from '../../src/theme/stitch';
 import ProgressHeader from '../../src/components/onboarding/ProgressHeader';
 
@@ -180,7 +181,7 @@ export default function ReviewScreen() {
           <Text style={styles.submitText}>Lanjut Buat Kata Sandi</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => safeRouterBack(router, '/(onboarding)' as Href)}>
           <Text style={styles.backEditText}>Kembali edit</Text>
         </TouchableOpacity>
       </View>

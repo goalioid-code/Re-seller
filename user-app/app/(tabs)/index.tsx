@@ -1,19 +1,56 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../src/contexts/AuthContext';
+import { fetchWithTimeout, getApiBaseUrl } from '../../src/lib/api';
 import tw from 'twrnc';
 import { Bell, Package, TrendingUp, CreditCard } from 'lucide-react-native';
 import { stitchColors } from '../../src/theme/stitch';
 
+type HomeStats = {
+  active_orders: number;
+  total_production_pcs: number;
+};
+
 export default function HomeScreen() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const router = useRouter();
+  const [stats, setStats] = useState<HomeStats | null>(null);
+  const [booting, setBooting] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  const load = useCallback(async () => {
+    if (!token) {
+      setRefreshing(false);
+      return;
+    }
+    try {
+      const api = getApiBaseUrl();
+      const res = await fetchWithTimeout(`${api}/resellers/dashboard`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.success && data.dashboard) {
+        setStats({
+          active_orders: Number(data.dashboard.active_orders ?? 0),
+          total_production_pcs: Number(data.dashboard.total_production_pcs ?? 0),
+        });
+      }
+    } catch (e) {
+      console.error('[Home] dashboard', e);
+    } finally {
+      setBooting(false);
+      setRefreshing(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   const onRefresh = () => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 1500);
+    void load();
   };
 
   return (
@@ -38,12 +75,24 @@ export default function HomeScreen() {
         <View style={tw`flex-row flex-wrap justify-between mb-8`}>
           <View style={[tw`w-[48%] p-4 rounded-3xl mb-4`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1 }]}>
             <TrendingUp size={24} color={stitchColors.primary} />
-            <Text style={[tw`text-2xl font-bold mt-2`, { color: stitchColors.textOnLight }]}>12</Text>
+            {booting ? (
+              <ActivityIndicator style={tw`mt-2`} size="small" color={stitchColors.primary} />
+            ) : (
+              <Text style={[tw`text-2xl font-bold mt-2`, { color: stitchColors.textOnLight }]}>
+                {stats != null ? stats.active_orders.toLocaleString('id-ID') : '—'}
+              </Text>
+            )}
             <Text style={[tw`text-xs`, { color: stitchColors.textMutedLight }]}>Order Aktif</Text>
           </View>
           <View style={[tw`w-[48%] p-4 rounded-3xl mb-4`, { backgroundColor: '#fff', borderColor: stitchColors.borderLight, borderWidth: 1 }]}>
             <Package size={24} color="#10B981" />
-            <Text style={[tw`text-2xl font-bold mt-2`, { color: stitchColors.textOnLight }]}>128</Text>
+            {booting ? (
+              <ActivityIndicator style={tw`mt-2`} size="small" color="#10B981" />
+            ) : (
+              <Text style={[tw`text-2xl font-bold mt-2`, { color: stitchColors.textOnLight }]}>
+                {stats != null ? stats.total_production_pcs.toLocaleString('id-ID') : '—'}
+              </Text>
+            )}
             <Text style={[tw`text-xs`, { color: stitchColors.textMutedLight }]}>Total Produksi</Text>
           </View>
         </View>
